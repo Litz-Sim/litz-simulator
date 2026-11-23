@@ -1,0 +1,5 @@
+engineStrict: true
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@litz-sim/litz@0.2.0 || 0.3.0'

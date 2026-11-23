@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@media (pointer: coarse) {
+	input[type='range'] {
+		height: 1.75rem;
+	}
+}
+
+/* Taps stay taps: no double-tap zoom or grey flash on the editor chrome. */
+button,
+input,
+select,
+textarea {
+	touch-action: manipulation;
+}
+
+button {
+	-webkit-tap-highlight-color: transparent;
+}
