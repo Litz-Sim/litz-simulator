@@ -331,6 +331,10 @@
 					run: () => ((ui.bottomOpen = true), (ui.bottomTab = 'plot'))
 				},
 				{
+					label: m.menu_screen_panel(),
+					run: () => ((ui.bottomOpen = true), (ui.bottomTab = 'screen'))
+				},
+				{
 					label: m.menu_analysis_panel(),
 					run: () => ((ui.bottomOpen = true), (ui.bottomTab = 'analysis'))
 				},

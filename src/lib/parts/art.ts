@@ -1,4 +1,5 @@
-import { liveDisplay, livePart, liveState } from '#lib/sim/live';
+import type { DisplayFrame } from '#lib/sim/backend';
+import { liveDisplay, livePanel, livePart, liveState } from '#lib/sim/live';
 import type { PartInstance } from '#lib/sketch/types';
 
 /** Mix a #rrggbb colour towards white (amount > 0) or black (amount < 0). */
@@ -362,21 +363,22 @@ export function drawSevenSegment(ctx: CanvasRenderingContext2D, part?: PartInsta
 	ctx.restore();
 }
 
-/** The live panel, rasterised once per version and shared by every display. */
-let displayCanvas: HTMLCanvasElement | null = null;
-let displayVersion = -1;
+/** Live panels, rasterised once per version; each part keeps its own canvas. */
+const panelCanvases = new Map<string, { canvas: HTMLCanvasElement; version: number }>();
 
-function displayImage(
-	frame: NonNullable<ReturnType<typeof liveDisplay>>
-): HTMLCanvasElement | null {
+function panelImage(id: string, frame: DisplayFrame): HTMLCanvasElement | null {
 	if (typeof document === 'undefined') return null;
-	if (!displayCanvas) displayCanvas = document.createElement('canvas');
-	if (displayVersion !== frame.version) {
-		const expected = frame.width * frame.height * 4;
-		if (frame.rgba.length < expected) return null;
-		displayCanvas.width = frame.width;
-		displayCanvas.height = frame.height;
-		const context = displayCanvas.getContext('2d');
+	const expected = frame.width * frame.height * 4;
+	if (frame.rgba.length < expected) return null;
+	let entry = panelCanvases.get(id);
+	if (!entry) {
+		entry = { canvas: document.createElement('canvas'), version: -1 };
+		panelCanvases.set(id, entry);
+	}
+	if (entry.version !== frame.version) {
+		entry.canvas.width = frame.width;
+		entry.canvas.height = frame.height;
+		const context = entry.canvas.getContext('2d');
 		if (!context) return null;
 		context.putImageData(
 			new ImageData(
@@ -387,12 +389,54 @@ function displayImage(
 			0,
 			0
 		);
-		displayVersion = frame.version;
+		entry.version = frame.version;
 	}
-	return displayCanvas;
+	return entry.canvas;
 }
 
-export function drawOled(ctx: CanvasRenderingContext2D): void {
+/**
+ * Draw a live frame inside a box, keeping the panel's own aspect ratio.
+ *
+ * Returns false when the frame cannot be rasterised, so the caller can keep
+ * whatever placeholder it drew first.
+ */
+export function drawPanelFrame(
+	ctx: CanvasRenderingContext2D,
+	id: string,
+	frame: DisplayFrame,
+	x: number,
+	y: number,
+	width: number,
+	height: number
+): boolean {
+	const image = panelImage(id, frame);
+	if (!image) return false;
+	const scale = Math.min(width / frame.width, height / frame.height);
+	const drawWidth = frame.width * scale;
+	const drawHeight = frame.height * scale;
+	ctx.save();
+	ctx.imageSmoothingEnabled = false;
+	ctx.drawImage(
+		image,
+		x + (width - drawWidth) / 2,
+		y + (height - drawHeight) / 2,
+		drawWidth,
+		drawHeight
+	);
+	ctx.restore();
+	return true;
+}
+
+/** A part's own frame, falling back to the board's display on older backends. */
+export function panelFrame(part: PartInstance): DisplayFrame | null {
+	const own = livePanel(part.id);
+	if (own) return own;
+	// Before per-part capture the backend only reported the board's first panel,
+	// which was the SSD1306 whenever the circuit had one.
+	return part.type === 'litz-ssd1306' ? liveDisplay() : null;
+}
+
+export function drawOled(ctx: CanvasRenderingContext2D, part: PartInstance): void {
 	ctx.save();
 	ctx.lineCap = 'round';
 	ctx.strokeStyle = '#b7bdc2';
@@ -412,15 +456,9 @@ export function drawOled(ctx: CanvasRenderingContext2D): void {
 	ctx.roundRect(-33, -24, 66, 40, 2);
 	ctx.fill();
 
-	const frame = liveDisplay();
-	const image = frame ? displayImage(frame) : null;
-	if (frame && image) {
-		// Preserve the panel's aspect ratio inside the 66 × 40 window.
-		const height = Math.min(40, 66 * (frame.height / frame.width));
-		const width = height * (frame.width / frame.height);
-		ctx.imageSmoothingEnabled = false;
-		ctx.drawImage(image, -width / 2, -24 + (40 - height) / 2, width, height);
-	} else {
+	const frame = panelFrame(part);
+	const drawn = frame ? drawPanelFrame(ctx, part.id, frame, -33, -24, 66, 40) : false;
+	if (!drawn) {
 		ctx.fillStyle = 'rgba(90, 200, 255, 0.5)';
 		ctx.font = '7px ui-sans-serif, system-ui, sans-serif';
 		ctx.textAlign = 'center';

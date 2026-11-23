@@ -14,6 +14,9 @@ export interface LivePart {
  */
 const states = new Map<string, LivePart>();
 
+/** One frame per display part, keyed by diagram id. */
+const panels = new Map<string, DisplayFrame>();
+
 let display: DisplayFrame | null = null;
 
 export function setLiveStates(entries: { id: string; state: PartState; value: number }[]): void {
@@ -39,4 +42,20 @@ export function setLiveDisplay(frame: DisplayFrame | null): void {
 
 export function liveDisplay(): DisplayFrame | null {
 	return display;
+}
+
+/** Replace the per-part frames; a part whose backend has no panel keeps none. */
+export function setLivePanels(entries: { id: string; frame: DisplayFrame | null }[]): void {
+	panels.clear();
+	for (const entry of entries) {
+		if (entry.frame) panels.set(entry.id, entry.frame);
+	}
+}
+
+export function clearLivePanels(): void {
+	panels.clear();
+}
+
+export function livePanel(id: string): DisplayFrame | null {
+	return panels.get(id) ?? null;
 }

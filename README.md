@@ -189,6 +189,7 @@ Each board boots its own image; a board that has no uploaded or built-in image s
 | Code      | Edit `main.c`; inspect the generated `diagram.json`.                                                                                                                                    |
 | Serial    | Live console for one board at a time, with tabs to switch boards when the session has several. ANSI colors, auto-scroll, and text sent to the shown board. The badge shows 115200 baud. |
 | Plot      | Plot up to four numeric channels parsed from the selected board's serial output.                                                                                                        |
+| Screen    | The circuit's whole-frame panels — OLED, TFT, e-paper, Nokia 5110, MAX7219 — at an integer zoom, with touch input for panels wired to an XPT2046.                                       |
 | Analysis  | Chip, clock, flash, heap, stop reason, fault, electrical conflicts, GPIO levels, probes, waveforms, protocol decoders, and VCD export.                                                  |
 | Debug     | RISC-V instruction stepping, registers, disassembly, breakpoints, and memory.                                                                                                           |
 | Manifests | Edit custom TOML part and board descriptions; saved in browser storage and passed to the engine on restart.                                                                             |
@@ -204,7 +205,7 @@ Click any disassembly line to toggle a breakpoint at its address; addresses can 
 
 ### Interactive devices
 
-Canvas devices drive the running session directly. Push buttons can be pressed, switches flipped or tilted, potentiometers dragged, and OLEDs tapped.
+Canvas devices drive the running session directly. Push buttons can be pressed, switches flipped or tilted, potentiometers dragged, and display panels tapped. A panel shows the engine's own frame; double-clicking one opens the Screen panel at a larger zoom. There a drag becomes the XPT2046's raw coordinates, so a driver that reads the touch controller sees the same codes it would on hardware.
 
 The inspector exposes device-specific controls and live state: distance for an HC-SR04, temperature and humidity for an NTC or DHT22, light level for a photoresistor module, voltage and current limit for a bench supply, shaft position for an encoder, axes for a joystick, and keys for a membrane keypad.
 

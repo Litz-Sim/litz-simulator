@@ -1,5 +1,6 @@
 import { canvasStatus } from '#lib/canvas/status.svelte';
 import { boardDef, drawBoard, nearestHole } from '#lib/parts/breadboard';
+import { touchCode } from '#lib/parts/panels';
 import { partDef } from '#lib/parts/registry';
 import type { PinDef } from '#lib/parts/types';
 import { sim } from '#lib/sim/controller.svelte';
@@ -18,7 +19,7 @@ const LATCHING_SWITCHES: readonly string[] = [
 	'litz-pushbutton-latching',
 	'litz-reed-switch'
 ];
-import { liveDisplay } from '#lib/sim/live';
+import { liveDisplay, livePanel } from '#lib/sim/live';
 import { doc } from '#lib/sketch/doc.svelte';
 import { distanceToPolyline, pointInBox, snapToGrid } from '#lib/sketch/geometry';
 import {
@@ -33,6 +34,29 @@ import {
 	type WireInstance
 } from '#lib/sketch/types';
 import { bendFromPoint, bendHandle, traceWire, wirePoints } from '#lib/sketch/wire';
+import { ui } from '#lib/ui.svelte';
+
+/** A panel's glass, in the part's own unrotated coordinates. */
+function panelGlass(type: string): { x: number; y: number; w: number; h: number } | null {
+	switch (type) {
+		case 'litz-ssd1306':
+			return { x: -33, y: -24, w: 66, h: 40 };
+		case 'litz-sh1106':
+			return { x: -33, y: -26, w: 66, h: 42 };
+		case 'litz-st7735':
+			return { x: -62, y: -42, w: 124, h: 74 };
+		case 'litz-ili9341':
+			return { x: -56, y: -78, w: 112, h: 152 };
+		case 'litz-epaper-1in54':
+			return { x: -56, y: -48, w: 112, h: 90 };
+		case 'litz-epaper-2in13':
+			return { x: -50, y: -76, w: 100, h: 144 };
+		case 'litz-nokia-5110-screen':
+			return { x: -48, y: -32, w: 96, h: 58 };
+		default:
+			return null;
+	}
+}
 
 export type Tool = 'select' | 'wire';
 
@@ -142,6 +166,7 @@ export class CanvasEngine {
 		this.#canvas.addEventListener('pointermove', this.#onPointerMove);
 		this.#canvas.addEventListener('pointerup', this.#onPointerUp);
 		this.#canvas.addEventListener('pointercancel', this.#onPointerUp);
+		this.#canvas.addEventListener('dblclick', this.#onDoubleClick);
 		this.#canvas.addEventListener('wheel', this.#onWheel, { passive: false });
 		window.addEventListener('keydown', this.#onKeyDown);
 		window.addEventListener('keyup', this.#onKeyUp);
@@ -154,6 +179,7 @@ export class CanvasEngine {
 		this.#canvas.removeEventListener('pointermove', this.#onPointerMove);
 		this.#canvas.removeEventListener('pointerup', this.#onPointerUp);
 		this.#canvas.removeEventListener('pointercancel', this.#onPointerUp);
+		this.#canvas.removeEventListener('dblclick', this.#onDoubleClick);
 		this.#canvas.removeEventListener('wheel', this.#onWheel);
 		window.removeEventListener('keydown', this.#onKeyDown);
 		window.removeEventListener('keyup', this.#onKeyUp);
@@ -732,7 +758,19 @@ export class CanvasEngine {
 		return out;
 	}
 
-	#pointerPos(event: PointerEvent): Point {
+	/** Double-clicking a panel opens it in the Screen panel, large enough to read. */
+	#onDoubleClick = (event: MouseEvent): void => {
+		const hit = this.#hitTest(this.#pointerPos(event));
+		if (hit?.kind !== 'part' || !panelGlass(hit.part.type)) return;
+		ui.screenPart = hit.part.id;
+		ui.bottomTab = 'screen';
+		ui.bottomOpen = true;
+		// Tall enough to read a panel, but never so tall the canvas disappears.
+		const room = Math.max(160, window.innerHeight - 260);
+		ui.bottomHeight = Math.min(room, Math.max(ui.bottomHeight, 320));
+	};
+
+	#pointerPos(event: MouseEvent): Point {
 		const rect = this.#canvas.getBoundingClientRect();
 		return this.screenToWorld(event.clientX - rect.left, event.clientY - rect.top);
 	}
@@ -748,16 +786,29 @@ export class CanvasEngine {
 		};
 	}
 
-	/** Deliver a pointer to the OLED's panel at its own pixel coordinates. */
+	/**
+	 * Deliver a pointer to a panel as raw controller codes.
+	 *
+	 * A frame is drawn letterboxed inside the glass, so the point is mapped
+	 * into the drawn rectangle; outside it the canvas keeps its own gestures.
+	 */
 	#touchPanel(part: PartInstance, point: Point, down: boolean): boolean {
-		if (part.type !== 'litz-ssd1306') return false;
-		const frame = liveDisplay();
-		if (!frame) return false;
+		const glass = panelGlass(part.type);
+		const frame = livePanel(part.id) ?? liveDisplay();
+		if (!glass || !frame) return false;
 		const local = this.#localPoint(part, point);
-		const height = Math.min(40, 66 * (frame.height / frame.width));
-		const top = -24 + (40 - height) / 2;
-		if (local.x < -33 || local.x > 33 || local.y < top || local.y > top + height) return false;
-		sim.touch(((local.x + 33) / 66) * frame.width, ((local.y - top) / height) * frame.height, down);
+		const scale = Math.min(glass.w / frame.width, glass.h / frame.height);
+		const width = frame.width * scale;
+		const height = frame.height * scale;
+		const left = glass.x + (glass.w - width) / 2;
+		const top = glass.y + (glass.h - height) / 2;
+		if (local.x < left || local.x > left + width || local.y < top || local.y > top + height)
+			return false;
+		sim.touch(
+			touchCode(((local.x - left) / width) * frame.width, frame.width),
+			touchCode(((local.y - top) / height) * frame.height, frame.height),
+			down
+		);
 		return true;
 	}
 
@@ -1084,7 +1135,7 @@ export class CanvasEngine {
 		if (hit.kind === 'wire') return 'move';
 		if (hit.kind === 'part' && sim.running) {
 			if (hit.part.type === 'litz-potentiometer') return 'ew-resize';
-			if (hit.part.type === 'litz-ssd1306') return 'pointer';
+			if (panelGlass(hit.part.type)) return 'pointer';
 			if (MOMENTARY_BUTTONS.includes(hit.part.type) || LATCHING_SWITCHES.includes(hit.part.type)) {
 				return 'pointer';
 			}

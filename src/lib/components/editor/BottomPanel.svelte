@@ -10,6 +10,7 @@
 	import DebugPanel from './DebugPanel.svelte';
 	import Icon from './Icon.svelte';
 	import ManifestsPanel from './ManifestsPanel.svelte';
+	import ScreenPanel from './ScreenPanel.svelte';
 	import SerialMonitor from './SerialMonitor.svelte';
 	import SerialPlot from './SerialPlot.svelte';
 
@@ -17,6 +18,7 @@
 		{ key: 'code', label: m.panel_code(), icon: 'code' },
 		{ key: 'serial', label: m.panel_serial(), icon: 'terminal' },
 		{ key: 'plot', label: m.panel_plot(), icon: 'chart' },
+		{ key: 'screen', label: m.panel_screen(), icon: 'monitor' },
 		{ key: 'analysis', label: m.panel_analysis(), icon: 'activity' },
 		{ key: 'debug', label: m.panel_debug(), icon: 'bug' },
 		{ key: 'manifests', label: m.panel_manifests(), icon: 'sliders' },
@@ -166,6 +168,8 @@
 				/>
 			{:else if ui.bottomTab === 'plot'}
 				<SerialPlot text={sim.serialFor(serialBoard)} emptyLabel={m.serial_plot_empty()} />
+			{:else if ui.bottomTab === 'screen'}
+				<ScreenPanel />
 			{:else if ui.bottomTab === 'analysis'}
 				<AnalysisPanel />
 			{:else if ui.bottomTab === 'debug'}

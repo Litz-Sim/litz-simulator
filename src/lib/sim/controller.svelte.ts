@@ -1,5 +1,6 @@
 import { canvasControl } from '#lib/canvas/control';
 import { m } from '#lib/paraglide/messages.js';
+import { isPanelPart } from '#lib/parts/panels';
 import { partDef } from '#lib/parts/registry';
 import { doc } from '#lib/sketch/doc.svelte';
 import { toLitzDiagram } from '#lib/sketch/export';
@@ -21,7 +22,13 @@ import {
 	readFirmware
 } from './firmware';
 import { LitzBackend } from './litzBackend';
-import { clearLiveStates, setLiveDisplay, setLiveStates } from './live';
+import {
+	clearLivePanels,
+	clearLiveStates,
+	setLiveDisplay,
+	setLivePanels,
+	setLiveStates
+} from './live';
 import { afterStaging, findEntry, rawPaste, storageBootstrap } from './python';
 import type { RuntimeMode } from '#lib/sketch/types';
 
@@ -359,6 +366,7 @@ class SimController {
 			this.loading = false;
 			this.#backend.dispose();
 			clearLiveStates();
+			clearLivePanels();
 			setLiveDisplay(null);
 			canvasControl.engine?.invalidate();
 			this.#fail(errorText(error));
@@ -375,6 +383,7 @@ class SimController {
 		this.#cancelFrame();
 		this.#backend.dispose();
 		clearLiveStates();
+		clearLivePanels();
 		setLiveDisplay(null);
 		this.chipInfo = null;
 		this.boardRuntime = [];
@@ -647,7 +656,7 @@ class SimController {
 		}
 	}
 
-	/** Deliver a touch to the panel at its own pixel coordinates. */
+	/** Deliver a touch as the XPT2046's raw 12-bit codes. */
 	touch(x: number, y: number, down: boolean): void {
 		if (!this.running) return;
 		this.#backend.touch(x, y, down);
@@ -911,6 +920,11 @@ class SimController {
 				.map((part) => ({ id: part.id, state: part.state, value: part.value }))
 		);
 		setLiveDisplay(this.#backend.displayFrame());
+		setLivePanels(
+			doc.sketch.parts
+				.filter((part) => isPanelPart(part.type))
+				.map((part) => ({ id: part.id, frame: this.#backend.partDisplayFrame(part.id) }))
+		);
 
 		const now = performance.now();
 		if (force || now - this.#lastDiag > 200) {

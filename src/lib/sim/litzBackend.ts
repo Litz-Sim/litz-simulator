@@ -1,4 +1,4 @@
-import { loadLitz, type Litz, type Session } from '@litz-sim/litz';
+import { loadLitz, type Display, type Litz, type Session } from '@litz-sim/litz';
 import { m } from '#lib/paraglide/messages.js';
 import type {
 	BoardRuntimeInfo,
@@ -37,6 +37,8 @@ export class LitzBackend implements SimBackend {
 	#chipInfo: ChipInfo | null = null;
 	/** Pixels are copied only when the board's frame version moves. */
 	#displayCache = new Map<number, { version: number; frame: DisplayFrame }>();
+	/** Per-part panels, keyed by diagram id. */
+	#partCache = new Map<string, { version: number; frame: DisplayFrame }>();
 
 	async load(diagramJson: string, assets?: SimAssets, options?: LoadOptions): Promise<void> {
 		const boards = assets?.boards ?? [];
@@ -248,6 +250,26 @@ export class LitzBackend implements SimBackend {
 		return frame;
 	}
 
+	partDisplayFrame(part: string): DisplayFrame | null {
+		const session = this.#session;
+		if (!session) return null;
+		// Per-part capture arrived with 0.5; older modules only answer for the board.
+		const display = (
+			session as Session & { partDisplay?: (id: string) => Display | null }
+		).partDisplay?.(part);
+		if (!display) return null;
+		const cached = this.#partCache.get(part);
+		if (cached && cached.version === display.version) return cached.frame;
+		const frame: DisplayFrame = {
+			width: display.width,
+			height: display.height,
+			rgba: display.pixels(),
+			version: display.version
+		};
+		this.#partCache.set(part, { version: frame.version, frame });
+		return frame;
+	}
+
 	debugAvailable(board: number | string): boolean {
 		return this.#session?.debug.available(board) ?? false;
 	}
@@ -282,5 +304,6 @@ export class LitzBackend implements SimBackend {
 		this.#chipName = '';
 		this.#chipInfo = null;
 		this.#displayCache.clear();
+		this.#partCache.clear();
 	}
 }

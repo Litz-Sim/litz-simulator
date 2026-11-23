@@ -1,4 +1,4 @@
-import { shade } from '../art';
+import { drawPanelFrame, panelFrame, shade } from '../art';
 import type { PartInstance } from '#lib/sketch/types';
 import type { PartDef, PinDef } from '../types';
 
@@ -330,13 +330,18 @@ function drawNokia(ctx: CanvasRenderingContext2D, part: PartInstance): void {
 	ctx.roundRect(-48, -32, 96, 58, 2);
 	ctx.fill();
 
-	// A coarse 84 × 48 pixel preview.
+	const live = panelFrame(part);
+	if (live && drawPanelFrame(ctx, part.id, live, -48, -32, 96, 58)) {
+		ctx.restore();
+		return;
+	}
+	// Nothing on the glass yet: a coarse 84 × 48 pixel preview.
 	cells(ctx, -44, -27, 12, 5, 5, 5, 7.6, 6.9, ink);
 	screenNote(ctx, '84 × 48', 0, 15, ink);
 	ctx.restore();
 }
 
-function drawSh1106(ctx: CanvasRenderingContext2D): void {
+function drawSh1106(ctx: CanvasRenderingContext2D, part: PartInstance): void {
 	ctx.save();
 	pinLegs(ctx, P_SH1106);
 
@@ -353,6 +358,11 @@ function drawSh1106(ctx: CanvasRenderingContext2D): void {
 	ctx.roundRect(-33, -26, 66, 42, 2);
 	ctx.fill();
 
+	const live = panelFrame(part);
+	if (live && drawPanelFrame(ctx, part.id, live, -33, -26, 66, 42)) {
+		ctx.restore();
+		return;
+	}
 	const ink = 'rgba(90, 200, 255, 0.68)';
 	ctx.fillStyle = ink;
 	ctx.fillRect(-28, -20, 50, 3);
@@ -365,6 +375,7 @@ function drawSh1106(ctx: CanvasRenderingContext2D): void {
 
 function tft(
 	ctx: CanvasRenderingContext2D,
+	part: PartInstance,
 	x: number,
 	y: number,
 	w: number,
@@ -405,25 +416,29 @@ function tft(
 	ctx.closePath();
 	ctx.fill();
 
+	const frame = panelFrame(part);
+	if (frame) drawPanelFrame(ctx, part.id, frame, gx, gy, gw, gh);
+
 	screenNote(ctx, label, x + w / 2, y + h - 8, 'rgba(235, 240, 240, 0.75)');
 }
 
-function drawSt7735(ctx: CanvasRenderingContext2D): void {
+function drawSt7735(ctx: CanvasRenderingContext2D, part: PartInstance): void {
 	ctx.save();
 	pinLegs(ctx, P_ST7735);
-	tft(ctx, -70, -50, 140, 98, '160 × 128');
+	tft(ctx, part, -70, -50, 140, 98, '160 × 128');
 	ctx.restore();
 }
 
-function drawIli9341(ctx: CanvasRenderingContext2D): void {
+function drawIli9341(ctx: CanvasRenderingContext2D, part: PartInstance): void {
 	ctx.save();
 	pinLegs(ctx, P_ILI9341);
-	tft(ctx, -64, -86, 128, 176, '240 × 320');
+	tft(ctx, part, -64, -86, 128, 176, '240 × 320');
 	ctx.restore();
 }
 
 function epaper(
 	ctx: CanvasRenderingContext2D,
+	part: PartInstance,
 	pins: readonly PinDef[],
 	x: number,
 	y: number,
@@ -453,26 +468,29 @@ function epaper(
 	ctx.fill();
 	ctx.stroke();
 
-	// A sparse 1-bit layout: a border and a few rule lines.
-	ctx.strokeStyle = 'rgba(30, 32, 30, 0.65)';
-	ctx.lineWidth = 1.2;
-	ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
-	ctx.fillStyle = 'rgba(30, 32, 30, 0.55)';
-	for (let i = 0; i < 5; i++) {
-		ctx.fillRect(px + 12, py + 16 + i * 7, pw - 24 - (i % 3) * 12, 2);
+	const frame = panelFrame(part);
+	if (!frame || !drawPanelFrame(ctx, part.id, frame, px, py, pw, ph)) {
+		// Nothing on the glass yet: a sparse 1-bit layout stands in for it.
+		ctx.strokeStyle = 'rgba(30, 32, 30, 0.65)';
+		ctx.lineWidth = 1.2;
+		ctx.strokeRect(px + 6, py + 6, pw - 12, ph - 12);
+		ctx.fillStyle = 'rgba(30, 32, 30, 0.55)';
+		for (let i = 0; i < 5; i++) {
+			ctx.fillRect(px + 12, py + 16 + i * 7, pw - 24 - (i % 3) * 12, 2);
+		}
+		screenNote(ctx, label, px + pw / 2, py + ph - 10, 'rgba(30, 32, 30, 0.7)');
 	}
-	screenNote(ctx, label, px + pw / 2, py + ph - 10, 'rgba(30, 32, 30, 0.7)');
 }
 
-function drawEpaper154(ctx: CanvasRenderingContext2D): void {
+function drawEpaper154(ctx: CanvasRenderingContext2D, part: PartInstance): void {
 	ctx.save();
-	epaper(ctx, P_EPAPER154, -62, -54, 124, 102, '200 × 200');
+	epaper(ctx, part, P_EPAPER154, -62, -54, 124, 102, '200 × 200');
 	ctx.restore();
 }
 
-function drawEpaper213(ctx: CanvasRenderingContext2D): void {
+function drawEpaper213(ctx: CanvasRenderingContext2D, part: PartInstance): void {
 	ctx.save();
-	epaper(ctx, P_EPAPER213, -56, -82, 112, 156, '122 × 250');
+	epaper(ctx, part, P_EPAPER213, -56, -82, 112, 156, '122 × 250');
 	ctx.restore();
 }
 

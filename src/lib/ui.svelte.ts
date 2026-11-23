@@ -1,4 +1,5 @@
-export type BottomTab = 'code' | 'serial' | 'plot' | 'analysis' | 'debug' | 'manifests' | 'log';
+export type BottomTab =
+	'code' | 'serial' | 'plot' | 'screen' | 'analysis' | 'debug' | 'manifests' | 'log';
 
 interface UiState {
 	settingsOpen: boolean;
@@ -13,6 +14,8 @@ interface UiState {
 	codeFile: string;
 	/** Board whose console the Serial and Plot panels show; the first one when unset. */
 	serialBoard: string | null;
+	/** Display part the Screen panel shows; the first one in the circuit when unset. */
+	screenPart: string | null;
 }
 
 /** Small pieces of chrome state shared by the menu bar, canvas and page. */
@@ -22,7 +25,8 @@ export const ui: UiState = $state({
 	bottomTab: 'code',
 	bottomHeight: 216,
 	codeFile: 'main.c',
-	serialBoard: null
+	serialBoard: null,
+	screenPart: null
 });
 
 /** Key for a file in a development board's storage. */

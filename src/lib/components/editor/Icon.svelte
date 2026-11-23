@@ -19,6 +19,7 @@
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import Maximize2 from '@lucide/svelte/icons/maximize-2';
 	import Minus from '@lucide/svelte/icons/minus';
+	import Monitor from '@lucide/svelte/icons/monitor';
 	import MousePointer2 from '@lucide/svelte/icons/mouse-pointer-2';
 	import Palette from '@lucide/svelte/icons/palette';
 	import PanelBottom from '@lucide/svelte/icons/panel-bottom';
@@ -65,6 +66,7 @@
 		loader: LoaderCircle,
 		log: ScrollText,
 		minus: Minus,
+		monitor: Monitor,
 		palette: Palette,
 		panel: PanelBottom,
 		parts: LayoutGrid,

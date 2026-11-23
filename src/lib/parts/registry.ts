@@ -253,7 +253,7 @@ export const PART_DEFS: PartDef[] = [
 			{ name: 'SDA', x: 30, y: 44 }
 		],
 		attrs: [],
-		draw: (ctx) => art.drawOled(ctx)
+		draw: (ctx, part) => art.drawOled(ctx, part)
 	},
 	{
 		type: 'litz-lcd1602',

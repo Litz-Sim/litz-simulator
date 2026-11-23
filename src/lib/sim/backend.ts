@@ -163,6 +163,8 @@ export interface SimBackend {
 	traceVcd(): string;
 	touch(x: number, y: number, down?: boolean): boolean;
 	displayFrame(board?: number | string): DisplayFrame | null;
+	/** One display part's frame, by diagram id; null when it has no panel. */
+	partDisplayFrame(part: string): DisplayFrame | null;
 	debugAvailable(board: number | string): boolean;
 	debugRegisters(board: number | string): RegisterSnapshot | null;
 	debugMemory(board: number | string, addr: number, length: number): Uint8Array;
@@ -273,6 +275,10 @@ export class NullBackend implements SimBackend {
 	}
 
 	displayFrame(): DisplayFrame | null {
+		return null;
+	}
+
+	partDisplayFrame(): DisplayFrame | null {
 		return null;
 	}
 
