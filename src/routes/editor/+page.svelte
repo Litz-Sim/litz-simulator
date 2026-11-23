@@ -6,6 +6,7 @@
 	import { m } from '#lib/paraglide/messages.js';
 	import BottomPanel from '#lib/components/editor/BottomPanel.svelte';
 	import CanvasView from '#lib/components/editor/CanvasView.svelte';
+	import ExamplesDialog from '#lib/components/editor/ExamplesDialog.svelte';
 	import Icon from '#lib/components/editor/Icon.svelte';
 	import Inspector from '#lib/components/editor/Inspector.svelte';
 	import MenuBar from '#lib/components/editor/MenuBar.svelte';
@@ -38,7 +39,6 @@
 	$effect(() => {
 		void doc.rev;
 		void doc.activeTab;
-		void doc.code;
 		clearTimeout(saveTimer);
 		saveTimer = setTimeout(() => doc.save(), 500);
 	});
@@ -205,4 +205,5 @@
 	<BottomPanel />
 	<StatusBar />
 	<SettingsDialog />
+	<ExamplesDialog />
 </div>

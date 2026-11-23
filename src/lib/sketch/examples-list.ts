@@ -1,0 +1,20 @@
+import { m } from '#lib/paraglide/messages.js';
+import { blinkySketch } from './examples';
+import { buttonLedSketch, oledSketch, potSketch, trafficLightSketch } from './examples-extra';
+import type { Sketch } from './types';
+
+export interface Example {
+	id: string;
+	/** Read when asked, so the label follows the current locale. */
+	name: () => string;
+	build: (name: string) => Sketch;
+}
+
+/** What the Examples dialog offers, in the order it lists them. */
+export const EXAMPLES: Example[] = [
+	{ id: 'blinky', name: m.example_blinky_name, build: blinkySketch },
+	{ id: 'pot', name: m.example_pot_name, build: potSketch },
+	{ id: 'button', name: m.example_button_name, build: buttonLedSketch },
+	{ id: 'oled', name: m.example_oled_name, build: oledSketch },
+	{ id: 'traffic', name: m.example_traffic_name, build: trafficLightSketch }
+];

@@ -3,13 +3,14 @@ export type BottomTab =
 
 interface UiState {
 	settingsOpen: boolean;
+	examplesOpen: boolean;
 	bottomOpen: boolean;
 	bottomTab: BottomTab;
 	/** Height in pixels of the open bottom panel; dragging the divider changes it. */
 	bottomHeight: number;
 	/**
-	 * File shown in the bottom editor: `main.c`, `diagram.json`, or a board
-	 * storage file written as `storage:<board id>:<path>`.
+	 * File shown in the bottom editor: `diagram.json`, or a board storage file
+	 * written as `storage:<board id>:<path>`.
 	 */
 	codeFile: string;
 	/** Board whose console the Serial and Plot panels show; the first one when unset. */
@@ -21,10 +22,11 @@ interface UiState {
 /** Small pieces of chrome state shared by the menu bar, canvas and page. */
 export const ui: UiState = $state({
 	settingsOpen: false,
+	examplesOpen: false,
 	bottomOpen: true,
 	bottomTab: 'code',
 	bottomHeight: 216,
-	codeFile: 'main.c',
+	codeFile: 'diagram.json',
 	serialBoard: null,
 	screenPart: null
 });

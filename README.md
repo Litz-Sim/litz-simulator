@@ -2,7 +2,7 @@
 
 Litz Breadboard is a browser-based breadboard editor built on the Litz simulation engine. The editing flow follows Wokwi, wires are strictly orthogonal like Fritzing, and the canvas layout takes cues from LCEDA (EasyEDA). You place boards and parts on a virtual breadboard, wire them up, and the editor derives the `diagram.json` that Litz consumes.
 
-Everything runs client-side. Simulation uses [`@litz-sim/litz`](https://www.npmjs.com/package/@litz-sim/litz) 0.3 compiled to WebAssembly: pressing Run boots one chip per board on the canvas, all chips share the same circuit, and serial output, LEDs, buttons, and seven-segment displays update live. The `main.c` in the code panel is editable source only; the browser does not compile it.
+Everything runs client-side. Simulation uses [`@litz-sim/litz`](https://www.npmjs.com/package/@litz-sim/litz) 0.3 compiled to WebAssembly: pressing Run boots one chip per board on the canvas, all chips share the same circuit, and serial output, LEDs, buttons, and seven-segment displays update live.
 
 ## Quick start
 
@@ -13,7 +13,7 @@ pnpm install
 pnpm dev
 ```
 
-Open <http://localhost:5173/editor>. The root path redirects there.
+Open <http://localhost:5173/editor>. The root path redirects there. File → Example projects opens a ready-made circuit.
 
 | Command        | What it does                                                |
 | -------------- | ----------------------------------------------------------- |
@@ -48,9 +48,9 @@ Dragging a wire segment moves its middle channel, which is stored as the `bend` 
 
 ### Code panel
 
-The bottom Code tab embeds CodeMirror. A file browser on the left lists each development board's storage next to the project's own files. `main.c` is editable and kept per tab. `diagram.json` is read-only and regenerated from the canvas on every change, so you can inspect exactly what the simulator receives.
+The bottom Code tab embeds CodeMirror. The browser on the left lists each development board's storage next to the project's own file. `diagram.json` is read-only and regenerated from the canvas on every change, so you can inspect exactly what the simulator receives.
 
-A board running MicroPython or CircuitPython shows its files as Python, with the entry file marked. Files can be added and deleted; they are stored in the document, not in the browser. Completion covers C, common ESP-IDF APIs (GPIO, FreeRTOS, macros, and snippets), Python (`time`, `machine`, `board`, `microcontroller`), and identifiers already present in the document. The top edge of the bottom panel can be dragged to resize it.
+A board running MicroPython or CircuitPython shows its files as Python, with the entry file marked. Files can be added and deleted; they are stored in the document, not in the browser. Completion covers Python (`time`, `machine`, `board`, `microcontroller`) and identifiers already present in the document. The top edge of the bottom panel can be dragged to resize it.
 
 ### Touch and narrow screens
 
@@ -60,13 +60,13 @@ Below the `xl` breakpoint, the parts library and inspector collapse into drawers
 
 ### Language
 
-The interface ships in English and Chinese. Switch with the Language menu; strings live in `messages/en.json` and `messages/zh.json` and are compiled by Paraglide.
+The interface ships in English and Chinese. Switch in Settings; strings live in `messages/en.json` and `messages/zh.json` and are compiled by Paraglide.
 
 ## Saving and exporting
 
 | Output              | Where                                      | Contents                                                                   |
 | ------------------- | ------------------------------------------ | -------------------------------------------------------------------------- |
-| Workspace           | Automatic, browser `localStorage`          | Every tab with code, layout, wires, and view state.                        |
+| Workspace           | Automatic, browser `localStorage`          | Every tab with its layout, wires, and view state.                          |
 | Project file        | File → Export project                      | `.litzproject.json` with every tab, ready to import elsewhere.             |
 | Single-tab document | File → Export JSON                         | `.litzboard.json` for the active tab, with layout and wire bends, no view. |
 | Litz diagram        | Code tab → `diagram.json`                  | Read-only JSON generated for the simulator.                                |
@@ -95,7 +95,6 @@ A `.litzproject.json` file is a thin wrapper around tabs. Each tab stores its co
 		{
 			"id": "t1",
 			"name": "Blink",
-			"code": "// main.c\n",
 			"sketch": {
 				"format": "litz-board",
 				"version": 1,
@@ -186,7 +185,7 @@ Each board boots its own image; a board that has no uploaded or built-in image s
 
 | Panel     | Purpose                                                                                                                                                                                 |
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Code      | Edit `main.c`; inspect the generated `diagram.json`.                                                                                                                                    |
+| Code      | Inspect the generated `diagram.json`.                                                                                                                                                   |
 | Serial    | Live console for one board at a time, with tabs to switch boards when the session has several. ANSI colors, auto-scroll, and text sent to the shown board. The badge shows 115200 baud. |
 | Plot      | Plot up to four numeric channels parsed from the selected board's serial output.                                                                                                        |
 | Screen    | The circuit's whole-frame panels — OLED, TFT, e-paper, Nokia 5110, MAX7219 — at an integer zoom, with touch input for panels wired to an XPT2046.                                       |
@@ -233,10 +232,8 @@ The inspector exposes device-specific controls and live state: distance for an H
 - MicroPython on the RP2040 runs the entry file from the raw REPL rather than through a soft reset, so a program that returns leaves the interpreter in raw mode instead of at the friendly prompt.
 - Classic ESP32 and ESP32-S3 are Xtensa. The current WebAssembly build does not include those cores, so the part library omits both boards.
 - Only RISC-V targets support register-level debugging. AVR and RP2040 boards have no debugger.
-- `main.c` is not compiled in the browser. Building firmware requires an external toolchain or build service.
 - There is no project sharing, cloud storage, account system, or CI pipeline.
 - Uploaded firmware is cached per browser. Opening a project on another browser or after clearing site data requires uploading the image again.
-- The display panel shows the first board's screen.
 - Flash size and MAC address are available from the engine API but are not exposed in the UI.
 
 ## Deployment

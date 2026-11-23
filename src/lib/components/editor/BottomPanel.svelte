@@ -132,9 +132,7 @@
 						</div>
 						<div class="min-h-0 flex-1">
 							{#key ui.codeFile}
-								{#if ui.codeFile === 'main.c'}
-									<CodeEditor value={doc.code} onchange={(text: string) => (doc.code = text)} />
-								{:else if ui.codeFile === 'diagram.json'}
+								{#if ui.codeFile === 'diagram.json'}
 									<CodeEditor value={diagramText} readonly />
 								{:else if storage && storageFile}
 									<CodeEditor

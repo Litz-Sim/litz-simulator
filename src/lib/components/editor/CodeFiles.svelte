@@ -29,7 +29,7 @@
 		if (ui.codeFile === storageFile(boardId, name)) {
 			const program = doc.programFor(boardId);
 			const next = findEntry(program.runtime, program.files) ?? program.files[0]?.name;
-			ui.codeFile = next ? storageFile(boardId, next) : 'main.c';
+			ui.codeFile = next ? storageFile(boardId, next) : 'diagram.json';
 		}
 	}
 
@@ -161,17 +161,6 @@
 	<p class="mt-2 px-1.5 py-1 text-[10px] font-medium tracking-wide text-stone-400">
 		{m.code_project()}
 	</p>
-	<button
-		type="button"
-		class="flex w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left {ui.codeFile ===
-		'main.c'
-			? 'bg-white text-stone-900 shadow-sm ring-1 ring-stone-300'
-			: 'hover:bg-stone-200/70'}"
-		onclick={() => (ui.codeFile = 'main.c')}
-	>
-		<Icon name="code" size={12} class="text-stone-400" />
-		{m.code_main()}
-	</button>
 	<button
 		type="button"
 		class="flex w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left {ui.codeFile ===

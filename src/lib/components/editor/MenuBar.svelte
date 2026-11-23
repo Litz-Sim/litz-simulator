@@ -1,16 +1,8 @@
 <script lang="ts">
 	import { canvasControl } from '#lib/canvas/control';
 	import { m } from '#lib/paraglide/messages.js';
-	import { blinkySketch } from '#lib/sketch/examples';
-	import {
-		buttonLedSketch,
-		oledSketch,
-		potSketch,
-		trafficLightSketch
-	} from '#lib/sketch/examples-extra';
 	import { sim } from '#lib/sim/controller.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
-	import type { Sketch } from '#lib/sketch/types';
 	import { ui } from '#lib/ui.svelte';
 	import Icon from './Icon.svelte';
 
@@ -138,11 +130,6 @@
 		await sim.loadFirmware(file);
 	}
 
-	function openExample(factory: (name: string) => Sketch, name: string): void {
-		doc.openSketch(name, factory(name));
-		requestAnimationFrame(() => canvasControl.engine?.fit());
-	}
-
 	function exportVcd(): void {
 		const text = sim.traceVcd();
 		if (!text) return;
@@ -167,30 +154,7 @@
 						requestAnimationFrame(() => canvasControl.engine?.fit());
 					}
 				},
-				{
-					label: m.menu_example_blinky(),
-					run: () => {
-						const name = m.example_blinky_name();
-						doc.openSketch(name, blinkySketch(name));
-						requestAnimationFrame(() => canvasControl.engine?.fit());
-					}
-				},
-				{
-					label: m.menu_example_pot(),
-					run: () => openExample(potSketch, m.example_pot_name())
-				},
-				{
-					label: m.menu_example_button(),
-					run: () => openExample(buttonLedSketch, m.example_button_name())
-				},
-				{
-					label: m.menu_example_oled(),
-					run: () => openExample(oledSketch, m.example_oled_name())
-				},
-				{
-					label: m.menu_example_traffic(),
-					run: () => openExample(trafficLightSketch, m.example_traffic_name())
-				},
+				{ label: m.menu_examples(), run: () => (ui.examplesOpen = true) },
 				{ label: m.menu_close_tab(), run: () => doc.closeTab(doc.activeTab) },
 				{ separator: true },
 				{ label: m.menu_save_project(), hint: '⌘S', run: () => doc.save() },

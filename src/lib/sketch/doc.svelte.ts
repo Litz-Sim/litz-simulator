@@ -18,7 +18,6 @@ import {
 	type Sketch,
 	type WireStyle
 } from './types';
-import { DEFAULT_CODE } from './template';
 import { defaultBend } from './wire';
 
 const WORKSPACE_KEY = 'litz-board.workspace.v1';
@@ -28,8 +27,6 @@ export interface Tab {
 	id: string;
 	name: string;
 	sketch: Sketch;
-	/** Firmware kept beside the diagram, the way Wokwi keeps code beside its canvas. */
-	code: string;
 }
 
 export function blankSketch(name: string = m.untitled()): Sketch {
@@ -139,15 +136,7 @@ class DocumentStore {
 
 	constructor() {
 		const name = m.untitled_n({ n: 1 });
-		this.tabs = [{ id: 't1', name, sketch: blankSketch(name), code: DEFAULT_CODE }];
-	}
-
-	get code(): string {
-		return this.tabs[this.activeTab].code;
-	}
-
-	set code(next: string) {
-		this.tabs[this.activeTab].code = next;
+		this.tabs = [{ id: 't1', name, sketch: blankSketch(name) }];
 	}
 
 	get sketch(): Sketch {
@@ -232,9 +221,22 @@ class DocumentStore {
 
 	// ------------------------------------------------------------------ tabs
 
-	#tabId(): string {
-		this.#seq += 1;
-		return `t${this.#seq}`;
+	/** An id no entry in `tabs` uses yet; a restored workspace may still hold `t2`. */
+	#tabId(tabs: { id: string }[] = this.tabs): string {
+		let id: string;
+		do {
+			this.#seq += 1;
+			id = `t${this.#seq}`;
+		} while (tabs.some((tab) => tab.id === id));
+		return id;
+	}
+
+	/** Keep the counter past the ids a loaded workspace already carries. */
+	#syncSeq(tabs: Tab[]): void {
+		for (const tab of tabs) {
+			const match = /^t(\d+)$/.exec(tab.id);
+			if (match) this.#seq = Math.max(this.#seq, Number(match[1]));
+		}
 	}
 
 	newTab(): void {
@@ -244,8 +246,8 @@ class DocumentStore {
 	}
 
 	/** Open a prepared document in a fresh tab. */
-	openSketch(name: string, sketch: Sketch, code = DEFAULT_CODE): void {
-		this.tabs.push({ id: this.#tabId(), name, sketch, code });
+	openSketch(name: string, sketch: Sketch): void {
+		this.tabs.push({ id: this.#tabId(), name, sketch });
 		this.activeTab = this.tabs.length - 1;
 		this.selected = [];
 		this.#undo = [];
@@ -745,9 +747,8 @@ class DocumentStore {
 						: m.untitled_n({ n: index + 1 });
 				const id = typeof raw.id === 'string' && raw.id ? raw.id : `t${index + 1}`;
 				tabs.push({
-					id: tabs.some((tab) => tab.id === id) ? `t${tabs.length + 1}` : id,
+					id: tabs.some((tab) => tab.id === id) ? this.#tabId(tabs) : id,
 					name,
-					code: typeof raw.code === 'string' ? raw.code : DEFAULT_CODE,
 					sketch: {
 						format: 'litz-board',
 						version: 1,
@@ -766,7 +767,7 @@ class DocumentStore {
 			if (tabs.length === 0) return false;
 			this.tabs = tabs;
 			this.activeTab = Math.min(Math.max(parsed.active ?? 0, 0), tabs.length - 1);
-			this.#seq = Math.max(this.#seq, tabs.length);
+			this.#syncSeq(tabs);
 			this.selected = [];
 			this.#undo = [];
 			this.#redo = [];
@@ -831,11 +832,16 @@ class DocumentStore {
 			if (saved) {
 				const parsed = JSON.parse(saved) as { tabs?: Tab[]; active?: number };
 				if (Array.isArray(parsed.tabs) && parsed.tabs.length) {
+					this.#syncSeq(parsed.tabs);
+					const seen: { id: string }[] = [];
 					this.tabs = parsed.tabs.map((tab) => {
 						const sketch = orthoWires(tab.sketch);
+						const id =
+							tab.id && !seen.some((entry) => entry.id === tab.id) ? tab.id : this.#tabId(seen);
+						seen.push({ id });
 						return {
-							...tab,
-							code: tab.code ?? DEFAULT_CODE,
+							id,
+							name: tab.name,
 							sketch: { ...sketch, programs: normalizePrograms(sketch.programs) }
 						};
 					});
