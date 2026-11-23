@@ -30,6 +30,8 @@ export function categoryLabel(category: string): string {
 			return m.category_radio();
 		case 'Modules':
 			return m.category_modules();
+		case 'Custom':
+			return m.category_custom();
 		default:
 			return category;
 	}

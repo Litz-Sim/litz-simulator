@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { canvasControl } from '#lib/canvas/control';
 	import { m } from '#lib/paraglide/messages.js';
-	import { getLocale, setLocale } from '#lib/paraglide/runtime.js';
 	import { blinkySketch } from '#lib/sketch/examples';
 	import {
 		buttonLedSketch,
@@ -150,12 +149,6 @@
 		download(`${doc.name}.vcd`, new Blob([text], { type: 'text/vcd' }));
 	}
 
-	async function chooseLocale(locale: 'en' | 'zh'): Promise<void> {
-		if (getLocale() === locale) return;
-		await setLocale(locale);
-		window.location.reload();
-	}
-
 	function selectAll(): void {
 		doc.setSelection([
 			...doc.sketch.parts.map((part) => ({ kind: 'part' as const, id: part.id })),
@@ -237,8 +230,6 @@
 		{
 			label: m.menu_place(),
 			items: [
-				{ label: m.menu_add_part(), hint: 'A', run: () => (ui.addOpen = true) },
-				{ separator: true },
 				{
 					label: m.menu_add_bb_full(),
 					run: () => canvasControl.engine?.addBoardAtCenter('breadboard-full')
@@ -353,13 +344,6 @@
 				},
 				{ label: m.menu_code_panel(), run: () => ((ui.bottomOpen = true), (ui.bottomTab = 'code')) }
 			]
-		},
-		{
-			label: m.language(),
-			items: [
-				{ label: m.language_en(), run: () => void chooseLocale('en') },
-				{ label: m.language_zh(), run: () => void chooseLocale('zh') }
-			]
 		}
 	];
 
@@ -407,6 +391,15 @@
 	</nav>
 
 	<div class="ml-auto flex shrink-0 items-center gap-2 pl-2">
+		<button
+			type="button"
+			title={m.settings()}
+			aria-label={m.settings()}
+			class="grid h-8 w-8 shrink-0 place-items-center rounded-md text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-900 [@media(pointer:coarse)]:h-10 [@media(pointer:coarse)]:w-10"
+			onclick={() => (ui.settingsOpen = true)}
+		>
+			<Icon name="settings" size={16} />
+		</button>
 		<button
 			type="button"
 			disabled={sim.loading}

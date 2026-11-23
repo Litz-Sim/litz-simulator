@@ -4,6 +4,7 @@
 	import { BOARD_MIME, PART_MIME } from '#lib/canvas/drag';
 	import { categoryLabel } from '#lib/i18n/labels';
 	import { partDefsByCategory } from '#lib/parts/registry';
+	import { customParts } from '#lib/parts/custom.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
 	import type { BoardType } from '#lib/sketch/types';
 	import Icon from './Icon.svelte';
@@ -11,7 +12,7 @@
 
 	let { onAdd }: { onAdd?: () => void } = $props();
 	let query = $state('');
-	const groups = partDefsByCategory();
+	const groups = $derived(partDefsByCategory(customParts));
 
 	const matches = $derived(
 		groups

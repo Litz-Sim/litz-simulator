@@ -74,6 +74,7 @@
 		"@litz-sim/litz": "^0.4.0",
 		"@lucide/svelte": "^1.77.0",
 		"codemirror": "^6.0.2",
+		"fflate": "^0.8.3",
 		"lucide-svelte": "^1.0.1"
 	}
 }

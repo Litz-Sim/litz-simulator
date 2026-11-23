@@ -1,7 +1,7 @@
 export type BottomTab = 'code' | 'serial' | 'plot' | 'analysis' | 'debug' | 'manifests' | 'log';
 
 interface UiState {
-	addOpen: boolean;
+	settingsOpen: boolean;
 	bottomOpen: boolean;
 	bottomTab: BottomTab;
 	/** Height in pixels of the open bottom panel; dragging the divider changes it. */
@@ -17,7 +17,7 @@ interface UiState {
 
 /** Small pieces of chrome state shared by the menu bar, canvas and page. */
 export const ui: UiState = $state({
-	addOpen: false,
+	settingsOpen: false,
 	bottomOpen: true,
 	bottomTab: 'code',
 	bottomHeight: 216,

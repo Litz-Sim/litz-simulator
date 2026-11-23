@@ -430,6 +430,24 @@ export const PART_DEFS: PartDef[] = [
 
 const BY_TYPE = new Map(PART_DEFS.map((def) => [def.type, def]));
 
+/** Parts installed from user packages; the engine needs them by type too. */
+const CUSTOM = new Map<string, PartDef>();
+
+export function isBuiltinPart(type: string): boolean {
+	return BY_TYPE.has(type) && !CUSTOM.has(type);
+}
+
+/** Make an installed part placeable; the canvas resolves it by type. */
+export function registerCustomPart(def: PartDef): void {
+	CUSTOM.set(def.type, def);
+	BY_TYPE.set(def.type, def);
+}
+
+export function unregisterCustomPart(type: string): void {
+	if (!CUSTOM.delete(type)) return;
+	BY_TYPE.delete(type);
+}
+
 function generic(type: string): PartDef {
 	return {
 		type,
@@ -452,9 +470,12 @@ export function partDef(type: string): PartDef {
 	return BY_TYPE.get(type) ?? generic(type);
 }
 
-export function partDefsByCategory(): { category: string; defs: PartDef[] }[] {
+/** Catalog groups plus whatever packages the user installed. */
+export function partDefsByCategory(
+	installed: PartDef[] = []
+): { category: string; defs: PartDef[] }[] {
 	const groups = new Map<string, PartDef[]>();
-	for (const def of PART_DEFS) {
+	for (const def of [...PART_DEFS, ...installed]) {
 		const list = groups.get(def.category) ?? [];
 		list.push(def);
 		groups.set(def.category, list);

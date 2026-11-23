@@ -29,6 +29,7 @@
 	import Save from '@lucide/svelte/icons/save';
 	import ScrollText from '@lucide/svelte/icons/scroll-text';
 	import Search from '@lucide/svelte/icons/search';
+	import SettingsIcon from '@lucide/svelte/icons/settings';
 	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
 	import Square from '@lucide/svelte/icons/square';
 	import Terminal from '@lucide/svelte/icons/terminal';
@@ -76,6 +77,7 @@
 		'save-ok': CircleCheck,
 		'save-pending': CircleDashed,
 		search: Search,
+		settings: SettingsIcon,
 		sliders: SlidersHorizontal,
 		stop: Square,
 		terminal: Terminal,

@@ -4,13 +4,13 @@
 	import type { Tool } from '#lib/canvas/engine';
 	import { canvasStatus } from '#lib/canvas/status.svelte';
 	import { m } from '#lib/paraglide/messages.js';
-	import AddPartModal from '#lib/components/editor/AddPartModal.svelte';
 	import BottomPanel from '#lib/components/editor/BottomPanel.svelte';
 	import CanvasView from '#lib/components/editor/CanvasView.svelte';
 	import Icon from '#lib/components/editor/Icon.svelte';
 	import Inspector from '#lib/components/editor/Inspector.svelte';
 	import MenuBar from '#lib/components/editor/MenuBar.svelte';
 	import PartsBin from '#lib/components/editor/PartsBin.svelte';
+	import SettingsDialog from '#lib/components/editor/SettingsDialog.svelte';
 	import StatusBar from '#lib/components/editor/StatusBar.svelte';
 	import TabRow from '#lib/components/editor/TabRow.svelte';
 	import Toolbar from '#lib/components/editor/Toolbar.svelte';
@@ -58,10 +58,7 @@
 		if (event.metaKey || event.ctrlKey || event.altKey) return;
 		if (event.key === 'v') tool = 'select';
 		else if (event.key === 'w') tool = 'wire';
-		else if (event.key === 'a') {
-			ui.addOpen = true;
-			event.preventDefault();
-		} else if (event.key === 'f') {
+		else if (event.key === 'f') {
 			canvasControl.engine?.fit();
 		}
 	}
@@ -91,14 +88,6 @@
 						onclick={() => (partsOpen = true)}
 					>
 						<Icon name="parts" size={17} />
-					</button>
-					<button
-						type="button"
-						title={m.add_part_shortcut()}
-						class="flex h-9 w-9 items-center justify-center rounded-full bg-[#2f6fd0] text-white shadow-lg ring-1 ring-[#2559a8]/30 hover:bg-[#2559a8] [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
-						onclick={() => (ui.addOpen = true)}
-					>
-						<Icon name="plus" size={18} />
 					</button>
 				</div>
 
@@ -215,5 +204,5 @@
 
 	<BottomPanel />
 	<StatusBar />
-	<AddPartModal />
+	<SettingsDialog />
 </div>
