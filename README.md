@@ -48,9 +48,9 @@ Dragging a wire segment moves its middle channel, which is stored as the `bend` 
 
 ### Code panel
 
-The bottom Code tab embeds CodeMirror. `main.c` is editable and kept per tab. `diagram.json` is read-only and regenerated from the canvas on every change, so you can inspect exactly what the simulator receives.
+The bottom Code tab embeds CodeMirror. A file browser on the left lists each development board's storage next to the project's own files. `main.c` is editable and kept per tab. `diagram.json` is read-only and regenerated from the canvas on every change, so you can inspect exactly what the simulator receives.
 
-Completion covers C, common ESP-IDF APIs (GPIO, FreeRTOS, macros, and snippets), and identifiers already present in the document. The top edge of the bottom panel can be dragged to resize it.
+A board running MicroPython or CircuitPython shows its files as Python, with the entry file marked. Files can be added and deleted; they are stored in the document, not in the browser. Completion covers C, common ESP-IDF APIs (GPIO, FreeRTOS, macros, and snippets), Python (`time`, `machine`, `board`, `microcontroller`), and identifiers already present in the document. The top edge of the bottom panel can be dragged to resize it.
 
 ### Touch and narrow screens
 
@@ -75,7 +75,7 @@ The interface ships in English and Chinese. Switch with the Language menu; strin
 
 The workspace is written to `localStorage` under `litz-board.workspace.v1` after every edit. The status bar shows whether the workspace is saved, has unsaved changes, or failed to save. <kbd>⌘S</kbd> / <kbd>Ctrl+S</kbd> or File → Save project writes immediately.
 
-Browser storage is local to one browser and one origin. It does not sync between devices, and clearing site data removes it. Browsers usually allow around 5 MB, which is plenty for diagrams but not for firmware images. Export a project file to back up or move a workspace.
+Browser storage is local to one browser and one origin. It does not sync between devices, and clearing site data removes it. The workspace stays under 5 MB; uploaded firmware lives separately in IndexedDB, keyed by content hash. Export a project file to back up or move a workspace, and keep the original image files to restore their references elsewhere.
 
 File → Import project replaces the entire workspace with the file's tabs. If the file is not a valid Litz project, the status bar reports the error and the current workspace is left untouched. File → Import JSON replaces the active tab's diagram with a `.litzboard.json` document and fits it to the viewport.
 
@@ -134,9 +134,21 @@ The editor uses its own `litz-board` format because Litz's `diagram.json` has no
 			"bend": [{ "u": 0.5, "v": -26 }],
 			"style": "ortho"
 		}
-	]
+	],
+	"programs": {
+		"p2": {
+			"runtime": "micropython",
+			"firmware": null,
+			"rom": null,
+			"boot": null,
+			"ptable": null,
+			"files": [{ "name": "main.py", "text": "print('hello')\n" }]
+		}
+	}
 }
 ```
+
+`programs` is keyed by part id and exists only for development boards that have been configured. An uploaded image appears as `{ "name": "custom.bin", "key": "…" }`; the bytes stay in IndexedDB, so importing a project on another browser asks for the file again.
 
 Coordinates are canvas units where 20 units equal 0.1 inch, one breadboard pitch. Wires have only horizontal and vertical runs; `bend[].u` positions the middle channel along the chord, and `v` is retained for older files.
 
@@ -146,35 +158,41 @@ When the editor builds `diagram.json`, `src/lib/sketch/export.ts` flattens the v
 
 ### Running a session
 
-Run starts a WebAssembly session and boots every board on the canvas. Each board runs its own chip, and all boards share the circuit formed by the wires. Built-in firmware is chosen by chip:
+Run starts a WebAssembly session and boots every board on the canvas. Each board runs its own chip, and all boards share the circuit formed by the wires. The Run button lives in the header; the Simulation menu adds pause, continue, stepping, restart, analog solve, speed from 0.25× to 4× or as fast as possible, and VCD export.
 
-| Chip       | Boards                      | Built-in image   |
-| ---------- | --------------------------- | ---------------- |
-| ESP32-C3   | ESP32-C3                    | `blinky.bin`     |
-| ATmega328P | Arduino Uno, Nano, Pro Mini | `uno-blink.hex`  |
-| RP2040     | Raspberry Pi Pico           | `pico-blink.bin` |
+### Board programs
 
-The Simulation menu controls the session: run, stop, pause, continue, step 1/10/100 ms, restart, analog solve, speed from 0.25× to 4× or as fast as possible, and VCD export.
+Every development board picks its own program in the inspector's Program section. The choice is per board, so one canvas can mix a C firmware and two Python boards.
 
-Firmware can be loaded as a `.bin` or `.hex` file and replaces the built-in image for that chip. ESP boards can also be given a bootloader, partition table, and Mask ROM; the bootloader case needs a ROM ELF to execute. Restoring built-in firmware reverts the session to the packaged images. A restart is required for new images to take effect.
+| Runtime       | Boots from                                          | Built-in images                                                            |
+| ------------- | --------------------------------------------------- | -------------------------------------------------------------------------- |
+| Native        | The image you upload or the packaged blinky fixture | ESP32-C3 `blinky.bin`, ATmega328P `uno-blink.hex`, RP2040 `pico-blink.bin` |
+| MicroPython   | `main.py` on the board's storage                    | ESP32-C3 `micropython-esp32c3.bin`, RP2040 `micropython-rp2040.bin`        |
+| CircuitPython | `code.py` on the board's storage                    | ESP32-C3 `circuitpython-esp32c3.bin`                                       |
+
+A board with no matching built-in image needs an uploaded one. Uploads accept `.bin`, `.hex`, `.elf`, or `.uf2` and are cached in IndexedDB under a content hash; the document keeps only the file name and hash, so exporting a project does not embed megabytes of firmware. Files larger than the browser's storage quota fall back to the in-memory copy for the current tab. ESP32 boards that run a merged Python image also need a Mask ROM ELF; the packaged images pair one automatically.
+
+The classic ESP32 line runs its own bootloader first. Upload a bootloader and partition table together with the Mask ROM; that combination only applies when the diagram has one board, because the engine carries one bootloader per session.
+
+Program files belong to the board, like files on a real device. Files are written to the simulated storage when the session starts: the editor waits for the interpreter's prompt, writes every file over the raw REPL, then resets the interpreter so its normal boot sequence runs `main.py` or `code.py`. On the RP2040 the entry file is executed from the raw REPL instead, because the engine has no second core for MicroPython's soft reset to synchronize with. Staging output is hidden from the Serial panel, which shows only what the program prints. A board with no entry file reports it instead of running.
 
 ### Multiple boards
 
-A session can hold any number of boards. Each board has its own UART, GPIO state, and display buffer, so one board's serial output does not appear on another's console.
+A session can hold any number of boards. Each board has its own UART, GPIO state, display buffer, firmware, and storage, so one board's serial output does not appear on another's console.
 
-Custom firmware is applied per chip: every board using that chip gets the same image, while other chips keep their built-in images. The display panel draws the first board's framebuffer.
+Each board boots its own image; a board that has no uploaded or built-in image stops the run with an error rather than borrowing another board's firmware. The display panel draws the first board's framebuffer.
 
 ### Bottom panels
 
-| Panel     | Purpose                                                                                                                                |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Code      | Edit `main.c`; inspect the generated `diagram.json`.                                                                                   |
-| Serial    | Live per-board console with ANSI colors and auto-scroll; send text to a chosen board. The badge shows 115200 baud.                     |
-| Plot      | Plot up to four numeric channels parsed from serial output.                                                                            |
-| Analysis  | Chip, clock, flash, heap, stop reason, fault, electrical conflicts, GPIO levels, probes, waveforms, protocol decoders, and VCD export. |
-| Debug     | RISC-V instruction stepping, registers, disassembly, breakpoints, and memory.                                                          |
-| Manifests | Edit custom TOML part and board descriptions; saved in browser storage and passed to the engine on restart.                            |
-| Log       | Timestamped engine events, including errors.                                                                                           |
+| Panel     | Purpose                                                                                                                                                                                 |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Code      | Edit `main.c`; inspect the generated `diagram.json`.                                                                                                                                    |
+| Serial    | Live console for one board at a time, with tabs to switch boards when the session has several. ANSI colors, auto-scroll, and text sent to the shown board. The badge shows 115200 baud. |
+| Plot      | Plot up to four numeric channels parsed from the selected board's serial output.                                                                                                        |
+| Analysis  | Chip, clock, flash, heap, stop reason, fault, electrical conflicts, GPIO levels, probes, waveforms, protocol decoders, and VCD export.                                                  |
+| Debug     | RISC-V instruction stepping, registers, disassembly, breakpoints, and memory.                                                                                                           |
+| Manifests | Edit custom TOML part and board descriptions; saved in browser storage and passed to the engine on restart.                                                                             |
+| Log       | Timestamped engine events, including errors.                                                                                                                                            |
 
 The Analysis panel reads GPIO levels through hidden probes, so it works for every board. Clicking a pin attaches a named probe. Each probe reports frequency, duty cycle, voltage range, and a digital waveform. Adding a UART, I²C, or SPI decoder shows decoded frames alongside the waveform. User probes and decoders are reattached automatically after a restart.
 
@@ -210,12 +228,13 @@ The inspector exposes device-specific controls and live state: distance for an H
 
 ## Limitations
 
-- Built-in firmware exists only for ESP32-C3, ATmega328P, and RP2040. C6/P4/S31 boards need a matching `.bin`, and the Litz RV32 board needs a WebAssembly MCU component.
+- Built-in native firmware exists only for ESP32-C3, ATmega328P, and RP2040. C6/P4/S31 boards need a matching `.bin`, and the Litz RV32 board needs a WebAssembly MCU component.
+- MicroPython on the RP2040 runs the entry file from the raw REPL rather than through a soft reset, so a program that returns leaves the interpreter in raw mode instead of at the friendly prompt.
 - Classic ESP32 and ESP32-S3 are Xtensa. The current WebAssembly build does not include those cores, so the part library omits both boards.
 - Only RISC-V targets support register-level debugging. AVR and RP2040 boards have no debugger.
 - `main.c` is not compiled in the browser. Building firmware requires an external toolchain or build service.
 - There is no project sharing, cloud storage, account system, or CI pipeline.
-- Custom firmware is selected per chip, not per board. All boards with the same chip run the same image.
+- Uploaded firmware is cached per browser. Opening a project on another browser or after clearing site data requires uploading the image again.
 - The display panel shows the first board's screen.
 - Flash size and MAC address are available from the engine API but are not exposed in the UI.
 
@@ -245,8 +264,8 @@ src/lib/sketch/              document types, edit operations, geometry, wires, e
 src/lib/parts/               part definitions and Canvas drawing
 src/lib/canvas/              Canvas 2D engine, viewport, input state
 src/lib/components/editor/   menus, toolbar, tabs, parts library, canvas, inspector, bottom panel
-src/lib/sim/                 Litz WASM backend, run controller, live session state
-static/firmware/             built-in firmware images (C3, ATmega328P, RP2040)
+src/lib/sim/                 Litz WASM backend, run controller, firmware cache, Python staging
+static/firmware/             built-in native images and Python interpreters
 ```
 
 The editor draws everything on a single Canvas 2D layer. Parts and wires are rendered directly by `src/lib/canvas/engine.ts`; there are no DOM nodes per component, so zooming and panning are redraws rather than CSS transforms.

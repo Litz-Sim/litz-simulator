@@ -6,6 +6,7 @@
 	import { partDefsByCategory } from '#lib/parts/registry';
 	import { doc } from '#lib/sketch/doc.svelte';
 	import type { BoardType } from '#lib/sketch/types';
+	import Icon from './Icon.svelte';
 	import PartThumb from './PartThumb.svelte';
 
 	let { onAdd }: { onAdd?: () => void } = $props();
@@ -49,12 +50,17 @@
 </script>
 
 <div class="flex h-full flex-col">
-	<div class="px-3 pt-3 pb-2">
+	<div class="relative px-3 pt-3 pb-2">
+		<Icon
+			name="search"
+			size={14}
+			class="pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 text-stone-400"
+		/>
 		<input
 			type="search"
 			placeholder={m.search_parts()}
 			bind:value={query}
-			class="w-full rounded-md border border-stone-300 bg-white px-2.5 py-1.5 text-[13px] text-stone-800 outline-none placeholder:text-stone-400 focus:border-stone-500 [@media(pointer:coarse)]:py-2.5"
+			class="w-full rounded-md border border-stone-300 bg-white py-1.5 pr-2.5 pl-8 text-[13px] text-stone-800 outline-none placeholder:text-stone-400 focus:border-stone-500 [@media(pointer:coarse)]:py-2.5"
 		/>
 	</div>
 

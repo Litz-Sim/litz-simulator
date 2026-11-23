@@ -82,6 +82,33 @@ export interface View {
 	zoom: number;
 }
 
+/** What a development board runs in the simulation. */
+export type RuntimeMode = 'native' | 'micropython' | 'circuitpython';
+
+/** An image uploaded by the user; `key` indexes the browser's firmware cache. */
+export interface FirmwareRef {
+	name: string;
+	key: string;
+}
+
+/** One text file in a board's Python storage. */
+export interface ProgramFile {
+	name: string;
+	text: string;
+}
+
+/** Per-board program: runtime, uploaded images, and files on the board. */
+export interface BoardProgram {
+	runtime: RuntimeMode;
+	/** `null` uses the image bundled for this chip and runtime. */
+	firmware: FirmwareRef | null;
+	/** Optional image parts; bundled Python images carry their own ROM. */
+	rom: FirmwareRef | null;
+	boot: FirmwareRef | null;
+	ptable: FirmwareRef | null;
+	files: ProgramFile[];
+}
+
 export interface Sketch {
 	format: 'litz-board';
 	version: 1;
@@ -91,6 +118,8 @@ export interface Sketch {
 	parts: PartInstance[];
 	wires: WireInstance[];
 	view: View;
+	/** Keyed by development-board part id. */
+	programs?: Record<string, BoardProgram>;
 }
 
 export interface Point {

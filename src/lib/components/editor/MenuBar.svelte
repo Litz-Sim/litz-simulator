@@ -13,6 +13,7 @@
 	import { doc } from '#lib/sketch/doc.svelte';
 	import type { Sketch } from '#lib/sketch/types';
 	import { ui } from '#lib/ui.svelte';
+	import Icon from './Icon.svelte';
 
 	interface Item {
 		label: string;
@@ -35,6 +36,39 @@
 	let firmwareInput: HTMLInputElement;
 	let auxInput: HTMLInputElement;
 	let auxKind: 'rom' | 'boot' | 'ptable' = 'boot';
+	let menuLeft = $state(0);
+	let menuTop = $state(0);
+
+	const MENU_WIDTH = 248;
+
+	function placeMenu(button: HTMLElement): void {
+		const rect = button.getBoundingClientRect();
+		menuLeft = Math.max(8, Math.min(rect.left, window.innerWidth - MENU_WIDTH - 8));
+		menuTop = rect.bottom + 6;
+	}
+
+	function toggleMenu(menu: Menu, event: MouseEvent): void {
+		event.stopPropagation();
+		const button = event.currentTarget as HTMLElement;
+		placeMenu(button);
+		open = open === menu.label ? null : menu.label;
+	}
+
+	function hoverMenu(menu: Menu, event: MouseEvent): void {
+		if (!open || open === menu.label) return;
+		placeMenu(event.currentTarget as HTMLElement);
+		open = menu.label;
+	}
+
+	function closeMenu(event: KeyboardEvent): void {
+		if (event.key === 'Escape') open = null;
+	}
+
+	function dismissMenu(event: MouseEvent): void {
+		const target = event.target as Element | null;
+		if (target?.closest('[data-menu-root]')) return;
+		open = null;
+	}
 
 	function download(name: string, blob: Blob): void {
 		const url = URL.createObjectURL(blob);
@@ -321,13 +355,6 @@
 			]
 		},
 		{
-			label: m.menu_help(),
-			items: [
-				{ label: m.menu_help_keys(), run: () => {} },
-				{ label: m.menu_help_pan(), run: () => {} }
-			]
-		},
-		{
 			label: m.language(),
 			items: [
 				{ label: m.language_en(), run: () => void chooseLocale('en') },
@@ -335,89 +362,135 @@
 			]
 		}
 	];
+
+	const activeMenu = $derived(menus.find((menu) => menu.label === open) ?? null);
 </script>
 
-<svelte:window onclick={() => (open = null)} />
+<svelte:window onclick={dismissMenu} onresize={() => (open = null)} onkeydown={closeMenu} />
 
-<div
-	class="relative flex h-8 shrink-0 items-center gap-0.5 overflow-x-auto border-b border-stone-300 bg-[#2f6fd0] px-2 text-[12px] whitespace-nowrap text-white [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:text-[13px]"
+<header
+	data-menu-root
+	class="relative z-50 flex h-12 shrink-0 items-center gap-2 border-b border-stone-200 bg-white px-2 text-[13px] text-stone-700 [@media(pointer:coarse)]:h-14"
 >
-	<span class="mr-2 font-semibold tracking-tight">{m.app_title()}</span>
-	{#each menus as menu (menu.label)}
-		<div class="relative">
+	<div class="flex shrink-0 items-center gap-2 pl-1">
+		<span
+			class="grid h-7 w-7 place-items-center rounded-lg bg-[#2f6fd0] text-white shadow-sm [@media(pointer:coarse)]:h-8 [@media(pointer:coarse)]:w-8"
+		>
+			<Icon name="chip" size={16} />
+		</span>
+		<span class="hidden font-semibold tracking-tight text-stone-900 sm:inline">
+			{m.app_title()}
+		</span>
+	</div>
+
+	<span class="mr-1 hidden h-5 w-px shrink-0 bg-stone-200 sm:block"></span>
+
+	<nav
+		class="flex min-w-0 [scrollbar-width:none] items-center gap-0.5 overflow-x-auto overscroll-x-contain [&::-webkit-scrollbar]:hidden"
+		aria-label={m.app_title()}
+	>
+		{#each menus as menu (menu.label)}
 			<button
 				type="button"
-				class="shrink-0 rounded px-2 py-0.5 hover:bg-white/15 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:py-1.5 {open ===
+				class="h-8 shrink-0 rounded-md px-2.5 text-[13px] whitespace-nowrap transition-colors [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:py-1.5 {open ===
 				menu.label
-					? 'bg-white/20'
-					: ''}"
-				onclick={(event) => {
-					event.stopPropagation();
-					open = open === menu.label ? null : menu.label;
-				}}
-				onmouseenter={() => {
-					if (open) open = menu.label;
-				}}
+					? 'bg-stone-100 text-stone-900'
+					: 'text-stone-600 hover:bg-stone-100 hover:text-stone-900'}"
+				aria-haspopup="menu"
+				aria-expanded={open === menu.label}
+				onclick={(event) => toggleMenu(menu, event)}
+				onmouseenter={(event) => hoverMenu(menu, event)}
 			>
 				{menu.label}
 			</button>
-			{#if open === menu.label}
-				<div
-					class="absolute top-full left-0 z-50 mt-0.5 min-w-52 rounded border border-stone-300 bg-white py-1 text-stone-800 shadow-lg"
-				>
-					{#each menu.items as item, index (index)}
-						{#if 'separator' in item}
-							<div class="my-1 h-px bg-stone-200"></div>
-						{:else}
-							<button
-								type="button"
-								class="flex w-full items-center justify-between gap-6 px-3 py-1 text-left hover:bg-stone-100 disabled:opacity-40 [@media(pointer:coarse)]:py-2.5"
-								disabled={item.disabled?.()}
-								onclick={(event) => {
-									event.stopPropagation();
-									item.run();
-									open = null;
-								}}
-							>
-								<span class="flex items-center gap-1.5">
-									{#if item.checked?.()}<span class="text-stone-700">✓</span>{/if}
-									{item.label}
-								</span>
-								{#if item.hint}<span class="text-[11px] text-stone-400">{item.hint}</span>{/if}
-							</button>
-						{/if}
-					{/each}
-				</div>
-			{/if}
-		</div>
-	{/each}
+		{/each}
+	</nav>
 
-	<input
-		bind:this={fileInput}
-		type="file"
-		accept="application/json,.json"
-		class="hidden"
-		onchange={importFile}
-	/>
-	<input
-		bind:this={projectInput}
-		type="file"
-		accept=".json,.litzproject,application/json"
-		class="hidden"
-		onchange={importProjectFile}
-	/>
-	<input
-		bind:this={firmwareInput}
-		type="file"
-		accept=".bin,.hex,application/octet-stream"
-		class="hidden"
-		onchange={chooseFirmware}
-	/>
-	<input
-		bind:this={auxInput}
-		type="file"
-		accept=".bin,.elf,application/octet-stream"
-		class="hidden"
-		onchange={chooseAuxFile}
-	/>
-</div>
+	<div class="ml-auto flex shrink-0 items-center gap-2 pl-2">
+		<button
+			type="button"
+			disabled={sim.loading}
+			class="flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium text-white shadow-sm transition-colors disabled:cursor-wait disabled:opacity-60 [@media(pointer:coarse)]:h-10 [@media(pointer:coarse)]:px-4 [@media(pointer:coarse)]:text-[13px] {sim.running
+				? 'bg-red-600 hover:bg-red-700'
+				: 'bg-emerald-600 hover:bg-emerald-700'}"
+			title={sim.running ? m.stop_sim() : m.run_sim()}
+			onclick={() => sim.toggle()}
+		>
+			<Icon
+				name={sim.loading ? 'loader' : sim.running ? 'stop' : 'play'}
+				size={14}
+				class={sim.loading ? 'animate-spin' : ''}
+			/>
+			<span class="hidden sm:inline">
+				{sim.loading ? m.sim_loading() : sim.running ? m.menu_stop() : m.menu_run()}
+			</span>
+		</button>
+	</div>
+</header>
+
+{#if activeMenu}
+	<div
+		data-menu-root
+		class="fixed z-[90] overflow-y-auto rounded-xl border border-stone-200 bg-white py-1.5 text-[12px] text-stone-700 shadow-xl ring-1 ring-black/5"
+		style:left="{menuLeft}px"
+		style:top="{menuTop}px"
+		style:width="{MENU_WIDTH}px"
+		style:max-height="calc(100dvh - {menuTop + 10}px)"
+	>
+		{#each activeMenu.items as item, index (index)}
+			{#if 'separator' in item}
+				<div class="mx-2 my-1 h-px bg-stone-200"></div>
+			{:else}
+				<button
+					type="button"
+					class="mx-1 flex w-[calc(100%-0.5rem)] items-center justify-between gap-6 rounded-md px-2.5 py-1.5 text-left hover:bg-stone-100 disabled:opacity-40 [@media(pointer:coarse)]:py-2.5"
+					disabled={item.disabled?.()}
+					onclick={(event) => {
+						event.stopPropagation();
+						item.run();
+						open = null;
+					}}
+				>
+					<span class="flex min-w-0 items-center gap-1.5">
+						{#if item.checked?.()}
+							<Icon name="check" size={13} class="shrink-0 text-stone-500" />
+						{:else}
+							<span class="h-[13px] w-[13px] shrink-0"></span>
+						{/if}
+						<span class="truncate">{item.label}</span>
+					</span>
+					{#if item.hint}<span class="shrink-0 text-[11px] text-stone-400">{item.hint}</span>{/if}
+				</button>
+			{/if}
+		{/each}
+	</div>
+{/if}
+
+<input
+	bind:this={fileInput}
+	type="file"
+	accept="application/json,.json"
+	class="hidden"
+	onchange={importFile}
+/>
+<input
+	bind:this={projectInput}
+	type="file"
+	accept=".json,.litzproject,application/json"
+	class="hidden"
+	onchange={importProjectFile}
+/>
+<input
+	bind:this={firmwareInput}
+	type="file"
+	accept=".bin,.hex,application/octet-stream"
+	class="hidden"
+	onchange={chooseFirmware}
+/>
+<input
+	bind:this={auxInput}
+	type="file"
+	accept=".bin,.elf,application/octet-stream"
+	class="hidden"
+	onchange={chooseAuxFile}
+/>

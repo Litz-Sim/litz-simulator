@@ -1,37 +1,99 @@
 <script lang="ts">
-	const PATHS: Record<string, string> = {
-		cursor: 'M5 3l6 17 2.2-6.8L20 11z',
-		wire: 'M4 19c4-1 6-4 8-7s4-6 8-8',
-		rotate: 'M4 10a8 8 0 1 1 2.3 8.7M4 5v5h5',
-		trash: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
-		undo: 'M9 14L4 9l5-5M4 9h9a7 7 0 0 1 0 14h-2',
-		redo: 'M15 14l5-5-5-5M20 9h-9a7 7 0 0 0 0 14h2',
-		plus: 'M12 5v14M5 12h14',
-		play: 'M8 5l11 7-11 7z',
-		stop: 'M7 7h10v10H7z',
-		grid: 'M4 9h16M4 15h16M9 4v16M15 4v16',
-		chevron: 'M6 9l6 6 6-6',
-		code: 'M9 7l-5 5 5 5M15 7l5 5-5 5',
-		chip: 'M8 8h8v8H8zM4 9h4M4 15h4M16 9h4M16 15h4M9 4v4M15 4v4M9 16v4M15 16v4',
-		fit: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5',
-		parts: 'M4 5h6v6H4zM14 5h6v6h-6zM4 13h6v6H4zM14 13h6v6h-6z',
-		sliders: 'M4 7h9M17 7h3M4 17h3M11 17h9M15 4v6M9 14v6',
-		close: 'M6 6l12 12M18 6L6 18'
+	import type { Component } from 'svelte';
+	import Activity from '@lucide/svelte/icons/activity';
+	import Bug from '@lucide/svelte/icons/bug';
+	import Cable from '@lucide/svelte/icons/cable';
+	import ChartLine from '@lucide/svelte/icons/chart-line';
+	import Check from '@lucide/svelte/icons/check';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import ChevronUp from '@lucide/svelte/icons/chevron-up';
+	import CircleCheck from '@lucide/svelte/icons/circle-check';
+	import CircleDashed from '@lucide/svelte/icons/circle-dashed';
+	import CircleX from '@lucide/svelte/icons/circle-x';
+	import Cpu from '@lucide/svelte/icons/cpu';
+	import FileCode from '@lucide/svelte/icons/file-code';
+	import FilePlus from '@lucide/svelte/icons/file-plus';
+	import FolderOpen from '@lucide/svelte/icons/folder-open';
+	import Grid3x3 from '@lucide/svelte/icons/grid-3x3';
+	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import Maximize2 from '@lucide/svelte/icons/maximize-2';
+	import Minus from '@lucide/svelte/icons/minus';
+	import MousePointer2 from '@lucide/svelte/icons/mouse-pointer-2';
+	import Palette from '@lucide/svelte/icons/palette';
+	import PanelBottom from '@lucide/svelte/icons/panel-bottom';
+	import Play from '@lucide/svelte/icons/play';
+	import Plus from '@lucide/svelte/icons/plus';
+	import Redo2 from '@lucide/svelte/icons/redo-2';
+	import RotateCw from '@lucide/svelte/icons/rotate-cw';
+	import Save from '@lucide/svelte/icons/save';
+	import ScrollText from '@lucide/svelte/icons/scroll-text';
+	import Search from '@lucide/svelte/icons/search';
+	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
+	import Square from '@lucide/svelte/icons/square';
+	import Terminal from '@lucide/svelte/icons/terminal';
+	import Trash from '@lucide/svelte/icons/trash';
+	import TriangleExclamationPoint from '@lucide/svelte/icons/triangle-exclamation-point';
+	import Undo2 from '@lucide/svelte/icons/undo-2';
+	import Upload from '@lucide/svelte/icons/upload';
+	import X from '@lucide/svelte/icons/x';
+
+	type IconComponent = Component<{
+		size?: number;
+		strokeWidth?: number;
+		class?: string;
+		'aria-hidden'?: boolean | 'true' | 'false';
+	}>;
+
+	const ICONS: Record<string, IconComponent> = {
+		activity: Activity,
+		bug: Bug,
+		chart: ChartLine,
+		check: Check,
+		chevron: ChevronDown,
+		'chevron-up': ChevronUp,
+		chip: Cpu,
+		close: X,
+		code: FileCode,
+		cursor: MousePointer2,
+		file: FileCode,
+		'file-plus': FilePlus,
+		fit: Maximize2,
+		folder: FolderOpen,
+		grid: Grid3x3,
+		loader: LoaderCircle,
+		log: ScrollText,
+		minus: Minus,
+		palette: Palette,
+		panel: PanelBottom,
+		parts: LayoutGrid,
+		play: Play,
+		plus: Plus,
+		redo: Redo2,
+		rotate: RotateCw,
+		save: Save,
+		'save-error': TriangleExclamationPoint,
+		'save-ok': CircleCheck,
+		'save-pending': CircleDashed,
+		search: Search,
+		sliders: SlidersHorizontal,
+		stop: Square,
+		terminal: Terminal,
+		trash: Trash,
+		upload: Upload,
+		undo: Undo2,
+		'save-x': CircleX,
+		wire: Cable
 	};
 
-	let { name, size = 16 }: { name: string; size?: number } = $props();
+	let {
+		name,
+		size = 16,
+		strokeWidth = 1.9,
+		class: className = ''
+	}: { name: string; size?: number; strokeWidth?: number; class?: string } = $props();
+
+	const Glyph = $derived(ICONS[name] ?? ICONS.code);
 </script>
 
-<svg
-	width={size}
-	height={size}
-	viewBox="0 0 24 24"
-	fill="none"
-	stroke="currentColor"
-	stroke-width="1.8"
-	stroke-linecap="round"
-	stroke-linejoin="round"
-	aria-hidden="true"
->
-	<path d={PATHS[name] ?? ''} />
-</svg>
+<Glyph {size} {strokeWidth} class={className} aria-hidden="true" />

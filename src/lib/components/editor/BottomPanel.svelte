@@ -3,8 +3,9 @@
 	import { sim } from '#lib/sim/controller.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
 	import { toLitzDiagram } from '#lib/sketch/export';
-	import { ui, type BottomTab } from '#lib/ui.svelte';
+	import { parseStorageFile, ui, type BottomTab } from '#lib/ui.svelte';
 	import AnalysisPanel from './AnalysisPanel.svelte';
+	import CodeFiles from './CodeFiles.svelte';
 	import CodeEditor from './CodeEditor.svelte';
 	import DebugPanel from './DebugPanel.svelte';
 	import Icon from './Icon.svelte';
@@ -12,20 +13,41 @@
 	import SerialMonitor from './SerialMonitor.svelte';
 	import SerialPlot from './SerialPlot.svelte';
 
-	const tabs: { key: BottomTab; label: string }[] = [
-		{ key: 'code', label: m.panel_code() },
-		{ key: 'serial', label: m.panel_serial() },
-		{ key: 'plot', label: m.panel_plot() },
-		{ key: 'analysis', label: m.panel_analysis() },
-		{ key: 'debug', label: m.panel_debug() },
-		{ key: 'manifests', label: m.panel_manifests() },
-		{ key: 'log', label: m.panel_log() }
+	const tabs: { key: BottomTab; label: string; icon: string }[] = [
+		{ key: 'code', label: m.panel_code(), icon: 'code' },
+		{ key: 'serial', label: m.panel_serial(), icon: 'terminal' },
+		{ key: 'plot', label: m.panel_plot(), icon: 'chart' },
+		{ key: 'analysis', label: m.panel_analysis(), icon: 'activity' },
+		{ key: 'debug', label: m.panel_debug(), icon: 'bug' },
+		{ key: 'manifests', label: m.panel_manifests(), icon: 'sliders' },
+		{ key: 'log', label: m.panel_log(), icon: 'log' }
 	];
 
 	const diagramText = $derived.by(() => {
 		void doc.rev;
 		return JSON.stringify(toLitzDiagram(doc.sketch), null, 2);
 	});
+
+	const storage = $derived(parseStorageFile(ui.codeFile));
+	const storageFile = $derived(
+		storage
+			? doc.programFor(storage.boardId).files.find((file) => file.name === storage.path)
+			: undefined
+	);
+	const storageLabel = $derived(
+		storage ? `${doc.part(storage.boardId)?.type ?? storage.boardId} / ${storage.path}` : ''
+	);
+
+	const serialBoards = $derived(
+		sim.boardRuntime.map((board) => ({ id: board.id, name: board.name }))
+	);
+	const serialBoard = $derived(
+		ui.serialBoard &&
+			(serialBoards.some((board) => board.id === ui.serialBoard) ||
+				sim.serialBoards[ui.serialBoard] !== undefined)
+			? ui.serialBoard
+			: (serialBoards[0]?.id ?? Object.keys(sim.serialBoards)[0] ?? null)
+	);
 
 	function startResize(event: PointerEvent): void {
 		const startY = event.clientY;
@@ -50,32 +72,33 @@
 
 <div class="shrink-0 border-t border-stone-300 bg-stone-50">
 	<div
-		class="flex h-8 items-center gap-0.5 overflow-x-auto border-b border-stone-200 px-2 [@media(pointer:coarse)]:h-11"
+		class="flex h-9 shrink-0 items-center gap-0.5 overflow-x-auto border-b border-stone-200 bg-stone-100 px-1.5 [@media(pointer:coarse)]:h-11"
 	>
 		{#each tabs as tab (tab.key)}
 			<button
 				type="button"
-				class="shrink-0 rounded-t px-2.5 py-0.5 text-[12px] [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:py-1.5 [@media(pointer:coarse)]:text-[13px] {ui.bottomTab ===
+				class="flex h-7 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-[12px] transition-colors [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:text-[13px] {ui.bottomTab ===
 				tab.key
-					? 'bg-stone-200 font-medium text-stone-800'
-					: 'text-stone-500 hover:bg-stone-200/60'}"
+					? 'bg-white font-medium text-stone-900 shadow-sm ring-1 ring-stone-300'
+					: 'text-stone-500 hover:bg-stone-200/70 hover:text-stone-800'}"
 				onclick={() => {
 					ui.bottomTab = tab.key;
 					ui.bottomOpen = true;
 				}}
 			>
+				<Icon name={tab.icon} size={13} />
 				{tab.label}
 			</button>
 		{/each}
-		<div class="ml-auto flex items-center gap-2 text-[11px] text-stone-400">
-			<span>{doc.name}</span>
+		<div class="ml-auto flex shrink-0 items-center gap-2 pl-2 text-[11px] text-stone-400">
+			<span class="hidden lg:inline">{doc.name}</span>
 			<button
 				type="button"
 				title={ui.bottomOpen ? m.panel_collapse() : m.panel_expand()}
-				class="flex h-6 w-6 items-center justify-center rounded hover:bg-stone-200 [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9"
+				class="flex h-7 w-7 items-center justify-center rounded-md text-stone-500 hover:bg-stone-200 hover:text-stone-800 [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9"
 				onclick={() => (ui.bottomOpen = !ui.bottomOpen)}
 			>
-				<span class={ui.bottomOpen ? 'rotate-180' : ''}><Icon name="chevron" size={14} /></span>
+				<Icon name={ui.bottomOpen ? 'chevron' : 'chevron-up'} size={14} />
 			</button>
 		</div>
 	</div>
@@ -90,51 +113,50 @@
 		></div>
 		<div style="height: {ui.bottomHeight}px">
 			{#if ui.bottomTab === 'code'}
-				<div class="flex h-full flex-col">
-					<div
-						class="flex h-7 shrink-0 items-center gap-0 border-b border-stone-200 bg-stone-100 px-2"
-					>
-						<button
-							type="button"
-							class="rounded px-2 py-0.5 text-[11px] {ui.codeFile === 'main.c'
-								? 'bg-white text-stone-800 shadow-sm'
-								: 'text-stone-500 hover:text-stone-700'}"
-							onclick={() => (ui.codeFile = 'main.c')}
-						>
-							main.c
-						</button>
-						<button
-							type="button"
-							class="rounded px-2 py-0.5 text-[11px] {ui.codeFile === 'diagram.json'
-								? 'bg-white text-stone-800 shadow-sm'
-								: 'text-stone-500 hover:text-stone-700'}"
-							onclick={() => (ui.codeFile = 'diagram.json')}
-						>
-							diagram.json
-						</button>
-						<span class="ml-auto text-[10px] text-stone-400">
-							{ui.codeFile === 'diagram.json'
-								? m.diagram_readonly()
-								: m.firmware_slot({ name: sim.slotName })}
-						</span>
+				<div class="flex h-full min-h-0">
+					<div class="w-44 shrink-0 overflow-y-auto border-r border-stone-200 bg-stone-50 sm:w-52">
+						<CodeFiles />
 					</div>
-					<div class="min-h-0 flex-1">
-						{#key ui.codeFile}
-							{#if ui.codeFile === 'main.c'}
-								<CodeEditor value={doc.code} onchange={(text: string) => (doc.code = text)} />
-							{:else}
-								<CodeEditor value={diagramText} readonly />
-							{/if}
-						{/key}
+					<div class="flex min-h-0 min-w-0 flex-1 flex-col">
+						<div
+							class="flex h-7 shrink-0 items-center gap-2 border-b border-stone-200 bg-stone-100 px-2 text-[11px] text-stone-500"
+						>
+							<span class="truncate font-mono text-stone-700">
+								{storage ? storageLabel : ui.codeFile}
+							</span>
+							<span class="ml-auto shrink-0 text-[10px] text-stone-400">
+								{sim.slotName}
+							</span>
+						</div>
+						<div class="min-h-0 flex-1">
+							{#key ui.codeFile}
+								{#if ui.codeFile === 'main.c'}
+									<CodeEditor value={doc.code} onchange={(text: string) => (doc.code = text)} />
+								{:else if ui.codeFile === 'diagram.json'}
+									<CodeEditor value={diagramText} readonly />
+								{:else if storage && storageFile}
+									<CodeEditor
+										value={storageFile.text}
+										language="python"
+										onchange={(text: string) =>
+											doc.setBoardFile(storage.boardId, storageFile.name, text)}
+									/>
+								{:else}
+									<p class="px-3 py-2 text-[11px] text-stone-400">{m.code_choose_file()}</p>
+								{/if}
+							{/key}
+						</div>
 					</div>
 				</div>
 			{:else if ui.bottomTab === 'serial'}
 				<SerialMonitor
-					text={sim.serial}
+					text={sim.serialFor(serialBoard)}
 					running={sim.running}
 					error={sim.error}
 					onSend={(text: string, board?: string) => sim.writeSerial(text, board)}
-					boards={sim.boardRuntime.map((board) => board.id)}
+					boards={serialBoards}
+					selected={serialBoard}
+					onselect={(board: string) => (ui.serialBoard = board)}
 					onClear={() => sim.clearSerial()}
 					placeholder={m.serial_placeholder()}
 					sendLabel={m.serial_send()}
@@ -143,7 +165,7 @@
 					idleLabel={m.serial_idle()}
 				/>
 			{:else if ui.bottomTab === 'plot'}
-				<SerialPlot text={sim.serial} emptyLabel={m.serial_plot_empty()} />
+				<SerialPlot text={sim.serialFor(serialBoard)} emptyLabel={m.serial_plot_empty()} />
 			{:else if ui.bottomTab === 'analysis'}
 				<AnalysisPanel />
 			{:else if ui.bottomTab === 'debug'}

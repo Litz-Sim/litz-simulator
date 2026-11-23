@@ -17,6 +17,9 @@ importers:
       '@codemirror/lang-cpp':
         specifier: ^6.0.3
         version: 6.0.3
+      '@codemirror/lang-python':
+        specifier: ^6.2.1
+        version: 6.2.1
       '@codemirror/state':
         specifier: ^6.7.6
         version: 6.7.6
@@ -24,11 +27,17 @@ importers:
         specifier: ^6.43.15
         version: 6.43.15
       '@litz-sim/litz':
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.0
+        version: 0.4.0
+      '@lucide/svelte':
+        specifier: ^1.77.0
+        version: 1.77.0(svelte@5.58.1(@typescript-eslint/types@8.73.0))
       codemirror:
         specifier: ^6.0.2
         version: 6.0.2
+      lucide-svelte:
+        specifier: ^1.0.1
+        version: 1.0.1(svelte@5.58.1(@typescript-eslint/types@8.73.0))
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -270,6 +279,9 @@ packages:
   '@codemirror/lang-cpp@6.0.3':
     resolution: {integrity: sha512-URM26M3vunFFn9/sm6rzqrBzDgfWuDixp85uTY49wKudToc2jTHUrKIGGKs+QWND+YLofNNZpxcNGRynFJfvgA==}
 
+  '@codemirror/lang-python@6.2.1':
+    resolution: {integrity: sha512-IRjC8RUBhn9mGR9ywecNhB51yePWCGgvHfY1lWN/Mrp3cKuHr0isDKia+9HnvhiWNnMpbGhWrkhuWOc09exRyw==}
+
   '@codemirror/language@6.13.1':
     resolution: {integrity: sha512-zfvU2r3TyylQLMj/te+5CnQ0rSqZi8B1oTCBbQkagcLW4Xc6imab6qN+pEJhsuNOLaJqiRyBXp9UhWA1DhVvDw==}
 
@@ -430,12 +442,20 @@ packages:
   '@lezer/lr@1.4.12':
     resolution: {integrity: sha512-On9HU4oMMiHPMkQDgoTnGahjgG5n/MkN38CgG77sMraKLL+3JBbeQNi1FcCXV9QRqwF9/BUXP3caHyJC1fBOTQ==}
 
-  '@litz-sim/litz@0.3.0':
-    resolution: {integrity: sha512-NoFj2Y4+amdhcON8vwE4JzIvk5+5zxBi24Iz62V8Um/Vm6V7GNTka773G9MfQijnOsadLsIqxQoE7YGrKf6Vtw==}
+  '@lezer/python@1.1.19':
+    resolution: {integrity: sha512-MhQIURHRytsNzP/YXnqpYKW6la6voAH3kyplTOOiCdjyFY6cWWGFVmYVdHIPrElqSDf4iCDktQCockB9FxuhzQ==}
+
+  '@litz-sim/litz@0.4.0':
+    resolution: {integrity: sha512-m1luk4vo4qSui6wv/FGdGwc8mKv4GHO7ePhBHSJBI4zxqgKhDzqWwxKbAeZ7sU9T9a4JXrSQLuBiQMF0tVBYbA==}
     engines: {node: '>=18'}
 
   '@lix-js/sdk@0.20.1':
     resolution: {integrity: sha512-oscOFP8Cr1My6Wh2KVYC9+aJ1mHs+d7vnD+7PPJaA4L+Y1FR37Sm99SrFGfvUizaj/XtRi2GlDF2IOFt9iXMNQ==}
+
+  '@lucide/svelte@1.77.0':
+    resolution: {integrity: sha512-gXjmQ4VK3Mh/M11Nn/XCeln3XZByR4MxX5o+NMfr/Wg9MQs+BffvXTnW+0WvmjV1u58TXJhXvgJZHrMASUnqow==}
+    peerDependencies:
+      svelte: ^5
 
   '@marijn/find-cluster-break@1.0.4':
     resolution: {integrity: sha512-Wy0V7+SGUjnF9/TkiM1hKVDPj7jKXduPNboMVtHTA8dySMURWqfg/JZ9E2Sq8JgSJmkl7k7Qe9FLeMSrSraWmQ==}
@@ -1898,6 +1918,12 @@ packages:
   lodash-es@4.18.1:
     resolution: {integrity: sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==}
 
+  lucide-svelte@1.0.1:
+    resolution: {integrity: sha512-WvzZgk0pqzgda+AErLvgWxHkfg/+GgUwqKMRHvzt0IqyMdmyEDzDCk3Z+Wo/3y753oIgx8u9Q4eUbWkghFa8Jg==}
+    deprecated: Package deprecated. Please use @lucide/svelte instead.
+    peerDependencies:
+      svelte: ^3 || ^4 || ^5.0.0-next.42
+
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -2562,6 +2588,14 @@ snapshots:
       '@codemirror/language': 6.13.1
       '@lezer/cpp': 1.1.6
 
+  '@codemirror/lang-python@6.2.1':
+    dependencies:
+      '@codemirror/autocomplete': 6.20.4
+      '@codemirror/language': 6.13.1
+      '@codemirror/state': 6.7.6
+      '@lezer/common': 1.5.6
+      '@lezer/python': 1.1.19
+
   '@codemirror/language@6.13.1':
     dependencies:
       '@codemirror/state': 6.7.6
@@ -2761,13 +2795,23 @@ snapshots:
     dependencies:
       '@lezer/common': 1.5.6
 
-  '@litz-sim/litz@0.3.0': {}
+  '@lezer/python@1.1.19':
+    dependencies:
+      '@lezer/common': 1.5.6
+      '@lezer/highlight': 1.2.5
+      '@lezer/lr': 1.4.12
+
+  '@litz-sim/litz@0.4.0': {}
 
   '@lix-js/sdk@0.20.1':
     dependencies:
       '@bytecodealliance/jco-transpile': 0.13.0
       binaryen: 130.0.0
       fflate: 0.8.3
+
+  '@lucide/svelte@1.77.0(svelte@5.58.1(@typescript-eslint/types@8.73.0))':
+    dependencies:
+      svelte: 5.58.1(@typescript-eslint/types@8.73.0)
 
   '@marijn/find-cluster-break@1.0.4': {}
 
@@ -4150,6 +4194,10 @@ snapshots:
       p-locate: 5.0.0
 
   lodash-es@4.18.1: {}
+
+  lucide-svelte@1.0.1(svelte@5.58.1(@typescript-eslint/types@8.73.0)):
+    dependencies:
+      svelte: 5.58.1(@typescript-eslint/types@8.73.0)
 
   magic-string@0.30.21:
     dependencies:

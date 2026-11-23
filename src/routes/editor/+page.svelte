@@ -71,8 +71,8 @@
 
 <div class="flex h-dvh flex-col overflow-hidden bg-stone-100 text-stone-800">
 	<MenuBar />
-	<Toolbar bind:tool />
 	<TabRow />
+	<Toolbar bind:tool />
 
 	<div class="flex min-h-0 flex-1">
 		<aside class="hidden w-[232px] shrink-0 border-r border-stone-300 bg-stone-50 xl:block">
@@ -83,144 +83,127 @@
 			<CanvasView {tool} />
 
 			<div class="pointer-events-none absolute inset-0">
-				<div class="pointer-events-auto absolute top-7 left-7 flex items-center gap-1.5">
+				<div class="pointer-events-auto absolute top-4 left-4 flex items-center gap-1.5">
 					<button
 						type="button"
 						title={m.parts()}
-						class="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-stone-700 shadow-md ring-1 ring-stone-300 hover:bg-white xl:hidden [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
+						class="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-stone-700 shadow-lg ring-1 ring-stone-300/80 hover:bg-white xl:hidden [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
 						onclick={() => (partsOpen = true)}
 					>
 						<Icon name="parts" size={17} />
 					</button>
 					<button
 						type="button"
-						title={sim.running ? m.stop_sim() : m.run_sim()}
-						class="flex h-9 w-9 items-center justify-center rounded-full text-white shadow-md [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11 {sim.running
-							? 'bg-red-600 hover:bg-red-700'
-							: 'bg-emerald-600 hover:bg-emerald-700'} {sim.loading ? 'opacity-60' : ''}"
-						onclick={() => sim.toggle()}
-					>
-						<Icon name={sim.running ? 'stop' : 'play'} size={16} />
-					</button>
-					<button
-						type="button"
 						title={m.add_part_shortcut()}
-						class="flex h-9 w-9 items-center justify-center rounded-full bg-[#2f6fd0] text-white shadow-md hover:bg-[#2559a8] [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
+						class="flex h-9 w-9 items-center justify-center rounded-full bg-[#2f6fd0] text-white shadow-lg ring-1 ring-[#2559a8]/30 hover:bg-[#2559a8] [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
 						onclick={() => (ui.addOpen = true)}
 					>
 						<Icon name="plus" size={18} />
-					</button>
-					<button
-						type="button"
-						title={m.fit_window_shortcut()}
-						class="flex h-9 w-9 items-center justify-center rounded-full bg-stone-700/85 text-white shadow-md hover:bg-stone-700 [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
-						onclick={() => canvasControl.engine?.fit()}
-					>
-						<Icon name="fit" size={16} />
 					</button>
 				</div>
 
 				<button
 					type="button"
 					title={m.inspector()}
-					class="pointer-events-auto absolute top-7 right-7 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-stone-700 shadow-md ring-1 ring-stone-300 hover:bg-white xl:hidden [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
+					class="pointer-events-auto absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-stone-700 shadow-lg ring-1 ring-stone-300/80 hover:bg-white xl:hidden [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11"
 					onclick={() => (inspectorOpen = true)}
 				>
 					<Icon name="sliders" size={17} />
 				</button>
 
 				<div
-					class="pointer-events-auto absolute bottom-7 left-7 flex items-center rounded-md border border-stone-300 bg-white/95 text-[11px] text-stone-700 shadow-sm [@media(pointer:coarse)]:text-[13px]"
+					class="pointer-events-auto absolute bottom-4 left-4 flex items-center rounded-lg border border-stone-300 bg-white/95 text-[11px] text-stone-700 shadow-lg"
 				>
 					<button
 						type="button"
-						class="px-2 py-1 hover:bg-stone-100 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:py-2"
+						class="flex h-8 w-8 items-center justify-center rounded-l-lg hover:bg-stone-100 [@media(pointer:coarse)]:h-10 [@media(pointer:coarse)]:w-10"
 						title={m.zoom_out_title()}
 						onclick={() => canvasControl.engine?.zoomBy(1 / 1.2)}
 					>
-						−
+						<Icon name="minus" size={14} />
 					</button>
 					<span class="w-12 text-center tabular-nums [@media(pointer:coarse)]:w-14">
 						{Math.round(canvasStatus.zoom * 100)}%
 					</span>
 					<button
 						type="button"
-						class="px-2 py-1 hover:bg-stone-100 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:py-2"
+						class="flex h-8 w-8 items-center justify-center hover:bg-stone-100 [@media(pointer:coarse)]:h-10 [@media(pointer:coarse)]:w-10"
 						title={m.zoom_in_title()}
 						onclick={() => canvasControl.engine?.zoomBy(1.2)}
 					>
-						+
+						<Icon name="plus" size={14} />
 					</button>
-					<span class="mx-1 h-4 w-px bg-stone-200"></span>
+					<span class="mx-0.5 h-4 w-px bg-stone-200"></span>
 					<button
 						type="button"
-						class="px-2 py-1 hover:bg-stone-100 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:py-2"
+						class="flex h-8 w-8 items-center justify-center rounded-r-lg hover:bg-stone-100 [@media(pointer:coarse)]:h-10 [@media(pointer:coarse)]:w-10"
+						title={m.tool_fit()}
 						onclick={() => canvasControl.engine?.fit()}
 					>
-						{m.fit_short()}
+						<Icon name="fit" size={14} />
 					</button>
 				</div>
-
-				{#if partsOpen}
-					<div class="pointer-events-auto absolute inset-0 z-40 xl:hidden">
-						<button
-							type="button"
-							aria-label={m.close()}
-							class="absolute inset-0 bg-black/25"
-							onclick={() => (partsOpen = false)}
-						></button>
-						<aside
-							class="absolute inset-y-0 left-0 flex w-[280px] flex-col border-r border-stone-300 bg-stone-50 shadow-2xl"
-						>
-							<div
-								class="flex h-11 shrink-0 items-center justify-between border-b border-stone-200 px-3"
-							>
-								<span class="text-[13px] font-medium text-stone-600">{m.parts()}</span>
-								<button
-									type="button"
-									class="flex h-9 w-9 items-center justify-center rounded text-stone-500 hover:bg-stone-200"
-									onclick={() => (partsOpen = false)}
-								>
-									<Icon name="close" size={18} />
-								</button>
-							</div>
-							<div class="min-h-0 flex-1">
-								<PartsBin onAdd={() => (partsOpen = false)} />
-							</div>
-						</aside>
-					</div>
-				{/if}
-
-				{#if inspectorOpen}
-					<div class="pointer-events-auto absolute inset-0 z-40 xl:hidden">
-						<button
-							type="button"
-							aria-label={m.close()}
-							class="absolute inset-0 bg-black/25"
-							onclick={() => (inspectorOpen = false)}
-						></button>
-						<aside
-							class="absolute inset-y-0 right-0 flex w-[300px] flex-col border-l border-stone-300 bg-stone-50 shadow-2xl"
-						>
-							<div
-								class="flex h-11 shrink-0 items-center justify-between border-b border-stone-200 px-3"
-							>
-								<span class="text-[13px] font-medium text-stone-600">{m.inspector()}</span>
-								<button
-									type="button"
-									class="flex h-9 w-9 items-center justify-center rounded text-stone-500 hover:bg-stone-200"
-									onclick={() => (inspectorOpen = false)}
-								>
-									<Icon name="close" size={18} />
-								</button>
-							</div>
-							<div class="min-h-0 flex-1 overflow-y-auto">
-								<Inspector />
-							</div>
-						</aside>
-					</div>
-				{/if}
 			</div>
+
+			{#if partsOpen}
+				<div class="pointer-events-auto absolute inset-0 z-40 xl:hidden">
+					<button
+						type="button"
+						aria-label={m.close()}
+						class="absolute inset-0 bg-black/25"
+						onclick={() => (partsOpen = false)}
+					></button>
+					<aside
+						class="absolute inset-y-0 left-0 flex w-[280px] flex-col border-r border-stone-300 bg-stone-50 shadow-2xl"
+					>
+						<div
+							class="flex h-11 shrink-0 items-center justify-between border-b border-stone-200 px-3"
+						>
+							<span class="text-[13px] font-medium text-stone-600">{m.parts()}</span>
+							<button
+								type="button"
+								class="flex h-9 w-9 items-center justify-center rounded text-stone-500 hover:bg-stone-200"
+								onclick={() => (partsOpen = false)}
+							>
+								<Icon name="close" size={18} />
+							</button>
+						</div>
+						<div class="min-h-0 flex-1">
+							<PartsBin onAdd={() => (partsOpen = false)} />
+						</div>
+					</aside>
+				</div>
+			{/if}
+
+			{#if inspectorOpen}
+				<div class="pointer-events-auto absolute inset-0 z-40 xl:hidden">
+					<button
+						type="button"
+						aria-label={m.close()}
+						class="absolute inset-0 bg-black/25"
+						onclick={() => (inspectorOpen = false)}
+					></button>
+					<aside
+						class="absolute inset-y-0 right-0 flex w-[300px] flex-col border-l border-stone-300 bg-stone-50 shadow-2xl"
+					>
+						<div
+							class="flex h-11 shrink-0 items-center justify-between border-b border-stone-200 px-3"
+						>
+							<span class="text-[13px] font-medium text-stone-600">{m.inspector()}</span>
+							<button
+								type="button"
+								class="flex h-9 w-9 items-center justify-center rounded text-stone-500 hover:bg-stone-200"
+								onclick={() => (inspectorOpen = false)}
+							>
+								<Icon name="close" size={18} />
+							</button>
+						</div>
+						<div class="min-h-0 flex-1 overflow-y-auto">
+							<Inspector />
+						</div>
+					</aside>
+				</div>
+			{/if}
 		</main>
 
 		<aside class="hidden w-[280px] shrink-0 flex-col border-l border-stone-300 bg-stone-50 xl:flex">

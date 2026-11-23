@@ -4,6 +4,7 @@
 	import { categoryLabel } from '#lib/i18n/labels';
 	import { partDefsByCategory } from '#lib/parts/registry';
 	import { ui } from '#lib/ui.svelte';
+	import Icon from './Icon.svelte';
 	import PartThumb from './PartThumb.svelte';
 
 	let query = $state('');
@@ -58,12 +59,17 @@
 			role="dialog"
 			aria-label={m.add_part_title()}
 		>
-			<div class="border-b border-stone-200 p-3">
+			<div class="relative border-b border-stone-200 p-3">
+				<Icon
+					name="search"
+					size={15}
+					class="pointer-events-none absolute top-1/2 left-6 -translate-y-1/2 text-stone-400"
+				/>
 				<input
 					bind:value={query}
 					use:focus
 					placeholder={m.add_part_search()}
-					class="w-full rounded-md border border-stone-300 bg-stone-50 px-3 py-2 text-[13px] outline-none focus:border-stone-500"
+					class="w-full rounded-md border border-stone-300 bg-stone-50 py-2 pr-3 pl-9 text-[13px] outline-none focus:border-stone-500"
 					onkeydown={(event) => {
 						if (event.key === 'Enter' && matches[0]) add(matches[0].type);
 					}}

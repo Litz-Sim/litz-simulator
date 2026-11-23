@@ -9,6 +9,7 @@
 	} from '@codemirror/autocomplete';
 	import { indentWithTab } from '@codemirror/commands';
 	import { cpp } from '@codemirror/lang-cpp';
+	import { python } from '@codemirror/lang-python';
 	import { EditorState } from '@codemirror/state';
 	import { EditorView, keymap } from '@codemirror/view';
 	import { basicSetup } from 'codemirror';
@@ -91,30 +92,54 @@
 		})
 	]);
 
+	const PYTHON = [
+		['print', 'built-in'],
+		['time.sleep', 'time'],
+		['machine.Pin', 'machine'],
+		['machine.reset', 'machine'],
+		['microcontroller.reset', 'microcontroller'],
+		['board.GPIO', 'board']
+	] as const;
+
+	const pythonSources = completeFromList([
+		...PYTHON.map(([label, detail]) => ({ label, detail, type: 'function' })),
+		snippetCompletion('import time\n\nwhile True:\n    ${}\n    time.sleep(1)', {
+			label: 'while True',
+			detail: 'main loop',
+			type: 'keyword'
+		})
+	]);
+
 	let {
 		value,
 		readonly = false,
+		language = 'c',
 		onchange
-	}: { value: string; readonly?: boolean; onchange?: (text: string) => void } = $props();
+	}: {
+		value: string;
+		readonly?: boolean;
+		language?: 'c' | 'python';
+		onchange?: (text: string) => void;
+	} = $props();
 
 	let host: HTMLDivElement;
 	let view: EditorView | null = null;
 
 	onMount(() => {
-		const extensions = [
-			basicSetup,
-			cpp(),
-			autocompletion({
-				override: [
-					chipSources,
-					ifNotIn(
-						IDF.map(([label]) => label),
-						completeAnyWord
-					)
-				]
-			}),
-			EditorView.lineWrapping
-		];
+		const syntax = language === 'python' ? python() : cpp();
+		const completion =
+			language === 'python'
+				? autocompletion({ override: [pythonSources, completeAnyWord] })
+				: autocompletion({
+						override: [
+							chipSources,
+							ifNotIn(
+								IDF.map(([label]) => label),
+								completeAnyWord
+							)
+						]
+					});
+		const extensions = [basicSetup, syntax, completion, EditorView.lineWrapping];
 		if (readonly) {
 			extensions.push(EditorState.readOnly.of(true));
 		} else {

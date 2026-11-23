@@ -2,6 +2,7 @@
 	import { canvasControl } from '#lib/canvas/control';
 	import { m } from '#lib/paraglide/messages.js';
 	import { doc } from '#lib/sketch/doc.svelte';
+	import Icon from './Icon.svelte';
 
 	function addTab(): void {
 		doc.newTab();
@@ -29,14 +30,14 @@
 </script>
 
 <div
-	class="flex h-8 shrink-0 items-center gap-0 overflow-x-auto border-b border-stone-300 bg-stone-200/70 pl-1 [@media(pointer:coarse)]:h-11"
+	class="flex h-9 shrink-0 items-stretch gap-0.5 overflow-x-auto border-b border-stone-300 bg-stone-100 px-1.5 [@media(pointer:coarse)]:h-11"
 >
 	{#each doc.tabs as tab, index (tab.id)}
 		<div
-			class="group relative flex h-7 max-w-48 shrink-0 items-center gap-1 rounded-t border border-b-0 px-2 text-[12px] [@media(pointer:coarse)]:h-10 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:text-[13px] {index ===
+			class="group my-1 flex h-7 max-w-52 min-w-0 shrink-0 items-center gap-1 rounded-md px-2 text-[12px] transition-colors [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:text-[13px] {index ===
 			doc.activeTab
-				? 'border-stone-300 bg-stone-50 text-stone-800'
-				: 'border-transparent text-stone-500 hover:bg-stone-300/60'}"
+				? 'bg-white text-stone-900 shadow-sm ring-1 ring-stone-300'
+				: 'text-stone-500 hover:bg-stone-200/70 hover:text-stone-800'}"
 		>
 			{#if editing === index}
 				<input
@@ -52,7 +53,8 @@
 			{:else}
 				<button
 					type="button"
-					class="truncate"
+					class="min-w-0 truncate"
+					title={tab.name}
 					onclick={() => doc.switchTab(index)}
 					ondblclick={() => begin(index)}
 				>
@@ -61,13 +63,14 @@
 				<button
 					type="button"
 					aria-label={m.tab_close()}
-					class="rounded px-0.5 text-stone-400 opacity-0 group-hover:opacity-100 hover:bg-stone-300 hover:text-stone-700 [@media(pointer:coarse)]:px-1.5 [@media(pointer:coarse)]:opacity-100"
+					title={m.tab_close()}
+					class="flex h-5 w-5 shrink-0 items-center justify-center rounded text-stone-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-stone-200 hover:text-stone-700 [@media(pointer:coarse)]:h-7 [@media(pointer:coarse)]:w-7 [@media(pointer:coarse)]:opacity-100"
 					onclick={(event) => {
 						event.stopPropagation();
 						doc.closeTab(index);
 					}}
 				>
-					×
+					<Icon name="close" size={12} />
 				</button>
 			{/if}
 		</div>
@@ -75,9 +78,10 @@
 	<button
 		type="button"
 		aria-label={m.tab_new()}
-		class="ml-1 flex h-6 w-6 shrink-0 items-center justify-center rounded text-[15px] leading-none text-stone-600 hover:bg-stone-300 [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9"
+		title={m.tab_new()}
+		class="my-1 ml-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-stone-500 transition-colors hover:bg-stone-200 hover:text-stone-900 [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9"
 		onclick={addTab}
 	>
-		+
+		<Icon name="plus" size={14} />
 	</button>
 </div>

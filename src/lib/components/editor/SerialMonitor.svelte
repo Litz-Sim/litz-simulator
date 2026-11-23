@@ -126,6 +126,8 @@
 		onSend,
 		onClear,
 		boards = [],
+		selected = null,
+		onselect,
 		placeholder,
 		sendLabel,
 		clearLabel,
@@ -137,7 +139,9 @@
 		error: string | null;
 		onSend: (text: string, board?: string) => void;
 		onClear: () => void;
-		boards?: string[];
+		boards?: { id: string; name: string }[];
+		selected?: string | null;
+		onselect?: (board: string) => void;
 		placeholder: string;
 		sendLabel: string;
 		clearLabel: string;
@@ -146,8 +150,7 @@
 	} = $props();
 
 	let input = $state('');
-	let target = $state('');
-	const destination = $derived(target || boards[0] || '');
+	const destination = $derived(selected ?? boards[0]?.id ?? '');
 	let scroller = $state<HTMLDivElement | undefined>();
 	let inputElement: HTMLInputElement | undefined;
 	let stickToBottom = true;
@@ -161,9 +164,13 @@
 		const start = Math.max(0, rawLines.length - MAX_LINES);
 		const lines: Token[][] = [];
 		for (let index = start; index < rawLines.length; index += 1) {
-			const raw = rawLines[index] ?? '';
-			const carriageReturn = raw.lastIndexOf('\r');
-			const line = carriageReturn === -1 ? raw : raw.slice(carriageReturn + 1);
+			let line = rawLines[index] ?? '';
+			// CRLF ends every normal line; a lone CR only rewrites the line
+			// already on screen. Strip the terminator before looking for the
+			// last in-line redraw, or every CRLF line would render empty.
+			while (line.endsWith('\r')) line = line.slice(0, -1);
+			const carriageReturn = line.lastIndexOf('\r');
+			if (carriageReturn !== -1) line = line.slice(carriageReturn + 1);
 			lines.push(parseLine(line));
 		}
 		return { lines, truncated: start > 0 };
@@ -178,7 +185,7 @@
 
 	function submit(event: SubmitEvent): void {
 		event.preventDefault();
-		onSend(`${input}\n`, boards.length > 1 ? destination : undefined);
+		onSend(`${input}\n`, destination || undefined);
 		input = '';
 		inputElement?.focus();
 	}
@@ -193,6 +200,26 @@
 </script>
 
 <div class="flex h-full min-h-0 flex-col bg-stone-50">
+	{#if boards.length > 1}
+		<div
+			class="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-stone-200 bg-stone-100 px-2 py-1"
+		>
+			{#each boards as board (board.id)}
+				<button
+					type="button"
+					title={board.name}
+					class="flex h-6 max-w-44 shrink-0 items-center gap-1.5 rounded-md border px-2 text-[10px] transition-colors [@media(pointer:coarse)]:h-8 [@media(pointer:coarse)]:text-[11px] {selected ===
+					board.id
+						? 'border-stone-700 bg-stone-800 text-white'
+						: 'border-stone-300 bg-white text-stone-600 hover:border-stone-400'}"
+					onclick={() => onselect?.(board.id)}
+				>
+					<span class="font-mono">{board.id}</span>
+					<span class="truncate opacity-70">{board.name}</span>
+				</button>
+			{/each}
+		</div>
+	{/if}
 	<div
 		bind:this={scroller}
 		onscroll={handleScroll}
@@ -229,16 +256,6 @@
 	{/if}
 
 	<form class="flex items-center gap-1 border-t border-stone-200 px-2 py-1" onsubmit={submit}>
-		{#if boards.length > 1}
-			<select
-				class="rounded border border-stone-300 bg-white px-1 py-0.5 font-mono text-[10px] text-stone-600 [@media(pointer:coarse)]:px-2 [@media(pointer:coarse)]:py-2 [@media(pointer:coarse)]:text-[11px]"
-				bind:value={target}
-			>
-				{#each boards as board (board)}
-					<option value={board}>{board}</option>
-				{/each}
-			</select>
-		{/if}
 		<input
 			bind:this={inputElement}
 			bind:value={input}

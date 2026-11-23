@@ -1,4 +1,3 @@
-import { asset } from '$app/paths';
 import { canvasControl } from '#lib/canvas/control';
 import { m } from '#lib/paraglide/messages.js';
 import { partDef } from '#lib/parts/registry';
@@ -14,38 +13,17 @@ import type {
 	ScopeSnapshot,
 	StopWord
 } from './backend';
+import {
+	bundledFirmware,
+	cacheFirmware,
+	loadBundled,
+	loadBundledRom,
+	readFirmware
+} from './firmware';
 import { LitzBackend } from './litzBackend';
 import { clearLiveStates, setLiveDisplay, setLiveStates } from './live';
-
-/**
- * One fixture image per chip family the shipped wasm boots. Compiling `main.c`
- * is a separate problem; the slot takes any bytes, so a compiler (or a remote
- * build service) can replace these fetches.
- */
-const BUNDLED: Record<string, { name: string; url: string }> = {
-	esp32c3: { name: 'blinky.bin', url: asset('firmware/blinky.bin') },
-	atmega328p: { name: 'uno-blink.hex', url: asset('firmware/uno-blink.hex') },
-	rp2040: { name: 'pico-blink.bin', url: asset('firmware/pico-blink.bin') }
-};
-
-const firmwareCache: Record<string, Promise<Uint8Array>> = {};
-
-function firmwareBytes(url: string): Promise<Uint8Array> {
-	let pending: Promise<Uint8Array> | undefined = firmwareCache[url];
-	if (pending === undefined) {
-		pending = fetch(url)
-			.then(async (response) => {
-				if (!response.ok) throw new Error(m.error_firmware_http({ status: response.status }));
-				return new Uint8Array(await response.arrayBuffer());
-			})
-			.catch((error: unknown) => {
-				delete firmwareCache[url];
-				throw error;
-			});
-		firmwareCache[url] = pending;
-	}
-	return pending;
-}
+import { afterStaging, findEntry, rawPaste, storageBootstrap } from './python';
+import type { RuntimeMode } from '#lib/sketch/types';
 
 const MANIFEST_KEY = 'litz.manifests';
 
@@ -75,6 +53,22 @@ function errorText(error: unknown): string {
 interface LogEntry {
 	at: number;
 	text: string;
+}
+
+interface PythonPlan {
+	runtime: Exclude<RuntimeMode, 'native'>;
+	entry: string;
+	payload: string[];
+	phase: 'wait' | 'paste' | 'done' | 'error';
+	offset: number;
+	startedMs: number;
+	lastNudge: number;
+	lastSend: number;
+	console: string;
+	/** Hide raw-REPL traffic until the interpreter has rebooted. */
+	quiet: boolean;
+	quietText: string;
+	quietUntil: number;
 }
 
 export interface ProbeEntry {
@@ -116,6 +110,8 @@ class SimController {
 	actionError = $state<string | null>(null);
 	/** Everything the firmware printed, oldest first. */
 	serial = $state('');
+	/** Each board's console, keyed by board id. */
+	serialBoards = $state<Record<string, string>>({});
 	entries = $state<LogEntry[]>([]);
 	probes = $state<ProbeEntry[]>([]);
 	decoders = $state<string[]>([]);
@@ -138,12 +134,8 @@ class SimController {
 	breakpoints = $state<Record<string, number[]>>({});
 
 	#backend = new LitzBackend();
-	#app: Uint8Array | null = null;
-	#rom: Uint8Array | null = null;
-	#boot: Uint8Array | null = null;
-	#ptable: Uint8Array | null = null;
-	/** The chip the custom image was loaded for; other boards keep fixtures. */
-	#appChip: string | null = null;
+	/** Python boards whose stored files still have to be seeded after boot. */
+	#pythonPlans = new Map<string, PythonPlan>();
 	#frame = 0;
 	#last = 0;
 	#lastDiag = 0;
@@ -204,11 +196,14 @@ class SimController {
 		return out;
 	}
 
-	/** The image the slot would load now: a custom one, or the board's fixture. */
+	/** The image the selected board would boot now. */
 	get slotName(): string {
-		if (this.#app) return this.firmwareName;
-		const bundled = this.boardChip ? BUNDLED[this.boardChip] : undefined;
-		return bundled?.name ?? '—';
+		const boardId = doc.selectedBoardId;
+		if (!boardId) return '—';
+		const program = doc.programFor(boardId);
+		if (program.firmware) return program.firmware.name;
+		const board = this.boards.find((entry) => entry.id === boardId);
+		return bundledFirmware(board?.chip ?? null, program.runtime)?.name ?? '—';
 	}
 
 	/** Chips of every booted board, with a count when they repeat. */
@@ -239,21 +234,34 @@ class SimController {
 			return;
 		}
 
-		if (this.#boot && !this.#rom) {
-			this.#fail(m.error_boot_needs_rom());
-			return;
+		const boards = this.boards;
+		if (boards.length > 1) {
+			const withAux = boards.some((board) => {
+				const program = doc.programFor(board.id);
+				return Boolean(program.boot || program.ptable);
+			});
+			if (withAux) {
+				this.#fail(m.error_aux_single_board());
+				return;
+			}
 		}
 
 		this.loading = true;
 		try {
-			// Every board on the canvas boots its own chip; one custom image can
-			// only stand in for the first board, the rest take their fixtures.
-			const images: { id: string; app: Uint8Array }[] = [];
+			const images: { id: string; app: Uint8Array; rom?: Uint8Array }[] = [];
 			const names: string[] = [];
-			for (const board of this.boards) {
-				let app = this.#app && board.chip === this.#appChip ? this.#app : null;
-				if (!app) {
-					const bundled = board.chip ? BUNDLED[board.chip] : undefined;
+			const plans: [string, PythonPlan][] = [];
+			let boot: Uint8Array | undefined;
+			let ptable: Uint8Array | undefined;
+			for (const board of boards) {
+				const program = doc.programFor(board.id);
+				const bundled = bundledFirmware(board.chip, program.runtime);
+				let app: Uint8Array;
+				let name: string;
+				if (program.firmware) {
+					app = await readFirmware(program.firmware);
+					name = program.firmware.name;
+				} else {
 					if (!bundled) {
 						this.loading = false;
 						this.#fail(
@@ -261,23 +269,59 @@ class SimController {
 						);
 						return;
 					}
-					app = await firmwareBytes(bundled.url);
-					names.push(bundled.name);
-				} else {
-					names.push(this.firmwareName);
+					app = await loadBundled(bundled);
+					name = bundled.name;
 				}
-				images.push({ id: board.id, app });
+				let rom = program.rom ? await readFirmware(program.rom) : undefined;
+				if (!rom && bundled) rom = await loadBundledRom(bundled);
+				if (program.boot && !rom) {
+					this.loading = false;
+					this.#fail(m.error_boot_needs_rom());
+					return;
+				}
+				if (boards.length === 1) {
+					if (program.boot) boot = await readFirmware(program.boot);
+					if (program.ptable) ptable = await readFirmware(program.ptable);
+				}
+				images.push({ id: board.id, app, rom });
+				names.push(`${board.id}: ${name}`);
+				if (program.runtime !== 'native' && program.files.length > 0) {
+					const entry = findEntry(program.runtime, program.files);
+					if (!entry) {
+						this.loading = false;
+						this.#fail(m.error_python_no_entry({ runtime: program.runtime }));
+						return;
+					}
+					const bootstrap = storageBootstrap(program.runtime, program.files, entry);
+					plans.push([
+						board.id,
+						{
+							runtime: program.runtime,
+							entry,
+							payload: Array.from(rawPaste(program.runtime, bootstrap, board.chip, entry)),
+							phase: 'wait',
+							offset: 0,
+							startedMs: this.ms,
+							lastNudge: 0,
+							lastSend: 0,
+							console: '',
+							quiet: false,
+							quietText: '',
+							quietUntil: 0
+						}
+					]);
+				}
 			}
-			this.firmwareName = [...new Set(names)].join(' + ');
+			this.firmwareName = names.join(' + ');
 			await this.#backend.load(
 				JSON.stringify(diagram),
 				{
 					app: images[0]?.app,
 					// Auxiliary images describe one flash, so they only apply when the
 					// diagram has one board; a fleet takes per-board images instead.
-					rom: this.#rom ?? undefined,
-					boot: this.#boot ?? undefined,
-					ptable: this.#ptable ?? undefined,
+					rom: images[0]?.rom,
+					boot,
+					ptable,
 					boards: images.length > 1 ? images : undefined
 				},
 				{ analog: this.analog, manifests: this.manifests.map((entry) => entry.text) }
@@ -286,6 +330,7 @@ class SimController {
 				this.#backend.dispose();
 				return;
 			}
+			this.#pythonPlans = new Map(plans);
 			this.chipInfo = this.#backend.chipInfo();
 			this.boardRuntime = this.#backend.boards();
 			this.debugBoard = 0;
@@ -344,6 +389,7 @@ class SimController {
 		this.#boundDecoders.clear();
 		this.#boardProbes.clear();
 		this.#boardSerial.clear();
+		this.#pythonPlans.clear();
 		canvasControl.engine?.invalidate();
 		if (wasRunning) this.#log(m.sim_stopped());
 	}
@@ -403,36 +449,44 @@ class SimController {
 		void this.start();
 	}
 
-	async loadFirmware(file: File): Promise<void> {
-		let bytes: Uint8Array;
-		try {
-			bytes = new Uint8Array(await file.arrayBuffer());
-		} catch (error) {
-			this.#fail(errorText(error));
+	async loadFirmware(file: File, boardId?: string): Promise<void> {
+		const target = boardId ?? doc.selectedBoardId;
+		if (!target) {
+			this.actionError = m.error_no_board();
 			return;
 		}
-		if (!bytes.length) return;
-		this.#app = bytes;
-		this.#appChip = this.boardChip;
-		this.firmwareName = file.name;
-		this.actionError = null;
+		if (!file.size) return;
+		try {
+			const ref = await cacheFirmware(file);
+			doc.setBoardFirmware(target, ref);
+			this.actionError = null;
+		} catch (error) {
+			this.actionError = errorText(error);
+			return;
+		}
 		if (this.running || this.loading) this.reset();
 	}
 
-	/** Load a bootloader, partition table or mask ROM next to the application. */
-	async loadImagePart(kind: 'rom' | 'boot' | 'ptable', file: File): Promise<void> {
-		let bytes: Uint8Array;
-		try {
-			bytes = new Uint8Array(await file.arrayBuffer());
-		} catch (error) {
-			this.#fail(errorText(error));
+	/** Load a bootloader, partition table or mask ROM for one board. */
+	async loadImagePart(
+		kind: 'rom' | 'boot' | 'ptable',
+		file: File,
+		boardId?: string
+	): Promise<void> {
+		const target = boardId ?? doc.selectedBoardId;
+		if (!target) {
+			this.actionError = m.error_no_board();
 			return;
 		}
-		if (!bytes.length) return;
-		if (kind === 'rom') this.#rom = bytes;
-		else if (kind === 'boot') this.#boot = bytes;
-		else this.#ptable = bytes;
-		this.actionError = null;
+		if (!file.size) return;
+		try {
+			const ref = await cacheFirmware(file);
+			doc.setBoardImagePart(target, kind, ref);
+			this.actionError = null;
+		} catch (error) {
+			this.actionError = errorText(error);
+			return;
+		}
 		if (this.running || this.loading) this.reset();
 	}
 
@@ -446,15 +500,14 @@ class SimController {
 		this.speed = value;
 	}
 
-	/** Drop the custom image and go back to the fixture for the board's chip. */
-	useBundledFirmware(): void {
-		this.#app = null;
-		this.#appChip = null;
-		this.#rom = null;
-		this.#boot = null;
-		this.#ptable = null;
-		const bundled = this.boardChip ? BUNDLED[this.boardChip] : undefined;
-		this.firmwareName = bundled?.name ?? '';
+	/** Drop the custom images and use the bundled image for the board's runtime. */
+	useBundledFirmware(boardId?: string): void {
+		const target = boardId ?? doc.selectedBoardId;
+		if (!target) return;
+		doc.setBoardFirmware(target, null);
+		doc.setBoardImagePart(target, 'rom', null);
+		doc.setBoardImagePart(target, 'boot', null);
+		doc.setBoardImagePart(target, 'ptable', null);
 		if (this.running || this.loading) this.reset();
 	}
 
@@ -696,7 +749,13 @@ class SimController {
 
 	clearSerial(): void {
 		this.serial = '';
+		this.serialBoards = {};
 		this.#boardSerial.clear();
+	}
+
+	/** One board's console; no board asks for the merged stream. */
+	serialFor(boardId: string | null): string {
+		return boardId ? (this.serialBoards[boardId] ?? '') : this.serial;
 	}
 
 	/** Bytes typed into the serial monitor, delivered to one board's UART0. */
@@ -712,6 +771,13 @@ class SimController {
 		}
 		this.#backend.serialWrite(text);
 		this.serial = (this.serial + text).slice(-40000);
+	}
+
+	#appendBoardSerial(boardId: string, text: string): void {
+		this.serialBoards = {
+			...this.serialBoards,
+			[boardId]: ((this.serialBoards[boardId] ?? '') + text).slice(-40000)
+		};
 	}
 
 	#tick = (): void => {
@@ -753,13 +819,76 @@ class SimController {
 		this.#frame = requestAnimationFrame(this.#tick);
 	};
 
+	#boardOutput(boardId: string, chunk: string): string {
+		const plan = this.#pythonPlans.get(boardId);
+		if (!plan || !plan.quiet) return chunk;
+		if (this.ms > plan.quietUntil && plan.quietUntil > 0) {
+			plan.quiet = false;
+			return chunk;
+		}
+		plan.quietText = (plan.quietText + chunk).slice(-1000);
+		const after = afterStaging(plan.quietText);
+		if (after === null) return '';
+		plan.quiet = false;
+		plan.quietText = '';
+		return after;
+	}
+
+	#advancePython(boardId: string, chunk: string): void {
+		const plan = this.#pythonPlans.get(boardId);
+		if (!plan || plan.phase === 'done' || plan.phase === 'error') return;
+		plan.console = (plan.console + chunk).slice(-800);
+		if (plan.phase === 'wait') {
+			if (plan.console.includes('>>>')) {
+				plan.phase = 'paste';
+				plan.console = '';
+				plan.quiet = true;
+			} else {
+				const now = performance.now();
+				if (plan.runtime === 'circuitpython' && now - plan.lastNudge > 400) {
+					this.#backend.serialWriteBoard(boardId, '\x03');
+					plan.lastNudge = now;
+				}
+				if (this.ms - plan.startedMs > 15_000) {
+					plan.phase = 'error';
+					const text = m.error_python_prompt({ board: boardId });
+					this.actionError = text;
+					this.#log(text);
+				}
+				return;
+			}
+		}
+		const now = performance.now();
+		if (now - plan.lastSend < 16) return;
+		plan.lastSend = now;
+		const next = plan.payload.slice(plan.offset, plan.offset + 16).join('');
+		if (next) {
+			this.#backend.serialWriteBoard(boardId, next);
+			plan.offset += 16;
+		}
+		if (plan.offset >= plan.payload.length) {
+			plan.phase = 'done';
+			plan.quietUntil = this.ms + 1500;
+			this.#log(m.python_stored({ board: boardId, entry: plan.entry }));
+		}
+	}
+
 	#refresh(force = false): void {
 		const boards = this.boardRuntime;
-		if (boards.length > 1) {
-			for (const board of boards) {
-				const chunk = this.#backend.serialTakeBoard(board.id);
-				if (!chunk) continue;
-				const pending = (this.#boardSerial.get(board.id) ?? '') + chunk;
+		for (const board of boards) {
+			const chunk = this.#backend.serialTakeBoard(board.id);
+			this.#advancePython(board.id, chunk);
+			// Raw Python bootstrap traffic is control bytes, not terminal text. ESC
+			// itself stays: the serial panel parses the ANSI sequences it introduces.
+			const visible = this.#boardOutput(board.id, chunk).replace(
+				// eslint-disable-next-line no-control-regex -- these bytes are the raw-REPL framing
+				/[\x00-\x08\x0b\x0c\x0e-\x1a\x1c-\x1f]/g,
+				''
+			);
+			if (!visible) continue;
+			this.#appendBoardSerial(board.id, visible);
+			if (boards.length > 1) {
+				const pending = (this.#boardSerial.get(board.id) ?? '') + visible;
 				const lines = pending.split('\n');
 				const rest = lines.pop() ?? '';
 				this.#boardSerial.set(board.id, rest);
@@ -770,10 +899,9 @@ class SimController {
 					.map((line) => `[${board.id}] ${line}`)
 					.join('\n');
 				if (prefixed) this.serial = (this.serial + prefixed + '\n').slice(-40000);
+			} else {
+				this.serial = (this.serial + visible).slice(-40000);
 			}
-		} else {
-			const text = this.#backend.serialTake();
-			if (text) this.serial = (this.serial + text).slice(-40000);
 		}
 
 		setLiveStates(
@@ -849,6 +977,7 @@ class SimController {
 		this.#boundDecoders.clear();
 		this.#boardProbes.clear();
 		this.#boardSerial.clear();
+		this.#pythonPlans.clear();
 	}
 
 	#registerBoardProbes(): void {

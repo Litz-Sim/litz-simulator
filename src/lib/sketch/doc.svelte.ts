@@ -6,10 +6,14 @@ import {
 	DEFAULT_WIRE_COLOR,
 	GRID,
 	type BoardInstance,
+	type BoardProgram,
 	type BoardType,
 	type Endpoint,
+	type FirmwareRef,
 	type PartInstance,
+	type ProgramFile,
 	type Rotation,
+	type RuntimeMode,
 	type Selection,
 	type Sketch,
 	type WireStyle
@@ -37,8 +41,62 @@ export function blankSketch(name: string = m.untitled()): Sketch {
 		boards: [{ id: 'bb1', type: 'breadboard-full', x: 0, y: 0, rotate: 0 }],
 		parts: [],
 		wires: [],
-		view: { panX: 0, panY: 0, zoom: 1 }
+		view: { panX: 0, panY: 0, zoom: 1 },
+		programs: {}
 	};
+}
+
+export function pythonEntry(runtime: RuntimeMode): string | null {
+	if (runtime === 'micropython') return 'main.py';
+	if (runtime === 'circuitpython') return 'code.py';
+	return null;
+}
+
+export function defaultProgram(runtime: RuntimeMode = 'native'): BoardProgram {
+	const files: ProgramFile[] = [];
+	const entry = pythonEntry(runtime);
+	if (entry) {
+		files.push({
+			name: entry,
+			text:
+				runtime === 'micropython'
+					? 'import time\n\nprint("Hello from MicroPython")\n\nwhile True:\n    time.sleep(1)\n'
+					: 'import time\n\nprint("Hello from CircuitPython")\n\nwhile True:\n    time.sleep(1)\n'
+		});
+	}
+	return { runtime, firmware: null, rom: null, boot: null, ptable: null, files };
+}
+
+export function normalizeProgram(raw: Partial<BoardProgram> | undefined): BoardProgram {
+	const runtime: RuntimeMode =
+		raw?.runtime === 'micropython' || raw?.runtime === 'circuitpython' ? raw.runtime : 'native';
+	// An empty list is a choice (the board's storage was cleared), so only a
+	// program that never named files gets the runtime's starter file.
+	const rawFiles = raw?.files;
+	const hasFiles = Array.isArray(rawFiles);
+	const files = hasFiles
+		? rawFiles
+				.filter(
+					(file): file is ProgramFile =>
+						typeof file?.name === 'string' && typeof file?.text === 'string'
+				)
+				.map((file) => ({ name: file.name, text: file.text }))
+		: [];
+	return {
+		runtime,
+		firmware: raw?.firmware ?? null,
+		rom: raw?.rom ?? null,
+		boot: raw?.boot ?? null,
+		ptable: raw?.ptable ?? null,
+		files: hasFiles ? files : defaultProgram(runtime).files
+	};
+}
+
+function normalizePrograms(raw: Record<string, Partial<BoardProgram>> | undefined) {
+	if (!raw) return {};
+	const programs: Record<string, BoardProgram> = {};
+	for (const [id, program] of Object.entries(raw)) programs[id] = normalizeProgram(program);
+	return programs;
 }
 
 function clone<T>(value: T): T {
@@ -229,6 +287,118 @@ class DocumentStore {
 		this.tabs[this.activeTab].name = trimmed;
 		this.sketch.name = trimmed;
 		this.bump();
+	}
+
+	// --------------------------------------------------------------- programs
+
+	/** Development boards on the canvas, in part order. */
+	developmentBoards(): PartInstance[] {
+		return this.sketch.parts.filter((part) => Boolean(partDef(part.type).chip));
+	}
+
+	/** The selected development board, or the first one when none is selected. */
+	get selectedBoardId(): string | null {
+		const selected = this.selected.find((item) => item.kind === 'part');
+		if (selected) {
+			const part = this.part(selected.id);
+			if (part && partDef(part.type).chip) return part.id;
+		}
+		return this.developmentBoards()[0]?.id ?? null;
+	}
+
+	/** A board's program, or the native default when it has never been edited. */
+	programFor(boardId: string): BoardProgram {
+		return this.sketch.programs?.[boardId] ?? defaultProgram();
+	}
+
+	#storeProgram(boardId: string, program: BoardProgram): void {
+		this.sketch.programs = { ...(this.sketch.programs ?? {}), [boardId]: program };
+	}
+
+	setBoardRuntime(boardId: string, runtime: RuntimeMode): void {
+		this.mutate(() => {
+			const current = this.programFor(boardId);
+			if (current.runtime === runtime) return;
+			const next: BoardProgram = {
+				...current,
+				runtime,
+				// A native image cannot boot a Python interpreter and vice versa.
+				firmware: null,
+				rom: null,
+				boot: null,
+				ptable: null
+			};
+			if (runtime !== 'native') {
+				// Switching interpreters should carry the program across: a board
+				// whose storage holds only the old runtime's entry gets that file
+				// renamed, and an empty storage gets the starter file.
+				const target = pythonEntry(runtime);
+				const previous = pythonEntry(current.runtime);
+				const hasEntry =
+					runtime === 'circuitpython'
+						? next.files.some((file) => file.name === 'code.py' || file.name === 'main.py')
+						: next.files.some((file) => file.name === 'main.py');
+				if (!hasEntry && target) {
+					const carried = previous ? next.files.some((file) => file.name === previous) : false;
+					next.files = carried
+						? next.files.map((file) =>
+								file.name === previous ? { name: target, text: file.text } : file
+							)
+						: [...next.files, ...defaultProgram(runtime).files];
+				}
+			}
+			this.#storeProgram(boardId, next);
+		});
+	}
+
+	setBoardFirmware(boardId: string, firmware: FirmwareRef | null): void {
+		this.mutate(() => {
+			const next = { ...this.programFor(boardId), firmware };
+			this.#storeProgram(boardId, next);
+		});
+	}
+
+	setBoardImagePart(
+		boardId: string,
+		kind: 'rom' | 'boot' | 'ptable',
+		ref: FirmwareRef | null
+	): void {
+		this.mutate(() => {
+			const next = { ...this.programFor(boardId), [kind]: ref };
+			this.#storeProgram(boardId, next);
+		});
+	}
+
+	setBoardFile(boardId: string, name: string, text: string): void {
+		this.mutate(() => {
+			const program = this.programFor(boardId);
+			const files = program.files.map((file) => (file.name === name ? { name, text } : file));
+			this.#storeProgram(boardId, { ...program, files });
+		});
+	}
+
+	addBoardFile(boardId: string, name: string): boolean {
+		const trimmed = name.trim().replace(/^\/+/, '');
+		if (!trimmed || trimmed.includes('..') || /[\\:*?"<>|]/.test(trimmed)) return false;
+		const program = this.programFor(boardId);
+		if (program.files.some((file) => file.name === trimmed)) return false;
+		this.mutate(() => {
+			this.#storeProgram(boardId, {
+				...program,
+				files: [...program.files, { name: trimmed, text: '' }]
+			});
+		});
+		return true;
+	}
+
+	removeBoardFile(boardId: string, name: string): void {
+		this.mutate(() => {
+			const program = this.programFor(boardId);
+			this.#storeProgram(boardId, {
+				...program,
+				files: program.files.filter((file) => file.name !== name)
+			});
+		});
 	}
 
 	// ------------------------------------------------------------- selection
@@ -488,6 +658,11 @@ class DocumentStore {
 			);
 			this.sketch.parts = this.sketch.parts.filter((part) => !parts.has(part.id));
 			this.sketch.boards = this.sketch.boards.filter((board) => !boards.has(board.id));
+			if (this.sketch.programs) {
+				const programs = { ...this.sketch.programs };
+				for (const id of parts) delete programs[id];
+				this.sketch.programs = programs;
+			}
 		});
 		this.selected = [];
 	}
@@ -583,7 +758,8 @@ class DocumentStore {
 						wires: Array.isArray(sketch.wires)
 							? sketch.wires.map((wire) => ({ ...wire, style: 'ortho' as const }))
 							: [],
-						view: sketch.view ?? { panX: 0, panY: 0, zoom: 1 }
+						view: sketch.view ?? { panX: 0, panY: 0, zoom: 1 },
+						programs: normalizePrograms(sketch.programs)
 					}
 				});
 			}
@@ -607,6 +783,7 @@ class DocumentStore {
 	toJSON(): string {
 		const plain: Record<string, unknown> = { ...clone(this.sketch) };
 		delete plain.view;
+		delete plain.programs;
 		return JSON.stringify(plain, null, 2);
 	}
 
@@ -630,7 +807,8 @@ class DocumentStore {
 				wires: Array.isArray(parsed.wires)
 					? parsed.wires.map((wire) => ({ ...wire, style: 'ortho' as const }))
 					: [],
-				view: parsed.view ?? this.sketch.view
+				view: parsed.view ?? this.sketch.view,
+				programs: normalizePrograms(parsed.programs)
 			};
 			this.sketch = next;
 			this.selected = [];
@@ -653,11 +831,14 @@ class DocumentStore {
 			if (saved) {
 				const parsed = JSON.parse(saved) as { tabs?: Tab[]; active?: number };
 				if (Array.isArray(parsed.tabs) && parsed.tabs.length) {
-					this.tabs = parsed.tabs.map((tab) => ({
-						...tab,
-						code: tab.code ?? DEFAULT_CODE,
-						sketch: orthoWires(tab.sketch)
-					}));
+					this.tabs = parsed.tabs.map((tab) => {
+						const sketch = orthoWires(tab.sketch);
+						return {
+							...tab,
+							code: tab.code ?? DEFAULT_CODE,
+							sketch: { ...sketch, programs: normalizePrograms(sketch.programs) }
+						};
+					});
 					this.activeTab = Math.min(parsed.active ?? 0, this.tabs.length - 1);
 					this.selected = [];
 					this.bump();

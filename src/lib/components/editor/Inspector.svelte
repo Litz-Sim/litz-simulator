@@ -8,6 +8,7 @@
 	import { livePart } from '#lib/sim/live';
 	import { doc } from '#lib/sketch/doc.svelte';
 	import { GRID, WIRE_COLORS, type Rotation } from '#lib/sketch/types';
+	import BoardProgram from './BoardProgram.svelte';
 	import PartControls from './PartControls.svelte';
 
 	const selection = $derived(doc.selected);
@@ -143,6 +144,10 @@
 		</p>
 		<h2 class="mt-0.5 text-[15px] font-semibold text-stone-800">{def.name}</h2>
 		<p class="text-[12px] text-stone-500">{part.type} · {part.id}</p>
+
+		{#if def.chip}
+			<BoardProgram boardId={part.id} chip={def.chip} />
+		{/if}
 
 		<div class="mt-4 grid grid-cols-2 gap-2">
 			<label class="block">
