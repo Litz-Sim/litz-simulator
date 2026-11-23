@@ -57,6 +57,25 @@ type Drag =
 const MIN_ZOOM = 0.06;
 const MAX_ZOOM = 6;
 const RULER = 20;
+/** How long a finger rests on a pin before its name appears. */
+const LONG_PRESS = 450;
+
+function roundRectPath(
+	ctx: CanvasRenderingContext2D,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	radius: number
+): void {
+	ctx.beginPath();
+	ctx.moveTo(x + radius, y);
+	ctx.arcTo(x + width, y, x + width, y + height, radius);
+	ctx.arcTo(x + width, y + height, x, y + height, radius);
+	ctx.arcTo(x, y + height, x, y, radius);
+	ctx.arcTo(x, y, x + width, y, radius);
+	ctx.closePath();
+}
 
 function boxOf(part: PartInstance, width: number, height: number) {
 	const rad = (part.rotate * Math.PI) / 180;
@@ -102,6 +121,10 @@ export class CanvasEngine {
 	/** Live touch points, in canvas pixels, for pinch and two-finger pan. */
 	#touches = new Map<number, Point>();
 	#gesture: { startDistance: number; startZoom: number; anchor: Point } | null = null;
+	/** Pending long-press on a pin; the timer names it without moving. */
+	#pressTimer = 0;
+	/** Where the finger went down, so drift can cancel the long press. */
+	#pressAt: Point | null = null;
 	#resize: ResizeObserver;
 
 	constructor(canvas: HTMLCanvasElement) {
@@ -135,6 +158,7 @@ export class CanvasEngine {
 		window.removeEventListener('keydown', this.#onKeyDown);
 		window.removeEventListener('keyup', this.#onKeyUp);
 		this.#resize.disconnect();
+		clearTimeout(this.#pressTimer);
 		if (this.#frame) cancelAnimationFrame(this.#frame);
 	}
 
@@ -338,6 +362,7 @@ export class CanvasEngine {
 		}
 
 		if (this.#hover) this.#drawHover(ctx, this.#hover, view.zoom);
+		this.#drawPinLabels(ctx, view.zoom);
 
 		ctx.setTransform(this.#dpr, 0, 0, this.#dpr, 0, 0);
 		if (this.#drag?.kind === 'marquee') this.#drawMarquee(ctx);
@@ -453,15 +478,56 @@ export class CanvasEngine {
 			ctx.arc(hit.point.x, hit.point.y, 8 / zoom, 0, Math.PI * 2);
 			ctx.stroke();
 		}
-		if (hit.kind === 'pin') {
-			ctx.save();
-			ctx.fillStyle = 'rgba(24, 30, 26, 0.9)';
-			ctx.font = `${10 / zoom}px ui-sans-serif, system-ui, sans-serif`;
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
-			ctx.fillText(hit.pin.name, hit.point.x, hit.point.y - 15 / zoom);
-			ctx.restore();
+	}
+
+	/**
+	 * Pin names: the pin under the pointer or finger, and the two ends of a
+	 * selected wire. The tag is screen-sized and dark, so it reads over any
+	 * artwork, including boards that print no pin labels of their own.
+	 */
+	#drawPinLabels(ctx: CanvasRenderingContext2D, zoom: number): void {
+		const labels = new Map<string, { name: string; point: Point }>();
+		const add = (name: string, point: Point): void => {
+			const key = `${Math.round(point.x)},${Math.round(point.y)}`;
+			if (!labels.has(key)) labels.set(key, { name, point });
+		};
+		if (this.#hover?.kind === 'pin') add(this.#hover.pin.name, this.#hover.point);
+		for (const wire of doc.sketch.wires) {
+			if (!doc.isSelected('wire', wire.id)) continue;
+			for (const endpoint of [wire.from, wire.to]) {
+				const pin = this.#endpointPin(endpoint);
+				if (pin) add(pin.name, pin.point);
+			}
 		}
+		for (const label of labels.values()) {
+			this.#drawPinTag(ctx, label.name, label.point, zoom);
+		}
+	}
+
+	#drawPinTag(ctx: CanvasRenderingContext2D, name: string, point: Point, zoom: number): void {
+		const size = 11 / zoom;
+		const padX = 5 / zoom;
+		const padY = 3 / zoom;
+		ctx.save();
+		ctx.font = `600 ${size}px ui-sans-serif, system-ui, sans-serif`;
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		const width = ctx.measureText(name).width + padX * 2;
+		const height = size + padY * 2;
+		const view = doc.sketch.view;
+		// Flip below the pin when the tag would run under the ruler.
+		const screenY = point.y * view.zoom + view.panY;
+		const gap = 4 / zoom;
+		const above = screenY - gap - height > RULER;
+		const centerY = point.y + (above ? -1 : 1) * (height / 2 + gap);
+		const left = point.x - width / 2;
+		const top = centerY - height / 2;
+		roundRectPath(ctx, left, top, width, height, 4 / zoom);
+		ctx.fillStyle = 'rgba(17, 20, 18, 0.94)';
+		ctx.fill();
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText(name, point.x, centerY);
+		ctx.restore();
 	}
 
 	#drawMarquee(ctx: CanvasRenderingContext2D): void {
@@ -617,6 +683,16 @@ export class CanvasEngine {
 		return null;
 	}
 
+	/** The part pin a wire ends on, with its live position; holes have no name. */
+	#endpointPin(endpoint: Endpoint): { name: string; point: Point } | null {
+		if (endpoint.kind !== 'pin') return null;
+		const part = doc.part(endpoint.part);
+		if (!part) return null;
+		const pin = partDef(part.type).pins.find((entry) => entry.name === endpoint.pin);
+		if (!pin) return null;
+		return { name: pin.name, point: this.#pinWorld(part, pin) };
+	}
+
 	#marqueeRect(drag: Extract<Drag, { kind: 'marquee' }>) {
 		return {
 			x0: Math.min(drag.start.x, drag.current.x),
@@ -708,6 +784,9 @@ export class CanvasEngine {
 
 	/** Two fingers take over from whatever one finger started. */
 	#beginGesture(): void {
+		clearTimeout(this.#pressTimer);
+		this.#pressTimer = 0;
+		this.#pressAt = null;
 		const pair = this.#touchPair();
 		if (!pair) return;
 		if (this.#pressed) {
@@ -783,6 +862,17 @@ export class CanvasEngine {
 		}
 
 		const hit = this.#hitTest(point);
+		// A finger hides what it covers; resting on a pin names it.
+		if (event.pointerType === 'touch' && hit?.kind === 'pin') {
+			clearTimeout(this.#pressTimer);
+			this.#pressAt = point;
+			this.#pressTimer = window.setTimeout(() => {
+				this.#pressTimer = 0;
+				this.#pressAt = null;
+				this.#hover = hit;
+				this.invalidate();
+			}, LONG_PRESS);
+		}
 		if (!hit) {
 			// A finger on empty canvas pans; a mouse still marquee-selects.
 			if (event.pointerType === 'touch') {
@@ -894,6 +984,16 @@ export class CanvasEngine {
 		canvasStatus.x = point.x;
 		canvasStatus.y = point.y;
 
+		if (this.#pressAt) {
+			const drift = Math.hypot(point.x - this.#pressAt.x, point.y - this.#pressAt.y);
+			// Finger jitter should not cancel the long press; a drag should.
+			if (drift * doc.sketch.view.zoom > 10) {
+				clearTimeout(this.#pressTimer);
+				this.#pressTimer = 0;
+				this.#pressAt = null;
+			}
+		}
+
 		if (this.#drag?.kind === 'pan') {
 			const view = doc.sketch.view;
 			// Both the start and the current point are client coordinates.
@@ -997,6 +1097,14 @@ export class CanvasEngine {
 			this.#canvas.releasePointerCapture(event.pointerId);
 		}
 		if (event.pointerType === 'touch') {
+			clearTimeout(this.#pressTimer);
+			this.#pressTimer = 0;
+			this.#pressAt = null;
+			// Touch has no hover, so the name goes away with the finger.
+			if (this.#hover) {
+				this.#hover = null;
+				this.invalidate();
+			}
 			this.#touches.delete(event.pointerId);
 			if (this.#gesture) {
 				if (this.#touches.size < 2) this.#gesture = null;
