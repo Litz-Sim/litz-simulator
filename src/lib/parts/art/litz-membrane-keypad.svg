@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-52 -60 104 122">
+	<defs>
+		<linearGradient id="mat" x1="0" y1="-58" x2="0" y2="46" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#3d4348" />
+			<stop offset="1" stop-color="#1a1e21" />
+		</linearGradient>
+		<linearGradient id="key" x1="0" y1="0" x2="0" y2="20" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#efece2" />
+			<stop offset="1" stop-color="#c8c2b1" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<rect x="-50" y="-58" width="100" height="104" rx="6" fill="url(#mat)" stroke="#0a0d0f" stroke-width="1.3" />
+		<rect x="-46" y="-54" width="92" height="3" rx="1.5" fill="#ffffff" opacity="0.08" />
+
+		<g fill="url(#key)" stroke="#8b8577" stroke-width="1">
+			<rect x="-43" y="-51" width="20" height="20" rx="3" />
+			<rect x="-21" y="-51" width="20" height="20" rx="3" />
+			<rect x="1" y="-51" width="20" height="20" rx="3" />
+			<rect x="23" y="-51" width="20" height="20" rx="3" />
+			<rect x="-43" y="-29" width="20" height="20" rx="3" />
+			<rect x="-21" y="-29" width="20" height="20" rx="3" />
+			<rect x="1" y="-29" width="20" height="20" rx="3" />
+			<rect x="23" y="-29" width="20" height="20" rx="3" />
+			<rect x="-43" y="-7" width="20" height="20" rx="3" />
+			<rect x="-21" y="-7" width="20" height="20" rx="3" />
+			<rect x="1" y="-7" width="20" height="20" rx="3" />
+			<rect x="23" y="-7" width="20" height="20" rx="3" />
+			<rect x="-43" y="15" width="20" height="20" rx="3" />
+			<rect x="-21" y="15" width="20" height="20" rx="3" />
+			<rect x="1" y="15" width="20" height="20" rx="3" />
+			<rect x="23" y="15" width="20" height="20" rx="3" />
+		</g>
+
+		<g font-family="ui-sans-serif, system-ui, sans-serif" font-size="8.5" text-anchor="middle" fill="#3c392f">
+			<text x="-33" y="-37">1</text>
+			<text x="-11" y="-37">2</text>
+			<text x="11" y="-37">3</text>
+			<text x="33" y="-37">A</text>
+			<text x="-33" y="-15">4</text>
+			<text x="-11" y="-15">5</text>
+			<text x="11" y="-15">6</text>
+			<text x="33" y="-15">B</text>
+			<text x="-33" y="7">7</text>
+			<text x="-11" y="7">8</text>
+			<text x="11" y="7">9</text>
+			<text x="33" y="7">C</text>
+			<text x="-33" y="29">*</text>
+			<text x="-11" y="29">0</text>
+			<text x="11" y="29">#</text>
+			<text x="33" y="29">D</text>
+		</g>
+
+		<rect x="-46" y="39" width="92" height="5" rx="1.5" fill="#111518" />
+		<line x1="-42" y1="44" x2="-42" y2="58" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-30" y1="44" x2="-30" y2="58" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-18" y1="44" x2="-18" y2="58" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-6" y1="44" x2="-6" y2="58" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="6" y1="44" x2="6" y2="58" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="18" y1="44" x2="18" y2="58" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="30" y1="44" x2="30" y2="58" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="42" y1="44" x2="42" y2="58" stroke="#b7bdc2" stroke-width="2.4" />
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-45.5" y="56" width="7" height="4" rx="1" />
+			<rect x="-33.5" y="56" width="7" height="4" rx="1" />
+			<rect x="-21.5" y="56" width="7" height="4" rx="1" />
+			<rect x="-9.5" y="56" width="7" height="4" rx="1" />
+			<rect x="2.5" y="56" width="7" height="4" rx="1" />
+			<rect x="14.5" y="56" width="7" height="4" rx="1" />
+			<rect x="26.5" y="56" width="7" height="4" rx="1" />
+			<rect x="38.5" y="56" width="7" height="4" rx="1" />
+		</g>
+	</g>
+</svg>

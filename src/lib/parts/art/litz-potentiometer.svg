@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -26 60 62">
+	<defs>
+		<linearGradient id="can" x1="0" y1="-17" x2="0" y2="15" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#4d7fbf" />
+			<stop offset="1" stop-color="#2f5b93" />
+		</linearGradient>
+		<radialGradient id="lid" cx="-4" cy="-7" r="12" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#eef1f4" />
+			<stop offset="1" stop-color="#aeb7bf" />
+		</radialGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-20" y1="15" x2="-20" y2="28" stroke="#b7bdc2" stroke-width="2.8" />
+		<line x1="0" y1="15" x2="0" y2="28" stroke="#b7bdc2" stroke-width="2.8" />
+		<line x1="20" y1="15" x2="20" y2="28" stroke="#b7bdc2" stroke-width="2.8" />
+
+		<rect x="-23" y="-17" width="46" height="32" rx="3" fill="url(#can)" stroke="#22406b" stroke-width="1.2" />
+		<rect x="-20" y="-14" width="40" height="2.2" rx="1.1" fill="#ffffff" opacity="0.14" />
+		<rect x="-20" y="10" width="40" height="2.2" rx="1.1" fill="#102a47" opacity="0.45" />
+
+		<circle cx="0" cy="-3" r="11" fill="url(#lid)" stroke="#7d858c" stroke-width="1" />
+		<circle cx="0" cy="-3" r="8" fill="none" stroke="#9aa3aa" stroke-width="0.8" opacity="0.55" />
+
+		<circle data-overlay="knob" cx="0" cy="-3" r="11" fill="none" stroke="none" />
+	</g>
+</svg>

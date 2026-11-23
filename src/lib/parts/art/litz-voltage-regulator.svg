@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-33 -46 66 92">
+	<defs>
+		<linearGradient id="tab" x1="-15" y1="0" x2="15" y2="0" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#d7dcdf" />
+			<stop offset="0.5" stop-color="#b9c0c4" />
+			<stop offset="1" stop-color="#8f979d" />
+		</linearGradient>
+		<linearGradient id="body" x1="0" y1="-32" x2="0" y2="18" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#3b4044" />
+			<stop offset="1" stop-color="#16181a" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-18" y1="18" x2="-18" y2="44" stroke="#b7bdc2" stroke-width="3" />
+		<line x1="0" y1="18" x2="0" y2="44" stroke="#b7bdc2" stroke-width="3" />
+		<line x1="18" y1="18" x2="18" y2="44" stroke="#b7bdc2" stroke-width="3" />
+
+		<rect x="-15" y="-44" width="30" height="16" rx="2" fill="url(#tab)" stroke="#7d858c" stroke-width="1.2" />
+		<circle cx="0" cy="-36" r="3.5" fill="#7d858c" />
+
+		<rect x="-20" y="-32" width="40" height="50" rx="3" fill="url(#body)" stroke="#0b0c0d" stroke-width="1.2" />
+		<rect x="-16" y="-27" width="32" height="40" rx="2" fill="none" stroke="#5b6267" stroke-width="0.7" opacity="0.5" />
+		<text x="0" y="2" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="600" fill="#cfd6db">7805</text>
+
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-20.5" y="40" width="5" height="4" rx="1" />
+			<rect x="-2.5" y="40" width="5" height="4" rx="1" />
+			<rect x="15.5" y="40" width="5" height="4" rx="1" />
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-31 -48 62 98">
+	<defs>
+		<linearGradient id="shell" x1="-28" y1="-28" x2="28" y2="26" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#d9dee1" />
+			<stop offset="0.4" stop-color="#a4abb0" />
+			<stop offset="0.72" stop-color="#737b80" />
+			<stop offset="1" stop-color="#545b60" />
+		</linearGradient>
+		<linearGradient id="shaft" x1="0" y1="-45" x2="8" y2="-27" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#e4e8ea" />
+			<stop offset="1" stop-color="#8a9298" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-26" y1="24" x2="-26" y2="44" stroke="#9aa2a9" stroke-width="3" />
+		<line x1="0" y1="24" x2="0" y2="44" stroke="#9aa2a9" stroke-width="3" />
+		<line x1="26" y1="24" x2="26" y2="44" stroke="#9aa2a9" stroke-width="3" />
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-31" y="41" width="10" height="7" rx="1" />
+			<rect x="-5" y="41" width="10" height="7" rx="1" />
+			<rect x="21" y="41" width="10" height="7" rx="1" />
+		</g>
+
+		<rect x="-28" y="-28" width="56" height="54" rx="7" fill="url(#shell)" stroke="#4c5257" stroke-width="1.4" />
+		<rect x="-24.5" y="-24" width="5" height="46" rx="2" fill="#ffffff" opacity="0.16" />
+		<ellipse cx="0" cy="-28" rx="28" ry="7" fill="#dfe3e6" stroke="#7d858c" stroke-width="1" />
+		<ellipse cx="0" cy="-28" rx="18" ry="4" fill="#c3c9cd" opacity="0.7" />
+		<ellipse cx="0" cy="23" rx="24" ry="5" fill="#596166" opacity="0.55" />
+
+		<rect x="-4" y="-45" width="8" height="18" rx="2.5" fill="url(#shaft)" stroke="#6b7379" stroke-width="0.9" />
+		<rect x="-1.5" y="-45" width="3" height="16" rx="1.5" fill="#eef1f3" opacity="0.75" />
+		<ellipse cx="0" cy="-45" rx="4" ry="1.8" fill="#c9d0d4" stroke="#7d858c" stroke-width="0.7" />
+
+		<text x="0" y="8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#343a3e">M</text>
+		<text x="0" y="18" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.6" text-anchor="middle" fill="#5b6368">DC 3-6V</text>
+	</g>
+</svg>

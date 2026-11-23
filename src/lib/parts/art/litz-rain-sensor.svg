@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-44 -52 88 104">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-24" x2="0" y2="34" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2b5f9e" />
+			<stop offset="1" stop-color="#173f70" />
+		</linearGradient>
+		<linearGradient id="plate" x1="0" y1="-48" x2="0" y2="-30" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#e3ddca" />
+			<stop offset="1" stop-color="#c7bfa6" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<rect x="-22" y="-48" width="44" height="18" rx="2" fill="url(#plate)" stroke="#9b947d" stroke-width="1" />
+		<g stroke="#8f8870" stroke-width="1.7" fill="none">
+			<path d="M-18 -45 v11 M-12 -45 v11 M-6 -45 v11 M0 -45 v11 M6 -45 v11 M12 -45 v11 M18 -45 v11" />
+			<path d="M-18 -45 h36 M-18 -40 h36 M-18 -34 h36" opacity="0.45" />
+		</g>
+		<g stroke="#b7bdc2" stroke-width="1.5" fill="none">
+			<path d="M-12 -30 C-12 -27 -8 -27 -8 -24" />
+			<path d="M12 -30 C12 -27 8 -27 8 -24" />
+		</g>
+
+		<rect x="-36" y="-24" width="72" height="58" rx="4" fill="url(#pcb)" stroke="#0d2b4e" stroke-width="1.2" />
+		<circle cx="-30" cy="-18" r="2.4" fill="#0b2340" />
+		<circle cx="30" cy="-18" r="2.4" fill="#0b2340" />
+
+		<rect x="-26" y="-12" width="17" height="11" rx="1.4" fill="#1d2124" stroke="#0a0c0d" stroke-width="0.8" />
+		<circle cx="-23" cy="-9" r="1.1" fill="#5e666b" />
+		<circle cx="22" cy="2" r="5.4" fill="#2f6bd0" stroke="#1c4792" stroke-width="0.9" />
+		<circle cx="22" cy="2" r="3.4" fill="#d7dde3" />
+		<path d="M22 -0.2 v4.4" stroke="#7f8a94" stroke-width="1" />
+		<circle cx="-27" cy="2" r="2" fill="#d6543f" />
+		<rect x="-12" y="-4" width="12" height="6" rx="1" fill="#c9a06b" stroke="#8e6c40" stroke-width="0.6" />
+		<g fill="#9fc0e0" font-family="ui-sans-serif, system-ui, sans-serif" font-size="2.8" text-anchor="middle">
+			<text x="2" y="10">RAIN</text>
+		</g>
+
+		<line x1="-30" y1="34" x2="-30" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-10" y1="34" x2="-10" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="10" y1="34" x2="10" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="30" y1="34" x2="30" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-33.5" y="38" width="7" height="6" rx="1" />
+			<rect x="-13.5" y="38" width="7" height="6" rx="1" />
+			<rect x="6.5" y="38" width="7" height="6" rx="1" />
+			<rect x="26.5" y="38" width="7" height="6" rx="1" />
+		</g>
+
+		<g fill="#d9e7f7" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.4" text-anchor="middle">
+			<text x="-30" y="27">VCC</text>
+			<text x="-10" y="27">GND</text>
+			<text x="10" y="27">AO</text>
+			<text x="30" y="27">DO</text>
+		</g>
+	</g>
+</svg>

@@ -32,6 +32,8 @@ export interface PartDef {
 	height: number;
 	pins: PinDef[];
 	attrs: AttrDef[];
+	/** Attribute whose value picks an `--<value>` art variant, such as an LED colour. */
+	artAttr?: string;
 	/** Set on development boards: the chip the Litz backend boots for it. */
 	chip?: string;
 	draw: (ctx: CanvasRenderingContext2D, part: PartInstance, zoom: number) => void;

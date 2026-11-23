@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-42 -12 84 24">
+	<defs>
+		<linearGradient id="tube" x1="0" y1="-8" x2="0" y2="8" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#eef7fb" />
+			<stop offset="0.5" stop-color="#bdd6e1" />
+			<stop offset="1" stop-color="#8aa8b7" />
+		</linearGradient>
+		<linearGradient id="cap" x1="0" y1="-8" x2="0" y2="8" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#e6ebee" />
+			<stop offset="0.5" stop-color="#b3bbbf" />
+			<stop offset="1" stop-color="#7d858a" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-40" y1="0" x2="-31" y2="0" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="31" y1="0" x2="40" y2="0" stroke="#b7bdc2" stroke-width="2.6" />
+
+		<rect x="-28" y="-7.5" width="56" height="15" rx="7.5" fill="url(#tube)" opacity="0.9" stroke="#7f9aa6" stroke-width="1" />
+		<rect x="-26" y="-5" width="52" height="2.2" rx="1.1" fill="#ffffff" opacity="0.55" />
+		<path d="M-27 0 L27 0" stroke="#a8792f" stroke-width="1" />
+
+		<rect x="-32" y="-8" width="7" height="16" rx="1.6" fill="url(#cap)" stroke="#6f787e" stroke-width="0.9" />
+		<rect x="25" y="-8" width="7" height="16" rx="1.6" fill="url(#cap)" stroke="#6f787e" stroke-width="0.9" />
+
+		<text x="0" y="4.8" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.2" fill="#3d5058">500mA</text>
+	</g>
+</svg>

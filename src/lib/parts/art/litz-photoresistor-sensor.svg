@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-36 -18 72 48">
+	<g stroke-linecap="round">
+		<line x1="-30" y1="16" x2="-30" y2="28" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-10" y1="16" x2="-10" y2="28" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="10" y1="16" x2="10" y2="28" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="30" y1="16" x2="30" y2="28" stroke="#b7bdc2" stroke-width="2.6" />
+
+		<rect x="-34" y="-16" width="68" height="32" rx="3" fill="#1f4f8f" stroke="#12325c" stroke-width="1.2" />
+		<circle cx="-28.5" cy="-10" r="2.6" fill="#0d2547" />
+		<circle cx="28.5" cy="-10" r="2.6" fill="#0d2547" />
+
+		<circle cx="-15" cy="-1" r="9" fill="#f1e9d3" stroke="#b9ac86" stroke-width="1" />
+		<path d="M-20 -4 h3 v6 h3 v-6 h3 v6 h3 v-6 h3" fill="none" stroke="#b4542a" stroke-width="1.3" />
+
+		<rect x="6" y="-8" width="16" height="14" rx="1.5" fill="#2e6bd0" stroke="#1e4a94" stroke-width="1" />
+		<circle cx="14" cy="-1" r="4.6" fill="#d7dde3" stroke="#7f8a94" stroke-width="0.9" />
+		<path d="M14 -3.6 v7.2" stroke="#7f8a94" stroke-width="1.1" />
+
+		<g fill="#d9e7f7" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle">
+			<text x="-30" y="13">VCC</text>
+			<text x="-10" y="13">GND</text>
+			<text x="10" y="13">AO</text>
+			<text x="30" y="13">DO</text>
+			<text x="-15" y="-13">LDR</text>
+		</g>
+
+		<rect x="-30.5" y="14.5" width="1" height="3" fill="#d8c27a" />
+		<rect x="-10.5" y="14.5" width="1" height="3" fill="#d8c27a" />
+		<rect x="9.5" y="14.5" width="1" height="3" fill="#d8c27a" />
+		<rect x="29.5" y="14.5" width="1" height="3" fill="#d8c27a" />
+	</g>
+</svg>

@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-102 -164 204 328">
+	<defs>
+		<linearGradient id="usb" x1="0" y1="-163" x2="0" y2="-137" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#e9edf0" />
+			<stop offset="0.5" stop-color="#c3c9cd" />
+			<stop offset="1" stop-color="#8f979d" />
+		</linearGradient>
+	</defs>
+
+	<rect x="-95" y="-157" width="190" height="314" rx="7" fill="#00979c" stroke="#007277" stroke-width="1.6" />
+	<rect x="-90" y="-152" width="180" height="304" rx="4" fill="none" stroke="#c9f4f4" stroke-width="0.8" opacity="0.55" />
+
+	<circle cx="-82" cy="-146" r="5" fill="#f2f7f7" stroke="#b6d7d7" stroke-width="1" />
+	<circle cx="82" cy="-146" r="5" fill="#f2f7f7" stroke="#b6d7d7" stroke-width="1" />
+	<circle cx="-82" cy="146" r="5" fill="#f2f7f7" stroke="#b6d7d7" stroke-width="1" />
+	<circle cx="82" cy="146" r="5" fill="#f2f7f7" stroke="#b6d7d7" stroke-width="1" />
+
+	<!-- USB-B and barrel jack -->
+	<rect x="-64" y="-163" width="42" height="27" rx="2" fill="url(#usb)" stroke="#6f787e" stroke-width="1.2" />
+	<rect x="-58" y="-159" width="30" height="9" rx="1.5" fill="#4a5257" />
+	<rect x="-76" y="132" width="38" height="27" rx="2.5" fill="#1b1d1f" stroke="#000" stroke-width="1" />
+	<circle cx="-57" cy="145.5" r="7.5" fill="#2e3235" stroke="#51585c" stroke-width="1" />
+	<circle cx="-57" cy="145.5" r="3" fill="#0b0c0d" />
+
+	<!-- headers -->
+	<rect x="-95" y="-139" width="12" height="282" rx="2" fill="#161616" />
+	<rect x="83" y="-139" width="12" height="240" rx="2" fill="#161616" />
+
+	<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+		<rect x="-93.6" y="-134" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="-114" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="-94" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="-74" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="-54" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="-34" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="-14" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="6" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="26" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="46" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="66" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="86" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="106" width="9.2" height="8" rx="1.2" />
+		<rect x="-93.6" y="126" width="9.2" height="8" rx="1.2" />
+
+		<rect x="84.4" y="-134" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="-114" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="-94" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="-74" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="-54" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="-34" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="-14" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="6" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="26" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="46" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="66" width="9.2" height="8" rx="1.2" />
+		<rect x="84.4" y="86" width="9.2" height="8" rx="1.2" />
+	</g>
+
+	<!-- reset button and LEDs -->
+	<rect x="52" y="-150" width="22" height="17" rx="2.5" fill="#8fc7e8" stroke="#5d94b6" stroke-width="1" />
+	<circle cx="63" cy="-141.5" r="4.6" fill="#c6e4f222" stroke="#4d7c99" stroke-width="0.8" />
+	<circle cx="18" cy="-146" r="2.5" fill="#f4c542" />
+	<circle cx="26" cy="-146" r="2.5" fill="#e05b4d" />
+	<circle cx="34" cy="-146" r="2.5" fill="#7fd18a" />
+	<circle cx="42" cy="-146" r="2.5" fill="#f4c542" />
+
+	<!-- USB bridge chip, crystal, regulator -->
+	<rect x="-20" y="-128" width="30" height="14" rx="1.5" fill="#1d2124" />
+	<ellipse cx="28" cy="-121" rx="9" ry="4.5" fill="#c8ced2" stroke="#7d858a" stroke-width="0.8" />
+	<rect x="-12" y="-149" width="12" height="8" rx="1.5" fill="#1d2124" />
+
+	<!-- ATmega328P -->
+	<rect x="2" y="-36" width="66" height="56" rx="3" fill="#202427" stroke="#0b0d0e" stroke-width="1.2" />
+	<circle cx="10" cy="-26" r="2" fill="#4a5155" />
+	<text x="35" y="-2" font-family="ui-sans-serif, system-ui, sans-serif" font-size="5.4" fill="#9aa2a7" text-anchor="middle">
+		ATmega328P
+	</text>
+	<g fill="#c9a34c">
+		<rect x="12" y="-41" width="4" height="5" />
+		<rect x="22" y="-41" width="4" height="5" />
+		<rect x="32" y="-41" width="4" height="5" />
+		<rect x="42" y="-41" width="4" height="5" />
+		<rect x="52" y="-41" width="4" height="5" />
+		<rect x="12" y="-31" width="4" height="5" />
+		<rect x="52" y="-31" width="4" height="5" />
+	</g>
+
+	<!-- ICSP -->
+	<rect x="54" y="92" width="32" height="22" rx="1.5" fill="#161616" />
+	<g fill="#d5af52">
+		<circle cx="61" cy="99" r="2.6" />
+		<circle cx="70" cy="99" r="2.6" />
+		<circle cx="79" cy="99" r="2.6" />
+		<circle cx="61" cy="107" r="2.6" />
+		<circle cx="70" cy="107" r="2.6" />
+		<circle cx="79" cy="107" r="2.6" />
+	</g>
+
+	<g fill="#eaffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.8">
+		<text x="-78" y="-127">D0</text>
+		<text x="-78" y="-107">D1</text>
+		<text x="-78" y="-87">D2</text>
+		<text x="-78" y="-67">D3</text>
+		<text x="-78" y="-47">D4</text>
+		<text x="-78" y="-27">D5</text>
+		<text x="-78" y="-7">D6</text>
+		<text x="-78" y="13">D7</text>
+		<text x="-78" y="33">D8</text>
+		<text x="-78" y="53">D9</text>
+		<text x="-78" y="73">D10</text>
+		<text x="-78" y="93">D11</text>
+		<text x="-78" y="113">D12</text>
+		<text x="-78" y="133">D13</text>
+
+		<text x="78" y="-127" text-anchor="end">A0</text>
+		<text x="78" y="-107" text-anchor="end">A1</text>
+		<text x="78" y="-87" text-anchor="end">A2</text>
+		<text x="78" y="-67" text-anchor="end">A3</text>
+		<text x="78" y="-47" text-anchor="end">A4</text>
+		<text x="78" y="-27" text-anchor="end">A5</text>
+		<text x="78" y="-7" text-anchor="end">5V</text>
+		<text x="78" y="13" text-anchor="end">3V3</text>
+		<text x="78" y="33" text-anchor="end">VIN</text>
+		<text x="78" y="53" text-anchor="end">GND</text>
+		<text x="78" y="73" text-anchor="end">GND</text>
+		<text x="78" y="93" text-anchor="end">GND</text>
+	</g>
+
+	<text x="-40" y="52" font-family="ui-sans-serif, system-ui, sans-serif" font-size="9" letter-spacing="1.6" fill="#eaffff">ARDUINO</text>
+	<text x="64" y="126" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#eaffff" text-anchor="end">UNO</text>
+</svg>

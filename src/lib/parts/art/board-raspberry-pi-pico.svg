@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-90 -250 180 500">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-237" x2="0" y2="237" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#1f7a48" />
+			<stop offset="1" stop-color="#0d5230" />
+		</linearGradient>
+		<linearGradient id="usb" x1="0" y1="-250" x2="0" y2="-236" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#e9edf0" />
+			<stop offset="0.5" stop-color="#c3c9cd" />
+			<stop offset="1" stop-color="#8f979d" />
+		</linearGradient>
+	</defs>
+
+	<rect x="-85" y="-237" width="170" height="474" rx="6" fill="url(#pcb)" stroke="#083b22" stroke-width="1.6" />
+	<rect x="-80" y="-232" width="160" height="464" rx="3.5" fill="none" stroke="#c4ecd2" stroke-width="0.8" opacity="0.4" />
+
+	<!-- micro-USB -->
+	<rect x="-12" y="-250" width="24" height="14" rx="2" fill="url(#usb)" stroke="#6f787e" stroke-width="1.1" />
+	<path d="M-7 -247 h14 l1.6 6 h-17.2 z" fill="#394146" />
+
+	<!-- buttons and power LED -->
+	<rect x="-31" y="-232" width="12" height="8" rx="1.5" fill="#cfd5da" stroke="#8b949a" stroke-width="0.8" />
+	<rect x="19" y="-232" width="13" height="8" rx="1.5" fill="#f2f5f7" stroke="#9aa3a9" stroke-width="0.8" />
+	<circle cx="0" cy="-228" r="2.2" fill="#42c46a" />
+	<g fill="#dff3e6" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.4" text-anchor="middle">
+		<text x="-25" y="-221">RUN</text>
+		<text x="25.5" y="-221">BOOTSEL</text>
+	</g>
+
+	<!-- silkscreen name -->
+	<text x="0" y="-178" font-family="ui-sans-serif, system-ui, sans-serif" font-size="6.4" fill="#dff3e6" text-anchor="middle">Raspberry Pi</text>
+	<text x="0" y="-163" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" letter-spacing="0.6" fill="#dff3e6" text-anchor="middle">Pico</text>
+
+	<!-- RP2040 QFN -->
+	<rect x="-24" y="-58" width="48" height="48" rx="2" fill="#202427" stroke="#0b0d0e" stroke-width="1.2" />
+	<circle cx="-18" cy="-52" r="1.8" fill="#4a5155" />
+	<text x="0" y="-29" font-family="ui-sans-serif, system-ui, sans-serif" font-size="6" fill="#9aa2a7" text-anchor="middle">RP2040</text>
+	<g fill="#c9a34c">
+		<rect x="-20" y="-61" width="3" height="4.5" /><rect x="-13" y="-61" width="3" height="4.5" /><rect x="-6" y="-61" width="3" height="4.5" /><rect x="1" y="-61" width="3" height="4.5" /><rect x="8" y="-61" width="3" height="4.5" /><rect x="15" y="-61" width="3" height="4.5" />
+		<rect x="-20" y="-10" width="3" height="4.5" /><rect x="-13" y="-10" width="3" height="4.5" /><rect x="-6" y="-10" width="3" height="4.5" /><rect x="1" y="-10" width="3" height="4.5" /><rect x="8" y="-10" width="3" height="4.5" /><rect x="15" y="-10" width="3" height="4.5" />
+		<rect x="-27" y="-52" width="4.5" height="3" /><rect x="-27" y="-45" width="4.5" height="3" /><rect x="-27" y="-38" width="4.5" height="3" /><rect x="-27" y="-31" width="4.5" height="3" /><rect x="-27" y="-24" width="4.5" height="3" /><rect x="-27" y="-17" width="4.5" height="3" />
+		<rect x="22.5" y="-52" width="4.5" height="3" /><rect x="22.5" y="-45" width="4.5" height="3" /><rect x="22.5" y="-38" width="4.5" height="3" /><rect x="22.5" y="-31" width="4.5" height="3" /><rect x="22.5" y="-24" width="4.5" height="3" /><rect x="22.5" y="-17" width="4.5" height="3" />
+	</g>
+
+	<!-- crystal, flash, regulator, passives -->
+	<rect x="-10" y="28" width="20" height="9" rx="2" fill="#c8ced2" stroke="#7d858a" stroke-width="0.8" />
+	<text x="0" y="35" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.2" fill="#6b757c" text-anchor="middle">12M</text>
+	<rect x="25" y="-30" width="17" height="12" rx="1.2" fill="#202427" stroke="#0b0d0e" stroke-width="0.8" />
+	<text x="33.5" y="-22" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3" fill="#9aa2a7" text-anchor="middle">QSPI</text>
+	<rect x="-52" y="-36" width="12" height="10" rx="1" fill="#202427" stroke="#0b0d0e" stroke-width="0.8" />
+	<g fill="#b9895a">
+		<rect x="-52" y="6" width="9" height="6" rx="0.8" />
+		<rect x="38" y="6" width="9" height="6" rx="0.8" />
+		<rect x="38" y="-8" width="9" height="6" rx="0.8" />
+	</g>
+
+	<!-- debug pads -->
+	<g fill="#d5af52" stroke="#a8843a" stroke-width="0.5">
+		<circle cx="-8" cy="226" r="2.6" /><circle cx="0" cy="226" r="2.6" /><circle cx="8" cy="226" r="2.6" />
+	</g>
+	<text x="0" y="218" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.2" fill="#c4ecd2" text-anchor="middle">DEBUG</text>
+
+	<!-- headers -->
+	<rect x="-85" y="-219" width="12" height="438" rx="2" fill="#161616" />
+	<rect x="73" y="-219" width="12" height="438" rx="2" fill="#161616" />
+
+	<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+		<rect x="-83.6" y="-214" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-194" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-174" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-154" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-134" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-114" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-94" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-74" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-54" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-34" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="-14" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="6" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="26" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="46" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="66" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="86" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="106" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="126" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="146" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="166" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="186" width="9.2" height="8" rx="1.2" /><rect x="-83.6" y="206" width="9.2" height="8" rx="1.2" />
+
+		<rect x="74.4" y="-214" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-194" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-174" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-154" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-134" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-114" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-94" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-74" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-54" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-34" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="-14" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="6" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="26" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="46" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="66" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="86" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="106" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="126" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="146" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="166" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="186" width="9.2" height="8" rx="1.2" /><rect x="74.4" y="206" width="9.2" height="8" rx="1.2" />
+	</g>
+
+	<g fill="#dff3e6" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.6">
+		<text x="-68" y="-207">GP0</text><text x="-68" y="-187">GP1</text><text x="-68" y="-167">GND</text><text x="-68" y="-147">GND</text><text x="-68" y="-127">GND</text><text x="-68" y="-107">GND</text><text x="-68" y="-87">GND</text><text x="-68" y="-67">GND</text><text x="-68" y="-47">GND</text><text x="-68" y="-27">GND</text><text x="-68" y="-7">GP2</text><text x="-68" y="13">GP3</text><text x="-68" y="33">GP4</text><text x="-68" y="53">GP5</text><text x="-68" y="73">GP6</text><text x="-68" y="93">GP7</text><text x="-68" y="113">GP8</text><text x="-68" y="133">GP9</text><text x="-68" y="153">GP10</text><text x="-68" y="173">GP11</text><text x="-68" y="193">GP12</text><text x="-68" y="213">GP13</text>
+
+		<text x="68" y="-207" text-anchor="end">GP14</text><text x="68" y="-187" text-anchor="end">GP15</text><text x="68" y="-167" text-anchor="end">GP16</text><text x="68" y="-147" text-anchor="end">GP17</text><text x="68" y="-127" text-anchor="end">GP18</text><text x="68" y="-107" text-anchor="end">GP19</text><text x="68" y="-87" text-anchor="end">GP20</text><text x="68" y="-67" text-anchor="end">GP21</text><text x="68" y="-47" text-anchor="end">GP22</text><text x="68" y="-27" text-anchor="end">GP26</text><text x="68" y="-7" text-anchor="end">GP27</text><text x="68" y="13" text-anchor="end">GP28</text><text x="68" y="33" text-anchor="end">ADC_VREF</text><text x="68" y="53" text-anchor="end">AGND</text><text x="68" y="73" text-anchor="end">3V3</text><text x="68" y="93" text-anchor="end">3V3_EN</text><text x="68" y="113" text-anchor="end">VSYS</text><text x="68" y="133" text-anchor="end">VBUS</text><text x="68" y="153" text-anchor="end">RUN</text><text x="68" y="173" text-anchor="end">SWCLK</text><text x="68" y="193" text-anchor="end">SWDIO</text><text x="68" y="213" text-anchor="end">GP25</text>
+	</g>
+
+	<!-- castellations on top of the header strips -->
+	<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+		<circle cx="-85" cy="-210" r="3.2" /><circle cx="-85" cy="-190" r="3.2" /><circle cx="-85" cy="-170" r="3.2" /><circle cx="-85" cy="-150" r="3.2" /><circle cx="-85" cy="-130" r="3.2" /><circle cx="-85" cy="-110" r="3.2" /><circle cx="-85" cy="-90" r="3.2" /><circle cx="-85" cy="-70" r="3.2" /><circle cx="-85" cy="-50" r="3.2" /><circle cx="-85" cy="-30" r="3.2" /><circle cx="-85" cy="-10" r="3.2" /><circle cx="-85" cy="10" r="3.2" /><circle cx="-85" cy="30" r="3.2" /><circle cx="-85" cy="50" r="3.2" /><circle cx="-85" cy="70" r="3.2" /><circle cx="-85" cy="90" r="3.2" /><circle cx="-85" cy="110" r="3.2" /><circle cx="-85" cy="130" r="3.2" /><circle cx="-85" cy="150" r="3.2" /><circle cx="-85" cy="170" r="3.2" /><circle cx="-85" cy="190" r="3.2" /><circle cx="-85" cy="210" r="3.2" />
+		<circle cx="85" cy="-210" r="3.2" /><circle cx="85" cy="-190" r="3.2" /><circle cx="85" cy="-170" r="3.2" /><circle cx="85" cy="-150" r="3.2" /><circle cx="85" cy="-130" r="3.2" /><circle cx="85" cy="-110" r="3.2" /><circle cx="85" cy="-90" r="3.2" /><circle cx="85" cy="-70" r="3.2" /><circle cx="85" cy="-50" r="3.2" /><circle cx="85" cy="-30" r="3.2" /><circle cx="85" cy="-10" r="3.2" /><circle cx="85" cy="10" r="3.2" /><circle cx="85" cy="30" r="3.2" /><circle cx="85" cy="50" r="3.2" /><circle cx="85" cy="70" r="3.2" /><circle cx="85" cy="90" r="3.2" /><circle cx="85" cy="110" r="3.2" /><circle cx="85" cy="130" r="3.2" /><circle cx="85" cy="150" r="3.2" /><circle cx="85" cy="170" r="3.2" /><circle cx="85" cy="190" r="3.2" /><circle cx="85" cy="210" r="3.2" />
+	</g>
+	<g fill="#101211">
+		<circle cx="-85" cy="-210" r="1.3" /><circle cx="-85" cy="-190" r="1.3" /><circle cx="-85" cy="-170" r="1.3" /><circle cx="-85" cy="-150" r="1.3" /><circle cx="-85" cy="-130" r="1.3" /><circle cx="-85" cy="-110" r="1.3" /><circle cx="-85" cy="-90" r="1.3" /><circle cx="-85" cy="-70" r="1.3" /><circle cx="-85" cy="-50" r="1.3" /><circle cx="-85" cy="-30" r="1.3" /><circle cx="-85" cy="-10" r="1.3" /><circle cx="-85" cy="10" r="1.3" /><circle cx="-85" cy="30" r="1.3" /><circle cx="-85" cy="50" r="1.3" /><circle cx="-85" cy="70" r="1.3" /><circle cx="-85" cy="90" r="1.3" /><circle cx="-85" cy="110" r="1.3" /><circle cx="-85" cy="130" r="1.3" /><circle cx="-85" cy="150" r="1.3" /><circle cx="-85" cy="170" r="1.3" /><circle cx="-85" cy="190" r="1.3" /><circle cx="-85" cy="210" r="1.3" />
+		<circle cx="85" cy="-210" r="1.3" /><circle cx="85" cy="-190" r="1.3" /><circle cx="85" cy="-170" r="1.3" /><circle cx="85" cy="-150" r="1.3" /><circle cx="85" cy="-130" r="1.3" /><circle cx="85" cy="-110" r="1.3" /><circle cx="85" cy="-90" r="1.3" /><circle cx="85" cy="-70" r="1.3" /><circle cx="85" cy="-50" r="1.3" /><circle cx="85" cy="-30" r="1.3" /><circle cx="85" cy="-10" r="1.3" /><circle cx="85" cy="10" r="1.3" /><circle cx="85" cy="30" r="1.3" /><circle cx="85" cy="50" r="1.3" /><circle cx="85" cy="70" r="1.3" /><circle cx="85" cy="90" r="1.3" /><circle cx="85" cy="110" r="1.3" /><circle cx="85" cy="130" r="1.3" /><circle cx="85" cy="150" r="1.3" /><circle cx="85" cy="170" r="1.3" /><circle cx="85" cy="190" r="1.3" /><circle cx="85" cy="210" r="1.3" />
+	</g>
+</svg>

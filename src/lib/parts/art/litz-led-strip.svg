@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-92 -26 184 62">
+	<defs>
+		<linearGradient id="strip" x1="0" y1="-16" x2="0" y2="16" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#22282b" />
+			<stop offset="1" stop-color="#0f1214" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-21" y1="10" x2="-21" y2="26" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-7" y1="10" x2="-7" y2="26" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="7" y1="10" x2="7" y2="26" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="21" y1="10" x2="21" y2="26" stroke="#b7bdc2" stroke-width="2.6" />
+
+		<rect x="-84" y="-16" width="168" height="32" rx="5" fill="url(#strip)" stroke="#080a0a" stroke-width="1.2" />
+		<rect x="-81" y="-13" width="162" height="7" rx="2" fill="#ffffff" opacity="0.08" />
+
+		<g stroke="#0b0d0e" stroke-width="0.8">
+			<circle cx="-70" cy="0" r="5.2" fill="#e0503f" />
+			<circle cx="-50" cy="0" r="5.2" fill="#f08a2a" />
+			<circle cx="-30" cy="0" r="5.2" fill="#f0c62a" />
+			<circle cx="-10" cy="0" r="5.2" fill="#3fb862" />
+			<circle cx="10" cy="0" r="5.2" fill="#3d7ef0" />
+			<circle cx="30" cy="0" r="5.2" fill="#7b3fa0" />
+			<circle cx="50" cy="0" r="5.2" fill="#e0503f" />
+			<circle cx="70" cy="0" r="5.2" fill="#f08a2a" />
+		</g>
+
+		<g fill="#ffffff" opacity="0.4">
+			<ellipse cx="-71.6" cy="-1.6" rx="1.8" ry="1.2" />
+			<ellipse cx="-51.6" cy="-1.6" rx="1.8" ry="1.2" />
+			<ellipse cx="-31.6" cy="-1.6" rx="1.8" ry="1.2" />
+			<ellipse cx="-11.6" cy="-1.6" rx="1.8" ry="1.2" />
+			<ellipse cx="8.4" cy="-1.6" rx="1.8" ry="1.2" />
+			<ellipse cx="28.4" cy="-1.6" rx="1.8" ry="1.2" />
+			<ellipse cx="48.4" cy="-1.6" rx="1.8" ry="1.2" />
+			<ellipse cx="68.4" cy="-1.6" rx="1.8" ry="1.2" />
+		</g>
+
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<circle cx="-21" cy="26" r="2.1" />
+			<circle cx="-7" cy="26" r="2.1" />
+			<circle cx="7" cy="26" r="2.1" />
+			<circle cx="21" cy="26" r="2.1" />
+		</g>
+	</g>
+</svg>

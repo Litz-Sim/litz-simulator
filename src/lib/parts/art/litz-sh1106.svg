@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-48 -42 96 102">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-34" x2="0" y2="30" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2b5b8e" />
+			<stop offset="1" stop-color="#173d63" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<g stroke="#b7bdc2" stroke-width="2.6">
+			<line x1="-30" y1="30" x2="-30" y2="46" />
+			<line x1="-10" y1="30" x2="-10" y2="46" />
+			<line x1="10" y1="30" x2="10" y2="46" />
+			<line x1="30" y1="30" x2="30" y2="46" />
+		</g>
+		<rect x="-42" y="-34" width="84" height="64" rx="4" fill="url(#pcb)" stroke="#122c4a" stroke-width="1.2" />
+		<circle cx="-36" cy="-28" r="2.2" fill="#0e2741" />
+		<circle cx="36" cy="-28" r="2.2" fill="#0e2741" />
+		<circle cx="-36" cy="24" r="2.2" fill="#0e2741" />
+		<circle cx="36" cy="24" r="2.2" fill="#0e2741" />
+		<rect x="-33" y="-26" width="66" height="42" rx="2" fill="#060708" stroke="#0b141f" stroke-width="0.8" />
+		<path d="M -33 -26 L 3 -26 L -33 8 Z" fill="#ffffff" opacity="0.045" />
+		<rect data-overlay="panel" x="-33" y="-26" width="66" height="42" rx="2" fill="none" stroke="none" />
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.55">
+			<rect x="-33.5" y="27" width="7" height="6" rx="1" />
+			<rect x="-13.5" y="27" width="7" height="6" rx="1" />
+			<rect x="6.5" y="27" width="7" height="6" rx="1" />
+			<rect x="26.5" y="27" width="7" height="6" rx="1" />
+		</g>
+		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.2" text-anchor="middle" letter-spacing="0.6">
+			<text x="0" y="-29.4">SH1106</text>
+		</g>
+		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.3" text-anchor="middle">
+			<text x="-30" y="24">GND</text>
+			<text x="-10" y="24">VCC</text>
+			<text x="10" y="24">SCL</text>
+			<text x="30" y="24">SDA</text>
+		</g>
+	</g>
+</svg>

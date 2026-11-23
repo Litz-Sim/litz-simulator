@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -50 200 108">
+	<defs>
+		<linearGradient id="body" x1="0" y1="-42" x2="0" y2="38" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2c3134" />
+			<stop offset="0.22" stop-color="#1b1d1f" />
+			<stop offset="1" stop-color="#0a0c0d" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<g stroke="#b7bdc2" stroke-width="2.6">
+			<line x1="-88" y1="38" x2="-88" y2="44" />
+			<line x1="-72" y1="38" x2="-72" y2="44" />
+			<line x1="-56" y1="38" x2="-56" y2="44" />
+			<line x1="-40" y1="38" x2="-40" y2="44" />
+			<line x1="-24" y1="38" x2="-24" y2="44" />
+			<line x1="-8" y1="38" x2="-8" y2="44" />
+			<line x1="8" y1="38" x2="8" y2="44" />
+			<line x1="24" y1="38" x2="24" y2="44" />
+			<line x1="40" y1="38" x2="40" y2="44" />
+			<line x1="56" y1="38" x2="56" y2="44" />
+			<line x1="72" y1="38" x2="72" y2="44" />
+			<line x1="88" y1="38" x2="88" y2="44" />
+		</g>
+		<rect x="-94" y="-42" width="188" height="80" rx="6" fill="url(#body)" stroke="#08090a" stroke-width="1.2" />
+		<rect x="-90" y="-39" width="180" height="74" rx="4" fill="none" stroke="#3a4044" stroke-width="0.7" opacity="0.55" />
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.55">
+			<rect x="-91.5" y="35" width="7" height="6" rx="1" />
+			<rect x="-75.5" y="35" width="7" height="6" rx="1" />
+			<rect x="-59.5" y="35" width="7" height="6" rx="1" />
+			<rect x="-43.5" y="35" width="7" height="6" rx="1" />
+			<rect x="-27.5" y="35" width="7" height="6" rx="1" />
+			<rect x="-11.5" y="35" width="7" height="6" rx="1" />
+			<rect x="4.5" y="35" width="7" height="6" rx="1" />
+			<rect x="20.5" y="35" width="7" height="6" rx="1" />
+			<rect x="36.5" y="35" width="7" height="6" rx="1" />
+			<rect x="52.5" y="35" width="7" height="6" rx="1" />
+			<rect x="68.5" y="35" width="7" height="6" rx="1" />
+			<rect x="84.5" y="35" width="7" height="6" rx="1" />
+		</g>
+		<g fill="#08090a">
+			<rect x="-89" y="-34" width="40" height="58" rx="4" />
+			<rect x="-43" y="-34" width="40" height="58" rx="4" />
+			<rect x="3" y="-34" width="40" height="58" rx="4" />
+			<rect x="49" y="-34" width="40" height="58" rx="4" />
+		</g>
+		<g fill="none" stroke="#343a3d" stroke-width="0.6" opacity="0.8">
+			<rect x="-88.3" y="-33.3" width="38.6" height="56.6" rx="3.6" />
+			<rect x="-42.3" y="-33.3" width="38.6" height="56.6" rx="3.6" />
+			<rect x="3.7" y="-33.3" width="38.6" height="56.6" rx="3.6" />
+			<rect x="49.7" y="-33.3" width="38.6" height="56.6" rx="3.6" />
+		</g>
+		<rect data-overlay="segments" x="-81" y="-26" width="24" height="40" data-mask="255" fill="none" stroke="none" />
+		<rect data-overlay="segments" x="-35" y="-26" width="24" height="40" data-mask="255" fill="none" stroke="none" />
+		<rect data-overlay="segments" x="11" y="-26" width="24" height="40" data-mask="255" fill="none" stroke="none" />
+		<rect data-overlay="segments" x="57" y="-26" width="24" height="40" data-mask="255" fill="none" stroke="none" />
+		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6" text-anchor="middle" letter-spacing="0.6">
+			<text x="0" y="-36.4" font-size="4.2">4-DIGIT</text>
+			<text x="0" y="31.5">LITZ 4 × 7</text>
+		</g>
+	</g>
+</svg>

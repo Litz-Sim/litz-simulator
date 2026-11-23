@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-42 -28 84 56">
+	<defs>
+		<linearGradient id="body" x1="0" y1="-16" x2="0" y2="16" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#dc5b4b" />
+			<stop offset="0.55" stop-color="#b23c31" />
+			<stop offset="1" stop-color="#8a2820" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-30" y1="-16" x2="-30" y2="-24" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-10" y1="-16" x2="-10" y2="-24" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="10" y1="-16" x2="10" y2="-24" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="30" y1="-16" x2="30" y2="-24" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-30" y1="16" x2="-30" y2="24" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-10" y1="16" x2="-10" y2="24" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="10" y1="16" x2="10" y2="24" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="30" y1="16" x2="30" y2="24" stroke="#b7bdc2" stroke-width="2.6" />
+
+		<rect x="-40" y="-16" width="80" height="32" rx="3" fill="url(#body)" stroke="#6b1f18" stroke-width="1.2" />
+		<rect x="-36" y="-12.5" width="72" height="3" rx="1.5" fill="#ffffff" opacity="0.12" />
+
+		<g>
+			<rect x="-34" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="-33" y="-10" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+
+			<rect x="-14" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="-13" y="-1" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+
+			<rect x="6" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="7" y="-10" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+
+			<rect x="26" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="27" y="-1" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+		</g>
+
+		<g font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.2" text-anchor="middle" fill="#f4d6d0">
+			<text x="-30" y="14">1</text>
+			<text x="-10" y="14">2</text>
+			<text x="10" y="14">3</text>
+			<text x="30" y="14">4</text>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-46 -60 92 120">
+	<defs>
+		<linearGradient id="body" x1="0" y1="-42" x2="0" y2="42" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2a2e31" />
+			<stop offset="0.2" stop-color="#1b1d1f" />
+			<stop offset="1" stop-color="#0a0c0d" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<g stroke="#b7bdc2" stroke-width="2.6">
+			<line x1="-30" y1="-42" x2="-30" y2="-52" />
+			<line x1="-10" y1="-42" x2="-10" y2="-52" />
+			<line x1="10" y1="-42" x2="10" y2="-52" />
+			<line x1="30" y1="-42" x2="30" y2="-52" />
+			<line x1="-40" y1="42" x2="-40" y2="52" />
+			<line x1="-20" y1="42" x2="-20" y2="52" />
+			<line x1="0" y1="42" x2="0" y2="52" />
+			<line x1="20" y1="42" x2="20" y2="52" />
+			<line x1="40" y1="42" x2="40" y2="52" />
+		</g>
+		<rect x="-32" y="-42" width="64" height="84" rx="6" fill="url(#body)" stroke="#08090a" stroke-width="1.2" />
+		<rect x="-28" y="-36" width="56" height="72" rx="5" fill="#070808" />
+		<rect x="-28.7" y="-36.7" width="57.4" height="73.4" rx="5.5" fill="none" stroke="#3a4044" stroke-width="0.7" opacity="0.55" />
+		<rect x="-24" y="-32" width="6" height="3" rx="1.2" fill="#2b3033" opacity="0.7" />
+		<rect data-overlay="segments" x="-20" y="-30" width="40" height="60" fill="none" stroke="none" />
+		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.8" text-anchor="middle" letter-spacing="0.5">
+			<text x="0" y="-38.2" font-size="4">7-SEG</text>
+			<text x="0" y="39">LITZ</text>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-54 -54 108 112">
+	<defs>
+		<linearGradient id="shell" x1="0" y1="-46" x2="0" y2="36" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#f7f8f9" />
+			<stop offset="0.65" stop-color="#e3e6e8" />
+			<stop offset="1" stop-color="#c6ccd0" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<!-- sealed plastic tag -->
+		<rect x="-36" y="-46" width="72" height="82" rx="20" fill="url(#shell)" stroke="#aab1b6" stroke-width="1.2" />
+		<rect x="-31" y="-41" width="62" height="72" rx="17" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.8" />
+		<path d="M-30 -14 h60" stroke="#d3d8dc" stroke-width="0.9" />
+		<circle cx="0" cy="-38" r="6.5" fill="none" stroke="#b3b9be" stroke-width="3.2" />
+
+		<!-- broadcast mark -->
+		<circle cx="0" cy="-8" r="2.4" fill="#6b747b" />
+		<g fill="none" stroke="#6b747b" stroke-width="1.6">
+			<path d="M-5 -13 a7.5 7.5 0 0 1 0 10" />
+			<path d="M-9.5 -17.5 a13.5 13.5 0 0 1 0 19" />
+			<path d="M5 -13 a7.5 7.5 0 0 0 0 10" />
+			<path d="M9.5 -17.5 a13.5 13.5 0 0 0 0 19" />
+		</g>
+
+		<text x="0" y="12" font-family="ui-sans-serif, system-ui, sans-serif" font-size="6.4" font-weight="600" letter-spacing="1.4" fill="#6b747b" text-anchor="middle">BLE</text>
+		<text x="0" y="20" font-family="ui-sans-serif, system-ui, sans-serif" font-size="2.9" letter-spacing="1.6" fill="#9aa2a7" text-anchor="middle">BEACON</text>
+
+		<circle cx="24" cy="-33" r="2.2" fill="#7fd18a" />
+
+		<!-- breakout tab with supply pads -->
+		<rect x="-20" y="32" width="40" height="11" rx="2" fill="#cfd4d8" stroke="#9aa2a7" stroke-width="0.9" />
+		<g stroke="#b7bdc2" stroke-width="2.2">
+			<line x1="-16" y1="40" x2="-16" y2="46" />
+			<line x1="16" y1="40" x2="16" y2="46" />
+		</g>
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-18.5" y="43.5" width="5" height="5" rx="1" />
+			<rect x="13.5" y="43.5" width="5" height="5" rx="1" />
+		</g>
+		<g fill="#6b747b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="2.8" text-anchor="middle">
+			<text x="-16" y="31">3V3</text>
+			<text x="16" y="31">GND</text>
+		</g>
+	</g>
+</svg>

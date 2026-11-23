@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -26 100 64">
+	<defs>
+		<linearGradient id="slideBody" x1="0" y1="-18" x2="0" y2="16" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#3d464c" />
+			<stop offset="1" stop-color="#171c1f" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-30" y1="16" x2="-30" y2="30" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="0" y1="16" x2="0" y2="30" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="30" y1="16" x2="30" y2="30" stroke="#b7bdc2" stroke-width="2.6" />
+
+		<rect x="-44" y="-18" width="88" height="34" rx="4" fill="url(#slideBody)" stroke="#0c1012" stroke-width="1.2" />
+		<rect x="-40" y="-15" width="80" height="3" rx="1.5" fill="#ffffff" opacity="0.08" />
+
+		<rect x="-34" y="-7" width="68" height="12" rx="6" fill="#0a0c0d" />
+		<rect x="-31" y="-5" width="62" height="2" rx="1" fill="#b4c3cd" opacity="0.25" />
+
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<circle cx="-30" cy="30" r="2.1" />
+			<circle cx="0" cy="30" r="2.1" />
+			<circle cx="30" cy="30" r="2.1" />
+		</g>
+
+		<rect data-overlay="slider" x="-30" y="-7" width="60" height="12" fill="none" stroke="none" />
+	</g>
+</svg>

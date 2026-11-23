@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-54 -42 108 92">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-34" x2="0" y2="34" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2b62a6" />
+			<stop offset="1" stop-color="#1a3f70" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<rect x="-48" y="-34" width="96" height="64" rx="3" fill="url(#pcb)" stroke="#12325c" stroke-width="1.2" />
+		<circle cx="-41" cy="-27" r="2.2" fill="#0d2547" />
+		<circle cx="41" cy="-27" r="2.2" fill="#0d2547" />
+
+		<!-- oscillator can -->
+		<rect x="-32" y="-27" width="26" height="18" rx="3" fill="#cfd5da" stroke="#7d858a" stroke-width="1" />
+		<text x="-19" y="-15.5" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.4" fill="#5b6268" text-anchor="middle">10k</text>
+
+		<!-- trim pot -->
+		<circle cx="16" cy="-17" r="9" fill="#2f6bd0" stroke="#1e4a94" stroke-width="1" />
+		<circle cx="16" cy="-17" r="4.6" fill="#d7dde3" stroke="#7f8a94" stroke-width="0.9" />
+		<path d="M16 -20 v6" stroke="#7f8a94" stroke-width="1.1" />
+
+		<!-- square-wave silk -->
+		<path d="M-36 10 h10 v-12 h12 v12 h12 v-12 h12 v12 h10" fill="none" stroke="#bfe3ff" stroke-width="1.4" />
+		<text x="0" y="24" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6" letter-spacing="1.2" fill="#bfe3ff" text-anchor="middle">SQUARE</text>
+
+		<!-- 2-pin header -->
+		<rect x="-36" y="27" width="72" height="9" rx="1.5" fill="#161616" />
+		<g stroke="#b7bdc2" stroke-width="2.2">
+			<line x1="-26" y1="29" x2="-26" y2="38" />
+			<line x1="26" y1="29" x2="26" y2="38" />
+		</g>
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-28.5" y="35.5" width="5" height="5" rx="1" />
+			<rect x="23.5" y="35.5" width="5" height="5" rx="1" />
+		</g>
+		<g fill="#d9e7f7" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.4" text-anchor="middle">
+			<text x="-26" y="25">CLK</text>
+			<text x="26" y="25">GND</text>
+		</g>
+	</g>
+</svg>

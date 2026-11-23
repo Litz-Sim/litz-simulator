@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-36 -13 72 26">
+	<defs>
+		<linearGradient id="can" x1="0" y1="-11" x2="0" y2="11" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#6a7176" />
+			<stop offset="0.55" stop-color="#343a3e" />
+			<stop offset="1" stop-color="#171b1d" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-34" y1="0" x2="-22" y2="0" stroke="#b7bdc2" stroke-width="2.8" />
+		<line x1="22" y1="0" x2="34" y2="0" stroke="#b7bdc2" stroke-width="2.8" />
+		<rect x="-24" y="-3" width="5" height="6" rx="1" fill="#c9a227" stroke="#8a6a12" stroke-width="0.6" />
+		<rect x="19" y="-3" width="5" height="6" rx="1" fill="#c9a227" stroke="#8a6a12" stroke-width="0.6" />
+
+		<rect x="-22" y="-11" width="44" height="22" rx="10" fill="url(#can)" stroke="#0a0d0f" stroke-width="1.2" />
+		<rect x="-19" y="-8.5" width="30" height="3" rx="1.5" fill="#ffffff" opacity="0.12" />
+
+		<circle cx="-12" cy="0" r="4.5" fill="#d8dde1" stroke="#8b949a" stroke-width="0.8" />
+		<circle cx="-13.4" cy="-1.4" r="1.3" fill="#ffffff" opacity="0.6" />
+		<text x="0" y="8.8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6" text-anchor="middle" fill="#93a0a6">TILT</text>
+	</g>
+</svg>

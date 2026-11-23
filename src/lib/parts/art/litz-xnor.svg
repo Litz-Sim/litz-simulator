@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -52 120 84">
+	<defs>
+		<linearGradient id="ceramic" x1="0" y1="-46" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#fbfaf4" />
+			<stop offset="0.55" stop-color="#ece9dd" />
+			<stop offset="1" stop-color="#d3cfc0" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<g stroke="#6f767d" stroke-width="2">
+			<line x1="-53" y1="-22" x2="21.7" y2="-22" />
+			<line x1="-53" y1="0" x2="21.7" y2="0" />
+			<line x1="30.7" y1="-22" x2="53" y2="-22" />
+			<line x1="21.7" y1="0" x2="53" y2="0" />
+			<line x1="-20.81" y1="22" x2="53" y2="22" />
+		</g>
+		<path d="M -36 -46 C -6 -46 18 -22 40 -11 C 18 0 -6 24 -36 24 C -16 0 -16 -22 -36 -46 Z" fill="url(#ceramic)" stroke="#2b2f33" stroke-width="1.5" />
+		<path d="M -42 24 C -24 0 -24 -22 -42 -46" fill="none" stroke="#2b2f33" stroke-width="1.5" />
+		<circle cx="26.2" cy="-22" r="4.5" fill="url(#ceramic)" stroke="#2b2f33" stroke-width="1.5" />
+		<g fill="#e2e6e9" stroke="#8f979e" stroke-width="0.6">
+			<circle cx="-53" cy="-22" r="2" />
+			<circle cx="-53" cy="0" r="2" />
+			<circle cx="53" cy="-22" r="2" />
+			<circle cx="53" cy="0" r="2" />
+			<circle cx="53" cy="22" r="2" />
+		</g>
+		<text x="0" y="-8" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="bold" fill="#2b2f33">XNOR</text>
+		<g font-family="ui-sans-serif, system-ui, sans-serif" font-size="4" fill="#565d64" text-anchor="middle">
+			<text x="-53" y="-25">A</text>
+			<text x="-53" y="-3">B</text>
+			<text x="53" y="-25">Y</text>
+			<text x="53" y="-3">VCC</text>
+			<text x="53" y="19">GND</text>
+		</g>
+	</g>
+</svg>

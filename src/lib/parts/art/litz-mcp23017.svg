@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-94 -136 188 272">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-122" x2="0" y2="122" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2e7d4c" />
+			<stop offset="1" stop-color="#1a5632" />
+		</linearGradient>
+		<linearGradient id="dip" x1="0" y1="-66" x2="0" y2="66" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#3a3f43" />
+			<stop offset="1" stop-color="#17191b" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<rect x="-70" y="-122" width="140" height="244" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.3" />
+		<circle cx="-60" cy="-112" r="3" fill="#0c3220" />
+		<circle cx="60" cy="-112" r="3" fill="#0c3220" />
+		<circle cx="-60" cy="112" r="3" fill="#0c3220" />
+		<circle cx="60" cy="112" r="3" fill="#0c3220" />
+
+		<text x="0" y="-104" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.2" letter-spacing="1.4" fill="#c8f0d6" text-anchor="middle">I2C GPIO EXPANDER</text>
+
+		<!-- 26 breakout pads, 13 a side -->
+		<g stroke="#b7bdc2" stroke-width="2.4">
+			<line x1="-70" y1="-108" x2="-80" y2="-108" />
+			<line x1="-70" y1="-90" x2="-80" y2="-90" />
+			<line x1="-70" y1="-72" x2="-80" y2="-72" />
+			<line x1="-70" y1="-54" x2="-80" y2="-54" />
+			<line x1="-70" y1="-36" x2="-80" y2="-36" />
+			<line x1="-70" y1="-18" x2="-80" y2="-18" />
+			<line x1="-70" y1="0" x2="-80" y2="0" />
+			<line x1="-70" y1="18" x2="-80" y2="18" />
+			<line x1="-70" y1="36" x2="-80" y2="36" />
+			<line x1="-70" y1="54" x2="-80" y2="54" />
+			<line x1="-70" y1="72" x2="-80" y2="72" />
+			<line x1="-70" y1="90" x2="-80" y2="90" />
+			<line x1="-70" y1="108" x2="-80" y2="108" />
+			<line x1="70" y1="-108" x2="80" y2="-108" />
+			<line x1="70" y1="-90" x2="80" y2="-90" />
+			<line x1="70" y1="-72" x2="80" y2="-72" />
+			<line x1="70" y1="-54" x2="80" y2="-54" />
+			<line x1="70" y1="-36" x2="80" y2="-36" />
+			<line x1="70" y1="-18" x2="80" y2="-18" />
+			<line x1="70" y1="0" x2="80" y2="0" />
+			<line x1="70" y1="18" x2="80" y2="18" />
+			<line x1="70" y1="36" x2="80" y2="36" />
+			<line x1="70" y1="54" x2="80" y2="54" />
+			<line x1="70" y1="72" x2="80" y2="72" />
+			<line x1="70" y1="90" x2="80" y2="90" />
+			<line x1="70" y1="108" x2="80" y2="108" />
+		</g>
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-82.5" y="-111" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="-93" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="-75" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="-57" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="-39" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="-21" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="-3" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="15" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="33" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="51" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="69" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="87" width="5" height="6" rx="1" />
+			<rect x="-82.5" y="105" width="5" height="6" rx="1" />
+			<rect x="77.5" y="-111" width="5" height="6" rx="1" />
+			<rect x="77.5" y="-93" width="5" height="6" rx="1" />
+			<rect x="77.5" y="-75" width="5" height="6" rx="1" />
+			<rect x="77.5" y="-57" width="5" height="6" rx="1" />
+			<rect x="77.5" y="-39" width="5" height="6" rx="1" />
+			<rect x="77.5" y="-21" width="5" height="6" rx="1" />
+			<rect x="77.5" y="-3" width="5" height="6" rx="1" />
+			<rect x="77.5" y="15" width="5" height="6" rx="1" />
+			<rect x="77.5" y="33" width="5" height="6" rx="1" />
+			<rect x="77.5" y="51" width="5" height="6" rx="1" />
+			<rect x="77.5" y="69" width="5" height="6" rx="1" />
+			<rect x="77.5" y="87" width="5" height="6" rx="1" />
+			<rect x="77.5" y="105" width="5" height="6" rx="1" />
+		</g>
+
+		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6">
+			<text x="-64" y="-105.5">VCC</text>
+			<text x="-64" y="-87.5">GND</text>
+			<text x="-64" y="-69.5">SDA</text>
+			<text x="-64" y="-51.5">SCL</text>
+			<text x="-64" y="-33.5">A0</text>
+			<text x="-64" y="-15.5">A1</text>
+			<text x="-64" y="2.5">A2</text>
+			<text x="-64" y="20.5">RESET</text>
+			<text x="-64" y="38.5">INTA</text>
+			<text x="-64" y="56.5">INTB</text>
+			<text x="-64" y="74.5">GPA0</text>
+			<text x="-64" y="92.5">GPA1</text>
+			<text x="-64" y="110.5">GPA2</text>
+			<text x="64" y="-105.5" text-anchor="end">GPA3</text>
+			<text x="64" y="-87.5" text-anchor="end">GPA4</text>
+			<text x="64" y="-69.5" text-anchor="end">GPA5</text>
+			<text x="64" y="-51.5" text-anchor="end">GPA6</text>
+			<text x="64" y="-33.5" text-anchor="end">GPA7</text>
+			<text x="64" y="-15.5" text-anchor="end">GPB0</text>
+			<text x="64" y="2.5" text-anchor="end">GPB1</text>
+			<text x="64" y="20.5" text-anchor="end">GPB2</text>
+			<text x="64" y="38.5" text-anchor="end">GPB3</text>
+			<text x="64" y="56.5" text-anchor="end">GPB4</text>
+			<text x="64" y="74.5" text-anchor="end">GPB5</text>
+			<text x="64" y="92.5" text-anchor="end">GPB6</text>
+			<text x="64" y="110.5" text-anchor="end">GPB7</text>
+		</g>
+
+		<!-- DIP-28 body -->
+		<rect x="-36" y="-66" width="72" height="132" rx="3" fill="url(#dip)" stroke="#0b0c0d" stroke-width="1.3" />
+		<path d="M-10 -66 a10 10 0 0 0 20 0" fill="none" stroke="#0b0c0d" stroke-width="1.8" />
+		<circle cx="-29" cy="-57" r="2.2" fill="#c9b06a" />
+		<g fill="#c9a34c">
+			<rect x="-40" y="-60" width="4" height="4" />
+			<rect x="-40" y="-41" width="4" height="4" />
+			<rect x="-40" y="-22" width="4" height="4" />
+			<rect x="-40" y="-3" width="4" height="4" />
+			<rect x="-40" y="16" width="4" height="4" />
+			<rect x="-40" y="35" width="4" height="4" />
+			<rect x="-40" y="54" width="4" height="4" />
+			<rect x="36" y="-60" width="4" height="4" />
+			<rect x="36" y="-41" width="4" height="4" />
+			<rect x="36" y="-22" width="4" height="4" />
+			<rect x="36" y="-3" width="4" height="4" />
+			<rect x="36" y="16" width="4" height="4" />
+			<rect x="36" y="35" width="4" height="4" />
+			<rect x="36" y="54" width="4" height="4" />
+		</g>
+		<text x="0" y="-2" font-family="ui-sans-serif, system-ui, sans-serif" font-size="7" font-weight="600" fill="#9aa2a7" text-anchor="middle">MCP23017</text>
+		<text x="0" y="8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6" letter-spacing="1" fill="#737b80" text-anchor="middle">16-BIT I/O</text>
+		<text x="-32" y="76" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.2" fill="#93a79b">1</text>
+		<text x="32" y="76" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.2" fill="#93a79b" text-anchor="end">26</text>
+	</g>
+</svg>

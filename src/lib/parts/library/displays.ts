@@ -871,6 +871,7 @@ export const DISPLAY_PARTS: PartDef[] = [
 				default: 'A00'
 			}
 		],
+		artAttr: 'background',
 		draw: drawLcd2004
 	},
 	{
@@ -1001,6 +1002,7 @@ export const DISPLAY_PARTS: PartDef[] = [
 				default: 'parola'
 			}
 		],
+		artAttr: 'color',
 		draw: drawMaxSpi
 	},
 	{
@@ -1019,6 +1021,7 @@ export const DISPLAY_PARTS: PartDef[] = [
 				default: 'red'
 			}
 		],
+		artAttr: 'color',
 		draw: drawMaxPin
 	},
 	{

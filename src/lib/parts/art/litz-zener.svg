@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-42 -12 84 24">
+	<defs>
+		<linearGradient id="glass" x1="0" y1="-8" x2="0" y2="8" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#f0c6d6" />
+			<stop offset="0.5" stop-color="#c2688c" />
+			<stop offset="1" stop-color="#742b47" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-40" y1="0" x2="-20" y2="0" stroke="#b7bdc2" stroke-width="2.8" />
+		<line x1="20" y1="0" x2="40" y2="0" stroke="#b7bdc2" stroke-width="2.8" />
+		<rect x="-20" y="-8" width="40" height="16" rx="8" fill="url(#glass)" stroke="#7a3049" stroke-width="1.1" />
+		<rect x="-18" y="-5.4" width="34" height="2.2" rx="1.1" fill="#ffffff" opacity="0.4" />
+		<rect x="9" y="-8" width="5" height="16" rx="1.6" fill="#1f1f1f" />
+		<text x="11.5" y="1.8" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4" fill="#e8e2ea">Z</text>
+	</g>
+</svg>

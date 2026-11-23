@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-70 -62 140 124">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-54" x2="0" y2="48" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#282d30" />
+			<stop offset="0.25" stop-color="#1c1f21" />
+			<stop offset="1" stop-color="#0e1011" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<g stroke="#b7bdc2" stroke-width="2.6">
+			<line x1="-52.5" y1="48" x2="-52.5" y2="56" />
+			<line x1="-37.5" y1="48" x2="-37.5" y2="56" />
+			<line x1="-22.5" y1="48" x2="-22.5" y2="56" />
+			<line x1="-7.5" y1="48" x2="-7.5" y2="56" />
+			<line x1="7.5" y1="48" x2="7.5" y2="56" />
+			<line x1="22.5" y1="48" x2="22.5" y2="56" />
+			<line x1="37.5" y1="48" x2="37.5" y2="56" />
+			<line x1="52.5" y1="48" x2="52.5" y2="56" />
+		</g>
+		<rect x="-62" y="-54" width="124" height="102" rx="3" fill="url(#pcb)" stroke="#08090a" stroke-width="1.2" />
+		<rect x="-58.5" y="-50.5" width="117" height="95" rx="2" fill="none" stroke="#3a4044" stroke-width="0.7" opacity="0.55" />
+		<rect x="-56" y="-48" width="112" height="90" rx="1" fill="#ece9df" stroke="#c7c2b4" stroke-width="1" />
+		<rect x="-53" y="-45" width="106" height="84" rx="0.5" fill="none" stroke="#d8d3c6" stroke-width="0.6" />
+		<rect data-overlay="panel" x="-56" y="-48" width="112" height="90" rx="1" fill="none" stroke="none" />
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.55">
+			<rect x="-56" y="45" width="7" height="6" rx="1" />
+			<rect x="-41" y="45" width="7" height="6" rx="1" />
+			<rect x="-26" y="45" width="7" height="6" rx="1" />
+			<rect x="-11" y="45" width="7" height="6" rx="1" />
+			<rect x="4" y="45" width="7" height="6" rx="1" />
+			<rect x="19" y="45" width="7" height="6" rx="1" />
+			<rect x="34" y="45" width="7" height="6" rx="1" />
+			<rect x="49" y="45" width="7" height="6" rx="1" />
+		</g>
+		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.5">
+			<text x="-54" y="-50.3" font-size="3.4" text-anchor="start">1.54</text>
+			<text x="54" y="-50.3" font-size="3.4" text-anchor="end">E-PAPER</text>
+		</g>
+	</g>
+</svg>

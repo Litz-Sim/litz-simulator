@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-47 -30 94 70">
+	<defs>
+		<linearGradient id="shell" x1="0" y1="-18" x2="0" y2="22" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#3d76b4" />
+			<stop offset="1" stop-color="#1d4a7c" />
+		</linearGradient>
+		<radialGradient id="boss" cx="0.35" cy="0.3" r="0.8">
+			<stop offset="0" stop-color="#f3f1e9" />
+			<stop offset="0.7" stop-color="#ddd9cd" />
+			<stop offset="1" stop-color="#b9b4a6" />
+		</radialGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-30" y1="22" x2="-30" y2="36" stroke="#9aa2a9" stroke-width="2.8" />
+		<line x1="-10" y1="22" x2="-10" y2="36" stroke="#9aa2a9" stroke-width="2.8" />
+		<line x1="10" y1="22" x2="10" y2="36" stroke="#9aa2a9" stroke-width="2.8" />
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-33.5" y="33" width="7" height="6" rx="1" />
+			<rect x="-13.5" y="33" width="7" height="6" rx="1" />
+			<rect x="6.5" y="33" width="7" height="6" rx="1" />
+		</g>
+
+		<g fill="url(#shell)" stroke="#163a60" stroke-width="1">
+			<rect x="-46" y="-8" width="12" height="20" rx="2" />
+			<rect x="34" y="-8" width="12" height="20" rx="2" />
+		</g>
+		<circle cx="-40" cy="2" r="3" fill="#0f2a46" />
+		<circle cx="40" cy="2" r="3" fill="#0f2a46" />
+
+		<rect x="-34" y="-18" width="68" height="40" rx="3" fill="url(#shell)" stroke="#163a60" stroke-width="1.2" />
+		<rect x="-30" y="-14" width="60" height="3" rx="1.5" fill="#ffffff" opacity="0.12" />
+		<rect x="-31" y="14" width="62" height="3" rx="1.5" fill="#0b2138" opacity="0.5" />
+
+		<circle cx="0" cy="-18" r="10" fill="url(#boss)" stroke="#8b8880" stroke-width="1" />
+		<circle cx="0" cy="-18" r="7" fill="none" stroke="#a09a8c" stroke-width="0.8" />
+		<g stroke="#a8a294" stroke-width="0.9">
+			<path d="M0 -25 v3" />
+			<path d="M0 -11 v-3" />
+			<path d="M-7 -18 h3" />
+			<path d="M7 -18 h-3" />
+			<path d="M-4.9 -22.1 l2.1 -2.1" />
+			<path d="M4.9 -13.9 l-2.1 2.1" />
+			<path d="M4.9 -22.1 l-2.1 -2.1" />
+			<path d="M-4.9 -13.9 l2.1 2.1" />
+		</g>
+		<line x1="0" y1="-18" x2="14" y2="-28" stroke="#8b8880" stroke-width="5.6" stroke-linecap="round" />
+		<line x1="0" y1="-18" x2="14" y2="-28" stroke="#e8e6df" stroke-width="4" stroke-linecap="round" />
+		<circle cx="0" cy="-18" r="4.2" fill="#c9c4b6" stroke="#8b8880" stroke-width="0.7" />
+		<circle cx="0" cy="-18" r="1.7" fill="#4d4a43" />
+
+		<text x="0" y="7" font-family="ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" text-anchor="middle" fill="#d6e6f8">SG90</text>
+		<text x="0" y="16" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" fill="#9fc0e6">MICRO SERVO</text>
+	</g>
+</svg>

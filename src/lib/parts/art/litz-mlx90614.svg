@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -54 80 106">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-40" x2="0" y2="34" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2b5f9e" />
+			<stop offset="1" stop-color="#173f70" />
+		</linearGradient>
+		<radialGradient id="can" cx="-6" cy="-22" r="21" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#f0f3f5" />
+			<stop offset="0.5" stop-color="#b4bcc2" />
+			<stop offset="0.85" stop-color="#7f888e" />
+			<stop offset="1" stop-color="#a7afb5" />
+		</radialGradient>
+		<radialGradient id="window" cx="-1" cy="-18" r="7" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#8e3a3a" />
+			<stop offset="0.6" stop-color="#38151a" />
+			<stop offset="1" stop-color="#14080a" />
+		</radialGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<rect x="-32" y="-40" width="64" height="74" rx="4" fill="url(#pcb)" stroke="#0d2b4e" stroke-width="1.2" />
+		<circle cx="-26" cy="-34" r="2.4" fill="#0b2340" />
+		<circle cx="26" cy="-34" r="2.4" fill="#0b2340" />
+
+		<g stroke="#b0b8be" stroke-width="2">
+			<line x1="-10" y1="-4" x2="-12" y2="4" />
+			<line x1="0" y1="-2" x2="0" y2="4" />
+			<line x1="10" y1="-4" x2="12" y2="4" />
+		</g>
+		<circle cx="0" cy="-16" r="16.5" fill="url(#can)" stroke="#6f787f" stroke-width="1.1" />
+		<circle cx="0" cy="-16" r="13.6" fill="none" stroke="rgba(80, 88, 94, 0.55)" stroke-width="0.8" />
+		<circle cx="0" cy="-16" r="6.8" fill="#c9a227" />
+		<circle cx="0" cy="-16" r="5.6" fill="url(#window)" stroke="#2a0f12" stroke-width="0.8" />
+		<path d="M-3.5 -19.5 a5.6 5.6 0 0 1 5 2" fill="none" stroke="#e3a5a5" stroke-width="1.2" opacity="0.7" />
+		<circle cx="0" cy="-16" r="0.9" fill="none" stroke="#5a2a2a" stroke-width="0.5" />
+
+		<rect x="12" y="-4" width="14" height="10" rx="1.4" fill="#1d2124" stroke="#0a0c0d" stroke-width="0.8" />
+		<circle cx="15" cy="-1" r="1.1" fill="#5e666b" />
+		<rect x="-28" y="0" width="8" height="5" rx="1" fill="#2a2e31" />
+
+		<line x1="-30" y1="34" x2="-30" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-10" y1="34" x2="-10" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="10" y1="34" x2="10" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="30" y1="34" x2="30" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-33.5" y="38" width="7" height="6" rx="1" />
+			<rect x="-13.5" y="38" width="7" height="6" rx="1" />
+			<rect x="6.5" y="38" width="7" height="6" rx="1" />
+			<rect x="26.5" y="38" width="7" height="6" rx="1" />
+		</g>
+
+		<g fill="#d9e7f7" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.8" text-anchor="middle">
+			<text x="-30" y="27">VCC</text>
+			<text x="-10" y="27">GND</text>
+			<text x="10" y="27">SDA</text>
+			<text x="30" y="27">SCL</text>
+			<text x="0" y="-36" font-size="4.6">MLX90614</text>
+			<text x="0" y="18" font-size="3.2" fill="#9fc0e0">IR THERM</text>
+		</g>
+	</g>
+</svg>

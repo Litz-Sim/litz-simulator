@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-54 -46 108 96">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-38" x2="0" y2="36" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2e7d4c" />
+			<stop offset="1" stop-color="#1a5632" />
+		</linearGradient>
+		<linearGradient id="coin" x1="0" y1="-26" x2="0" y2="10" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#eef1f3" />
+			<stop offset="0.65" stop-color="#b3bbc1" />
+			<stop offset="1" stop-color="#7f878d" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<rect x="-48" y="-38" width="96" height="74" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.2" />
+		<circle cx="-41" cy="-31" r="2.3" fill="#0c3220" />
+		<circle cx="41" cy="-31" r="2.3" fill="#0c3220" />
+
+		<!-- CR2032 holder -->
+		<circle cx="-22" cy="-8" r="17.5" fill="#cfd5da" stroke="#6f787e" stroke-width="1.2" />
+		<circle cx="-22" cy="-8" r="13.5" fill="url(#coin)" stroke="#8b949a" stroke-width="0.9" />
+		<path d="M-31 -8 a9 9 0 0 1 18 0" fill="none" stroke="#7f878d" stroke-width="1.2" />
+		<path d="M-12 -14 a6 6 0 0 1 0 10" fill="none" stroke="#d7dde3" stroke-width="1.4" />
+		<text x="-22" y="15" font-family="ui-sans-serif, system-ui, sans-serif" font-size="2.8" fill="#7d858a" text-anchor="middle">CR2032</text>
+
+		<!-- DS3231 chip -->
+		<rect x="8" y="-24" width="26" height="20" rx="1.5" fill="#1d2124" stroke="#0a0c0d" stroke-width="0.9" />
+		<circle cx="12.5" cy="-20" r="1.2" fill="#5e666b" />
+		<text x="21" y="-12" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.1" fill="#9aa2a7" text-anchor="middle">DS3231</text>
+		<g fill="#5e666b">
+			<rect x="4" y="-22" width="4" height="2.5" />
+			<rect x="4" y="-15" width="4" height="2.5" />
+			<rect x="4" y="-8" width="4" height="2.5" />
+			<rect x="34" y="-22" width="4" height="2.5" />
+			<rect x="34" y="-15" width="4" height="2.5" />
+			<rect x="34" y="-8" width="4" height="2.5" />
+		</g>
+
+		<!-- 32 kHz crystal -->
+		<rect x="12" y="2" width="18" height="8" rx="3.5" fill="#cfd5da" stroke="#7d858a" stroke-width="0.9" />
+
+		<text x="21" y="-31" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" letter-spacing="1.2" fill="#c8f0d6" text-anchor="middle">RTC</text>
+
+		<!-- 6-pin header -->
+		<rect x="-46" y="33" width="92" height="9" rx="1.5" fill="#161616" />
+		<g stroke="#b7bdc2" stroke-width="2.2">
+			<line x1="-35" y1="35" x2="-35" y2="42" />
+			<line x1="-21" y1="35" x2="-21" y2="42" />
+			<line x1="-7" y1="35" x2="-7" y2="42" />
+			<line x1="7" y1="35" x2="7" y2="42" />
+			<line x1="21" y1="35" x2="21" y2="42" />
+			<line x1="35" y1="35" x2="35" y2="42" />
+		</g>
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-37.5" y="39.5" width="5" height="5" rx="1" />
+			<rect x="-23.5" y="39.5" width="5" height="5" rx="1" />
+			<rect x="-9.5" y="39.5" width="5" height="5" rx="1" />
+			<rect x="4.5" y="39.5" width="5" height="5" rx="1" />
+			<rect x="18.5" y="39.5" width="5" height="5" rx="1" />
+			<rect x="32.5" y="39.5" width="5" height="5" rx="1" />
+		</g>
+		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="2.9" text-anchor="middle">
+			<text x="-35" y="31">VCC</text>
+			<text x="-21" y="31">GND</text>
+			<text x="-7" y="31">SDA</text>
+			<text x="7" y="31">SCL</text>
+			<text x="21" y="31">SQW</text>
+			<text x="35" y="31">32K</text>
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 -38 48 90">
+	<defs>
+		<linearGradient id="body" x1="-16" y1="-22" x2="16" y2="12" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#43494d" />
+			<stop offset="0.45" stop-color="#1c2023" />
+			<stop offset="1" stop-color="#0b0d0e" />
+		</linearGradient>
+		<radialGradient id="lens" cx="-2" cy="-7" r="9" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#ffe8a8" />
+			<stop offset="0.55" stop-color="#b98a2a" />
+			<stop offset="1" stop-color="#5f4410" />
+		</radialGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-12" y1="10" x2="-12" y2="42" stroke="#b7bdc2" stroke-width="3" />
+		<line x1="12" y1="10" x2="12" y2="42" stroke="#b7bdc2" stroke-width="3" />
+
+		<path d="M-16 -17 Q-16 -22 -11 -22 L11 -22 Q16 -22 16 -17 L16 7 Q16 12 11 12 L-11 12 Q-16 12 -16 7 Z" fill="url(#body)" stroke="#050607" stroke-width="1.2" />
+		<path d="M-16 -17 Q-16 -22 -11 -22 L11 -22 Q16 -22 16 -17 L12 -17 Q12 -19 9 -19 L-9 -19 Q-12 -19 -12 -17 Z" fill="#6b7278" opacity="0.4" />
+		<rect x="-16" y="6" width="32" height="6" rx="3" fill="#0a0b0c" />
+
+		<circle cx="0" cy="-4" r="8.5" fill="url(#lens)" stroke="#1a1205" stroke-width="1" />
+		<circle cx="0" cy="-4" r="5" fill="#2d2413" opacity="0.6" />
+		<circle cx="0" cy="-4" r="1.6" fill="#e8cf8a" opacity="0.75" />
+		<ellipse cx="-3" cy="-7" rx="2.4" ry="1.4" fill="#fff2c8" opacity="0.6" />
+
+		<g stroke="#f0c33c" stroke-width="1.8" fill="none">
+			<path d="M-14 -32 l7 7 M-7 -25 h-3.5 M-7 -25 v-3.5" />
+			<path d="M-4 -36 l6 6 M2 -30 h-3.5 M2 -30 v-3.5" />
+			<path d="M6 -34 l5 5 M11 -29 h-3.5 M11 -29 v-3.5" />
+		</g>
+
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-15.5" y="38" width="7" height="6" rx="1" />
+			<rect x="8.5" y="38" width="7" height="6" rx="1" />
+		</g>
+
+		<g fill="#6f6a5f" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.8" text-anchor="middle">
+			<text x="-12" y="33">A</text>
+			<text x="12" y="33">C</text>
+			<text x="0" y="2" font-size="4.4" fill="#9aa2a8">PD</text>
+		</g>
+	</g>
+</svg>

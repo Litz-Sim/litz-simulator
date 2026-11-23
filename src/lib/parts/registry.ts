@@ -6,6 +6,7 @@ import { INPUT_PARTS } from './library/inputs';
 import { LOGIC_PARTS } from './library/logic';
 import { OUTPUT_PARTS } from './library/outputs';
 import { SENSOR_PARTS } from './library/sensors';
+import { withArt } from './svgArt.svelte';
 import type { PartDef, PinDef } from './types';
 
 /** Header names that reach a GPIO without spelling it out. */
@@ -44,7 +45,7 @@ function devBoard(
 	};
 }
 
-export const PART_DEFS: PartDef[] = [
+const CATALOG: PartDef[] = [
 	...BOARD_PARTS,
 	devBoard(
 		'board-esp32-c3-devkitm-1',
@@ -86,6 +87,7 @@ export const PART_DEFS: PartDef[] = [
 			},
 			{ name: 'label', type: 'string', default: '' }
 		],
+		artAttr: 'color',
 		draw: art.drawLed
 	},
 	{
@@ -286,6 +288,7 @@ export const PART_DEFS: PartDef[] = [
 			{ name: 'variant', type: 'enum', values: ['A00', 'A02'], default: 'A00' },
 			{ name: 'pins', type: 'enum', values: ['full', 'i2c'], default: 'full' }
 		],
+		artAttr: 'background',
 		draw: (ctx) => art.drawLcd(ctx)
 	},
 	{
@@ -427,6 +430,9 @@ export const PART_DEFS: PartDef[] = [
 	...LOGIC_PARTS,
 	...COMMS_PARTS
 ];
+
+/** A part draws from its SVG asset when it has one, and from its vector code otherwise. */
+export const PART_DEFS: PartDef[] = CATALOG.map(withArt);
 
 const BY_TYPE = new Map(PART_DEFS.map((def) => [def.type, def]));
 

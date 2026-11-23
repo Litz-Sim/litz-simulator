@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-34 -36 68 84">
+	<defs>
+		<linearGradient id="to92" x1="0" y1="-28" x2="0" y2="12" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#4a4f52" />
+			<stop offset="0.5" stop-color="#262a2d" />
+			<stop offset="1" stop-color="#121416" />
+		</linearGradient>
+		<linearGradient id="leg" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#c9ced2" />
+			<stop offset="1" stop-color="#9aa2a9" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<path d="M-10 10 C-12 20 -18 22 -20 30 L-20 42" fill="none" stroke="url(#leg)" stroke-width="2.6" />
+		<path d="M0 12 L0 42" fill="none" stroke="url(#leg)" stroke-width="2.6" />
+		<path d="M10 10 C12 20 18 22 20 30 L20 42" fill="none" stroke="url(#leg)" stroke-width="2.6" />
+
+		<path d="M-15 -24 Q-15 -28 -11 -28 L11 -28 Q15 -28 15 -24 L15 6 Q15 10 11 10 L-11 10 Q-15 10 -15 6 Z" fill="url(#to92)" stroke="#08090a" stroke-width="1.2" />
+		<path d="M-15 -24 Q-15 -28 -11 -28 L11 -28 Q15 -28 15 -24 L11.5 -24 Q11 -26 8 -26 L-8 -26 Q-11 -26 -11.5 -24 Z" fill="#5d6366" opacity="0.6" />
+		<rect x="-12" y="3" width="24" height="1.2" fill="#0a0b0c" opacity="0.7" />
+		<circle cx="-8" cy="-21" r="1.6" fill="#727a7f" />
+
+		<text x="0" y="-6" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.6" fill="#cfd6da" text-anchor="middle">DS18B20</text>
+		<text x="0" y="0" font-family="ui-sans-serif, system-ui, sans-serif" font-size="2.6" fill="#8b9298" text-anchor="middle">1-WIRE</text>
+
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-23.5" y="38" width="7" height="6" rx="1" />
+			<rect x="-3.5" y="38" width="7" height="6" rx="1" />
+			<rect x="16.5" y="38" width="7" height="6" rx="1" />
+		</g>
+
+		<g fill="#6f6a5f" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.4" text-anchor="middle">
+			<text x="-20" y="33">VCC</text>
+			<text x="0" y="33">GND</text>
+			<text x="20" y="33">DQ</text>
+		</g>
+	</g>
+</svg>

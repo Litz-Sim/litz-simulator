@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-88 -170 176 340">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-157" x2="0" y2="157" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2a5fa4" />
+			<stop offset="1" stop-color="#143c6c" />
+		</linearGradient>
+	</defs>
+
+	<rect x="-85" y="-157" width="170" height="314" rx="6" fill="url(#pcb)" stroke="#0b2a4e" stroke-width="1.6" />
+	<rect x="-80" y="-152" width="160" height="304" rx="3.5" fill="none" stroke="#d3e5f8" stroke-width="0.8" opacity="0.42" />
+
+	<circle cx="-74" cy="-146" r="3.4" fill="#0d2b4f" />
+	<circle cx="74" cy="-146" r="3.4" fill="#0d2b4f" />
+	<circle cx="-74" cy="146" r="3.4" fill="#0d2b4f" />
+	<circle cx="74" cy="146" r="3.4" fill="#0d2b4f" />
+
+	<!-- reset, power LED -->
+	<rect x="37" y="-150" width="19" height="15" rx="2.5" fill="#8fbfd8" stroke="#5d94b6" stroke-width="0.9" />
+	<circle cx="46.5" cy="-142.5" r="4.8" fill="#c9e3f0" stroke="#4d7c99" stroke-width="0.8" />
+	<text x="46.5" y="-154" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.4" fill="#e8f1fb" text-anchor="middle">RST</text>
+	<circle cx="-44" cy="-146" r="2.6" fill="#42c46a" />
+	<circle cx="-44" cy="-146" r="4.2" fill="none" stroke="#e8f1fb" stroke-width="0.5" opacity="0.5" />
+
+	<!-- ATmega328P TQFP -->
+	<rect x="-22" y="-48" width="44" height="44" rx="2" fill="#202427" stroke="#0b0d0e" stroke-width="1.2" />
+	<circle cx="-16" cy="-42" r="1.8" fill="#4a5155" />
+	<text x="0" y="-22" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.8" fill="#9aa2a7" text-anchor="middle">ATMEGA</text>
+	<text x="0" y="-15" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.8" fill="#9aa2a7" text-anchor="middle">328P</text>
+	<g fill="#c9a34c">
+		<rect x="-18" y="-52" width="3.4" height="4.5" />
+		<rect x="-10" y="-52" width="3.4" height="4.5" />
+		<rect x="-2" y="-52" width="3.4" height="4.5" />
+		<rect x="6" y="-52" width="3.4" height="4.5" />
+		<rect x="13" y="-52" width="3.4" height="4.5" />
+		<rect x="-18" y="34" width="3.4" height="4.5" />
+		<rect x="-10" y="34" width="3.4" height="4.5" />
+		<rect x="-2" y="34" width="3.4" height="4.5" />
+		<rect x="6" y="34" width="3.4" height="4.5" />
+		<rect x="13" y="34" width="3.4" height="4.5" />
+		<rect x="-26" y="-44" width="4.5" height="3.4" />
+		<rect x="-26" y="-36" width="4.5" height="3.4" />
+		<rect x="-26" y="-28" width="4.5" height="3.4" />
+		<rect x="-26" y="-20" width="4.5" height="3.4" />
+		<rect x="-26" y="-12" width="4.5" height="3.4" />
+		<rect x="21.5" y="-44" width="4.5" height="3.4" />
+		<rect x="21.5" y="-36" width="4.5" height="3.4" />
+		<rect x="21.5" y="-28" width="4.5" height="3.4" />
+		<rect x="21.5" y="-20" width="4.5" height="3.4" />
+		<rect x="21.5" y="-12" width="4.5" height="3.4" />
+	</g>
+
+	<!-- crystal and passives -->
+	<ellipse cx="38" cy="-66" rx="9.5" ry="4.8" fill="#c8ced2" stroke="#7d858a" stroke-width="0.8" />
+	<g fill="#b9895a">
+		<rect x="-52" y="-22" width="9" height="6" rx="0.8" />
+		<rect x="-52" y="-8" width="9" height="6" rx="0.8" />
+		<rect x="34" y="-6" width="9" height="6" rx="0.8" />
+	</g>
+
+	<!-- regulator -->
+	<rect x="40" y="26" width="17" height="23" rx="1.2" fill="#202427" stroke="#0b0d0e" stroke-width="0.9" />
+	<rect x="43" y="30" width="11" height="12" rx="0.8" fill="#33393d" />
+	<g fill="#c9a34c">
+		<rect x="42" y="49" width="3" height="4" />
+		<rect x="47" y="49" width="3" height="4" />
+		<rect x="52" y="49" width="3" height="4" />
+	</g>
+
+	<text x="0" y="70" font-family="ui-sans-serif, system-ui, sans-serif" font-size="7" letter-spacing="1.2" fill="#e8f1fb" text-anchor="middle">ARDUINO</text>
+	<text x="0" y="88" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" letter-spacing="0.6" fill="#e8f1fb" text-anchor="middle">PRO MINI</text>
+
+	<!-- FTDI header -->
+	<text x="0" y="138" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6" fill="#cfe2f6" text-anchor="middle">FTDI</text>
+	<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+		<circle cx="-25" cy="146" r="2.8" />
+		<circle cx="-15" cy="146" r="2.8" />
+		<circle cx="-5" cy="146" r="2.8" />
+		<circle cx="5" cy="146" r="2.8" />
+		<circle cx="15" cy="146" r="2.8" />
+		<circle cx="25" cy="146" r="2.8" />
+	</g>
+
+	<!-- headers -->
+	<rect x="-85" y="-140" width="12" height="280" rx="2" fill="#161616" />
+	<rect x="73" y="-140" width="12" height="280" rx="2" fill="#161616" />
+
+	<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+		<rect x="-83.6" y="-134" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-114" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-94" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-74" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-54" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-34" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-14" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="6" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="26" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="46" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="66" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="86" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="106" width="9.2" height="8" rx="1.2" />
+
+		<rect x="74.4" y="-134" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-114" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-94" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-74" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-54" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-34" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-14" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="6" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="26" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="46" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="66" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="86" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="106" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="126" width="9.2" height="8" rx="1.2" />
+	</g>
+
+	<g fill="#e8f1fb" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.6">
+		<text x="-68" y="-127">RAW</text>
+		<text x="-68" y="-107">GND</text>
+		<text x="-68" y="-87">GND</text>
+		<text x="-68" y="-67">GND</text>
+		<text x="-68" y="-47">VCC</text>
+		<text x="-68" y="-27">A3</text>
+		<text x="-68" y="-7">A2</text>
+		<text x="-68" y="13">A1</text>
+		<text x="-68" y="33">A0</text>
+		<text x="-68" y="53">D13</text>
+		<text x="-68" y="73">D12</text>
+		<text x="-68" y="93">D11</text>
+		<text x="-68" y="113">D10</text>
+
+		<text x="68" y="-127" text-anchor="end">D1</text>
+		<text x="68" y="-107" text-anchor="end">D0</text>
+		<text x="68" y="-87" text-anchor="end">D2</text>
+		<text x="68" y="-67" text-anchor="end">D3</text>
+		<text x="68" y="-47" text-anchor="end">D4</text>
+		<text x="68" y="-27" text-anchor="end">D5</text>
+		<text x="68" y="-7" text-anchor="end">D6</text>
+		<text x="68" y="13" text-anchor="end">D7</text>
+		<text x="68" y="33" text-anchor="end">D8</text>
+		<text x="68" y="53" text-anchor="end">D9</text>
+		<text x="68" y="73" text-anchor="end">A4</text>
+		<text x="68" y="93" text-anchor="end">A5</text>
+		<text x="68" y="113" text-anchor="end">A6</text>
+		<text x="68" y="133" text-anchor="end">A7</text>
+	</g>
+</svg>

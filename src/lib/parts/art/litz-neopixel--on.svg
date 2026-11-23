@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-42 -40 84 84">
+	<defs>
+		<radialGradient id="halo" cx="0" cy="-4" r="25" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#eafff2" stop-opacity="0.9" />
+			<stop offset="0.5" stop-color="#65e08c" stop-opacity="0.45" />
+			<stop offset="1" stop-color="#65e08c" stop-opacity="0" />
+		</radialGradient>
+		<radialGradient id="pixel" cx="-2.5" cy="-6.5" r="10" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#eafff2" />
+			<stop offset="0.4" stop-color="#65e08c" />
+			<stop offset="1" stop-color="#1d5a33" />
+		</radialGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-30" y1="14" x2="-30" y2="30" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-10" y1="14" x2="-10" y2="30" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="10" y1="14" x2="10" y2="30" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="30" y1="14" x2="30" y2="30" stroke="#b7bdc2" stroke-width="2.6" />
+
+		<circle cx="0" cy="-4" r="25" fill="url(#halo)" opacity="0.6" />
+		<circle cx="0" cy="-4" r="20" fill="#1b1f22" stroke="#0b0c0d" stroke-width="1.2" />
+		<circle cx="0" cy="-4" r="18" fill="none" stroke="#2c3237" stroke-width="0.7" opacity="0.7" />
+		<circle cx="0" cy="-4" r="9" fill="url(#pixel)" stroke="#2f7a4c" stroke-width="0.8" />
+
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<circle cx="-30" cy="30" r="2.1" />
+			<circle cx="-10" cy="30" r="2.1" />
+			<circle cx="10" cy="30" r="2.1" />
+			<circle cx="30" cy="30" r="2.1" />
+		</g>
+	</g>
+</svg>

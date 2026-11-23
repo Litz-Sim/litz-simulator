@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-56 -28 112 56">
+	<defs>
+		<linearGradient id="body" x1="0" y1="-16" x2="0" y2="16" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#dc5b4b" />
+			<stop offset="0.55" stop-color="#b23c31" />
+			<stop offset="1" stop-color="#8a2820" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-49" y1="-16" x2="-49" y2="-24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-35" y1="-16" x2="-35" y2="-24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-21" y1="-16" x2="-21" y2="-24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-7" y1="-16" x2="-7" y2="-24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="7" y1="-16" x2="7" y2="-24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="21" y1="-16" x2="21" y2="-24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="35" y1="-16" x2="35" y2="-24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="49" y1="-16" x2="49" y2="-24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-49" y1="16" x2="-49" y2="24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-35" y1="16" x2="-35" y2="24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-21" y1="16" x2="-21" y2="24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="-7" y1="16" x2="-7" y2="24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="7" y1="16" x2="7" y2="24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="21" y1="16" x2="21" y2="24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="35" y1="16" x2="35" y2="24" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="49" y1="16" x2="49" y2="24" stroke="#b7bdc2" stroke-width="2.4" />
+
+		<rect x="-56" y="-16" width="112" height="32" rx="3" fill="url(#body)" stroke="#6b1f18" stroke-width="1.2" />
+		<rect x="-51" y="-12.5" width="102" height="3" rx="1.5" fill="#ffffff" opacity="0.12" />
+
+		<g>
+			<rect x="-53" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="-52" y="-10" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+			<rect x="-39" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="-38" y="-1" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+			<rect x="-25" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="-24" y="-10" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+			<rect x="-11" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="-10" y="-1" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+			<rect x="3" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="4" y="-10" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+			<rect x="17" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="18" y="-1" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+			<rect x="31" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="32" y="-10" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+			<rect x="45" y="-11" width="8" height="22" rx="2" fill="#3b1712" />
+			<rect x="46" y="-1" width="6" height="10" rx="1.5" fill="#f1efe8" stroke="#8b8880" stroke-width="0.8" />
+		</g>
+
+		<g font-family="ui-sans-serif, system-ui, sans-serif" font-size="4" text-anchor="middle" fill="#f4d6d0">
+			<text x="-49" y="14">1</text>
+			<text x="-35" y="14">2</text>
+			<text x="-21" y="14">3</text>
+			<text x="-7" y="14">4</text>
+			<text x="7" y="14">5</text>
+			<text x="21" y="14">6</text>
+			<text x="35" y="14">7</text>
+			<text x="49" y="14">8</text>
+		</g>
+	</g>
+</svg>

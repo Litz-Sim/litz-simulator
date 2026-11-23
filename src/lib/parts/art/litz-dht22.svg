@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -44 80 92">
+	<defs>
+		<linearGradient id="case" x1="0" y1="-34" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#fbfaf6" />
+			<stop offset="0.55" stop-color="#efede5" />
+			<stop offset="1" stop-color="#dad6c9" />
+		</linearGradient>
+		<linearGradient id="slot" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#c9c5b8" />
+			<stop offset="1" stop-color="#e6e3d9" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-30" y1="24" x2="-30" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="-10" y1="24" x2="-10" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="10" y1="24" x2="10" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+		<line x1="30" y1="24" x2="30" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
+
+		<rect x="-21" y="-34" width="42" height="58" rx="5" fill="url(#case)" stroke="#b9b5aa" stroke-width="1.2" />
+		<rect x="-17" y="-30" width="34" height="9" rx="3" fill="#f4f2eb" stroke="#d3cfc2" stroke-width="0.8" />
+		<circle cx="-12" cy="-25.5" r="1.4" fill="#c8c4b7" />
+		<circle cx="12" cy="-25.5" r="1.4" fill="#c8c4b7" />
+
+		<g fill="url(#slot)" stroke="#b7b2a4" stroke-width="0.7">
+			<rect x="-14" y="-16" width="28" height="4.4" rx="2.2" />
+			<rect x="-14" y="-8.4" width="28" height="4.4" rx="2.2" />
+			<rect x="-14" y="-0.8" width="28" height="4.4" rx="2.2" />
+			<rect x="-14" y="6.8" width="28" height="4.4" rx="2.2" />
+		</g>
+		<rect x="-19" y="14" width="38" height="1" fill="#cfcabd" />
+
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-33.5" y="38" width="7" height="6" rx="1" />
+			<rect x="-13.5" y="38" width="7" height="6" rx="1" />
+			<rect x="6.5" y="38" width="7" height="6" rx="1" />
+			<rect x="26.5" y="38" width="7" height="6" rx="1" />
+		</g>
+
+		<g fill="#8a877e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.8" text-anchor="middle">
+			<text x="-30" y="33">VCC</text>
+			<text x="-10" y="33">SDA</text>
+			<text x="10" y="33">NC</text>
+			<text x="30" y="33">GND</text>
+			<text x="0" y="21" font-size="4.4" fill="#7d7a70">DHT22</text>
+		</g>
+	</g>
+</svg>

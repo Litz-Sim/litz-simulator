@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -15 40 30">
+	<defs>
+		<linearGradient id="housing" x1="0" y1="-13.5" x2="0" y2="13.5" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#565d63" />
+			<stop offset="0.55" stop-color="#2b3135" />
+			<stop offset="1" stop-color="#13181b" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-12.6" y1="-9" x2="-18" y2="-9" stroke="#b7bdc2" stroke-width="2.8" />
+		<line x1="-12.6" y1="9" x2="-18" y2="9" stroke="#b7bdc2" stroke-width="2.8" />
+		<line x1="12.6" y1="-9" x2="18" y2="-9" stroke="#b7bdc2" stroke-width="2.8" />
+		<line x1="12.6" y1="9" x2="18" y2="9" stroke="#b7bdc2" stroke-width="2.8" />
+		<rect x="-13.5" y="-13.5" width="27" height="27" rx="2.6" fill="url(#housing)" stroke="#0b0e10" stroke-width="1" />
+		<rect x="-11.4" y="-11.4" width="22.8" height="22.8" rx="2" fill="none" stroke="#6a737a" stroke-width="0.8" opacity="0.65" />
+		<circle data-overlay="cap" cx="0" cy="-0.9" r="9" fill="none" stroke="none" />
+	</g>
+</svg>

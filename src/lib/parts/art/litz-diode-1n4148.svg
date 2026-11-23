@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-42 -10 84 20">
+	<defs>
+		<linearGradient id="glass" x1="0" y1="-7" x2="0" y2="7" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#ffe2bd" />
+			<stop offset="0.5" stop-color="#e59a3c" />
+			<stop offset="1" stop-color="#a85e14" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<line x1="-40" y1="0" x2="-20" y2="0" stroke="#b7bdc2" stroke-width="2.4" />
+		<line x1="20" y1="0" x2="40" y2="0" stroke="#b7bdc2" stroke-width="2.4" />
+		<rect x="-20" y="-6.5" width="40" height="13" rx="6.5" fill="url(#glass)" stroke="#9b6a2a" stroke-width="1" />
+		<rect x="-18" y="-4.4" width="34" height="2" rx="1" fill="#ffffff" opacity="0.45" />
+		<rect x="9" y="-6.5" width="5" height="13" rx="1.5" fill="#1f1f1f" />
+		<text x="-9" y="1.6" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.2" fill="#6a3a12">1N4148</text>
+	</g>
+</svg>

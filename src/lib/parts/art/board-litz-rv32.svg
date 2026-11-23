@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-88 -122 176 244">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-107" x2="0" y2="107" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#134f4a" />
+			<stop offset="1" stop-color="#0a312e" />
+		</linearGradient>
+		<linearGradient id="usb" x1="0" y1="-122" x2="0" y2="-100" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#e9edf0" />
+			<stop offset="0.5" stop-color="#c3c9cd" />
+			<stop offset="1" stop-color="#8f979d" />
+		</linearGradient>
+	</defs>
+
+	<rect x="-85" y="-107" width="170" height="214" rx="6" fill="url(#pcb)" stroke="#062320" stroke-width="1.6" />
+	<rect x="-80" y="-102" width="160" height="204" rx="3.5" fill="none" stroke="#cdeee7" stroke-width="0.8" opacity="0.42" />
+
+	<circle cx="-74" cy="-96" r="3.2" fill="#072b28" />
+	<circle cx="74" cy="-96" r="3.2" fill="#072b28" />
+	<circle cx="-74" cy="96" r="3.2" fill="#072b28" />
+	<circle cx="74" cy="96" r="3.2" fill="#072b28" />
+
+	<!-- USB-C -->
+	<rect x="-17" y="-122" width="34" height="22" rx="4.5" fill="url(#usb)" stroke="#6f787e" stroke-width="1.1" />
+	<rect x="-11" y="-119" width="22" height="9" rx="4" fill="#394146" />
+	<rect x="-13.5" y="-118" width="2.2" height="7" rx="1" fill="#737d84" />
+	<rect x="11.3" y="-118" width="2.2" height="7" rx="1" fill="#737d84" />
+
+	<!-- buttons -->
+	<g stroke-width="0.9">
+		<rect x="31" y="-101" width="16" height="13" rx="2.5" fill="#9fb6e8" stroke="#6079ad" />
+		<circle cx="39" cy="-94.5" r="4.2" fill="#d3def5" stroke="#526a9c" stroke-width="0.8" />
+		<rect x="51" y="-101" width="16" height="13" rx="2.5" fill="#9fb6e8" stroke="#6079ad" />
+		<circle cx="59" cy="-94.5" r="4.2" fill="#d3def5" stroke="#526a9c" stroke-width="0.8" />
+	</g>
+	<g fill="#d6f5ee" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.1" text-anchor="middle">
+		<text x="39" y="-104">BOOT</text>
+		<text x="59" y="-104">RST</text>
+	</g>
+
+	<circle cx="-42" cy="-94" r="2.6" fill="#42c46a" />
+	<circle cx="-42" cy="-94" r="4.2" fill="none" stroke="#d6f5ee" stroke-width="0.5" opacity="0.5" />
+	<rect x="52" y="-76" width="15" height="11" rx="1.2" fill="#202427" stroke="#0b0d0e" stroke-width="0.8" />
+
+	<!-- RV32 QFN -->
+	<rect x="-22" y="-54" width="44" height="44" rx="2" fill="#202427" stroke="#0b0d0e" stroke-width="1.2" />
+	<circle cx="-16" cy="-48" r="1.8" fill="#4a5155" />
+	<text x="0" y="-30" font-family="ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="600" fill="#a9b2b8" text-anchor="middle">RV32</text>
+	<text x="0" y="-21" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6" fill="#8f989e" text-anchor="middle">RISCV SoC</text>
+	<g fill="#c9a34c">
+		<rect x="-18" y="-57" width="3.2" height="4" /><rect x="-11" y="-57" width="3.2" height="4" /><rect x="-4" y="-57" width="3.2" height="4" /><rect x="3" y="-57" width="3.2" height="4" /><rect x="10" y="-57" width="3.2" height="4" /><rect x="16" y="-57" width="3.2" height="4" />
+		<rect x="-18" y="-10" width="3.2" height="4" /><rect x="-11" y="-10" width="3.2" height="4" /><rect x="-4" y="-10" width="3.2" height="4" /><rect x="3" y="-10" width="3.2" height="4" /><rect x="10" y="-10" width="3.2" height="4" /><rect x="16" y="-10" width="3.2" height="4" />
+		<rect x="-25" y="-50" width="4" height="3.2" /><rect x="-25" y="-44" width="4" height="3.2" /><rect x="-25" y="-38" width="4" height="3.2" /><rect x="-25" y="-32" width="4" height="3.2" /><rect x="-25" y="-26" width="4" height="3.2" /><rect x="-25" y="-20" width="4" height="3.2" />
+		<rect x="21" y="-50" width="4" height="3.2" /><rect x="21" y="-44" width="4" height="3.2" /><rect x="21" y="-38" width="4" height="3.2" /><rect x="21" y="-32" width="4" height="3.2" /><rect x="21" y="-26" width="4" height="3.2" /><rect x="21" y="-20" width="4" height="3.2" />
+	</g>
+
+	<!-- crystal, flash, passives -->
+	<rect x="-10" y="8" width="20" height="8" rx="2" fill="#c8ced2" stroke="#7d858a" stroke-width="0.8" />
+	<rect x="24" y="4" width="17" height="11" rx="1.2" fill="#202427" stroke="#0b0d0e" stroke-width="0.8" />
+	<text x="32.5" y="11.5" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3" fill="#9aa2a7" text-anchor="middle">QSPI</text>
+	<g fill="#b9895a">
+		<rect x="-50" y="-6" width="9" height="6" rx="0.8" />
+		<rect x="40" y="26" width="9" height="6" rx="0.8" />
+		<rect x="-50" y="26" width="9" height="6" rx="0.8" />
+	</g>
+
+	<!-- brand -->
+	<g opacity="0.95">
+		<rect x="-7" y="46" width="7" height="7" rx="1.6" fill="#a78bfa" />
+		<rect x="1" y="51" width="7" height="7" rx="1.6" fill="#7dd3fc" />
+	</g>
+	<text x="0" y="78" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" letter-spacing="2" fill="#d6f5ee" text-anchor="middle">LITZ</text>
+	<text x="0" y="91" font-family="ui-sans-serif, system-ui, sans-serif" font-size="5.4" letter-spacing="1.4" fill="#a78bfa" text-anchor="middle">RV32 REFERENCE</text>
+
+	<!-- headers -->
+	<rect x="-85" y="-89" width="12" height="178" rx="2" fill="#161616" />
+	<rect x="73" y="-89" width="12" height="178" rx="2" fill="#161616" />
+
+	<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+		<rect x="-83.6" y="-84" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-64" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-44" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-24" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="-4" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="16" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="36" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="56" width="9.2" height="8" rx="1.2" />
+		<rect x="-83.6" y="76" width="9.2" height="8" rx="1.2" />
+
+		<rect x="74.4" y="-84" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-64" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-44" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-24" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="-4" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="16" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="36" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="56" width="9.2" height="8" rx="1.2" />
+		<rect x="74.4" y="76" width="9.2" height="8" rx="1.2" />
+	</g>
+
+	<g fill="#d6f5ee" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.6">
+		<text x="-68" y="-77">3V3</text>
+		<text x="-68" y="-57">GND</text>
+		<text x="-68" y="-37">GND</text>
+		<text x="-68" y="-17">IO0</text>
+		<text x="-68" y="3">IO1</text>
+		<text x="-68" y="23">IO2</text>
+		<text x="-68" y="43">IO3</text>
+		<text x="-68" y="63">IO4</text>
+		<text x="-68" y="83">IO5</text>
+
+		<text x="68" y="-77" text-anchor="end">IO6</text>
+		<text x="68" y="-57" text-anchor="end">IO7</text>
+		<text x="68" y="-37" text-anchor="end">IO8</text>
+		<text x="68" y="-17" text-anchor="end">IO9</text>
+		<text x="68" y="3" text-anchor="end">IO10</text>
+		<text x="68" y="23" text-anchor="end">IO20</text>
+		<text x="68" y="43" text-anchor="end">IO21</text>
+		<text x="68" y="63" text-anchor="end">RX</text>
+		<text x="68" y="83" text-anchor="end">TX</text>
+	</g>
+</svg>

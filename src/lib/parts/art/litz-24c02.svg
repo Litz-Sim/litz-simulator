@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -58 120 116">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-46" x2="0" y2="46" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2e7d4c" />
+			<stop offset="1" stop-color="#1a5632" />
+		</linearGradient>
+		<linearGradient id="dip" x1="0" y1="-26" x2="0" y2="26" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#3a3f43" />
+			<stop offset="1" stop-color="#17191b" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<rect x="-40" y="-46" width="80" height="92" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.2" />
+		<circle cx="-33" cy="-39" r="2.2" fill="#0c3220" />
+		<circle cx="33" cy="-39" r="2.2" fill="#0c3220" />
+		<circle cx="-33" cy="39" r="2.2" fill="#0c3220" />
+		<circle cx="33" cy="39" r="2.2" fill="#0c3220" />
+
+		<g stroke="#b7bdc2" stroke-width="2.4">
+			<line x1="-40" y1="-33" x2="-48" y2="-33" />
+			<line x1="-40" y1="-11" x2="-48" y2="-11" />
+			<line x1="-40" y1="11" x2="-48" y2="11" />
+			<line x1="-40" y1="33" x2="-48" y2="33" />
+			<line x1="40" y1="-33" x2="48" y2="-33" />
+			<line x1="40" y1="11" x2="48" y2="11" />
+			<line x1="40" y1="33" x2="48" y2="33" />
+		</g>
+		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
+			<rect x="-50.5" y="-36" width="5" height="6" rx="1" />
+			<rect x="-50.5" y="-14" width="5" height="6" rx="1" />
+			<rect x="-50.5" y="8" width="5" height="6" rx="1" />
+			<rect x="-50.5" y="30" width="5" height="6" rx="1" />
+			<rect x="45.5" y="-36" width="5" height="6" rx="1" />
+			<rect x="45.5" y="8" width="5" height="6" rx="1" />
+			<rect x="45.5" y="30" width="5" height="6" rx="1" />
+		</g>
+
+		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.5">
+			<text x="-34" y="-30.5">A0</text>
+			<text x="-34" y="-8.5">A1</text>
+			<text x="-34" y="13.5">A2</text>
+			<text x="-34" y="35.5">GND</text>
+			<text x="34" y="-30.5" text-anchor="end">VCC</text>
+			<text x="34" y="13.5" text-anchor="end">SCL</text>
+			<text x="34" y="35.5" text-anchor="end">SDA</text>
+		</g>
+
+		<!-- DIP-8 -->
+		<rect x="-18" y="-26" width="36" height="52" rx="3" fill="url(#dip)" stroke="#0b0c0d" stroke-width="1.2" />
+		<path d="M-7 -26 a7 7 0 0 0 14 0" fill="none" stroke="#0b0c0d" stroke-width="1.6" />
+		<circle cx="-13" cy="-19" r="1.8" fill="#c9b06a" />
+		<g fill="#c9a34c">
+			<rect x="-22" y="-21" width="4" height="3.5" />
+			<rect x="-22" y="-7" width="4" height="3.5" />
+			<rect x="-22" y="7" width="4" height="3.5" />
+			<rect x="-22" y="21" width="4" height="3.5" />
+			<rect x="18" y="-21" width="4" height="3.5" />
+			<rect x="18" y="-7" width="4" height="3.5" />
+			<rect x="18" y="7" width="4" height="3.5" />
+			<rect x="18" y="21" width="4" height="3.5" />
+		</g>
+		<text x="0" y="-2" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.6" font-weight="600" fill="#9aa2a7" text-anchor="middle">24C02</text>
+		<text x="0" y="6" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3" letter-spacing="0.8" fill="#737b80" text-anchor="middle">EEPROM</text>
+	</g>
+</svg>

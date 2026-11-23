@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-66 -54 132 116">
+	<defs>
+		<linearGradient id="frame" x1="-60" y1="-44" x2="60" y2="42" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#d7dbde" />
+			<stop offset="0.5" stop-color="#9aa2a8" />
+			<stop offset="1" stop-color="#c3c9cd" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<g stroke="#b7bdc2" stroke-width="2.6">
+			<line x1="-52.5" y1="42" x2="-52.5" y2="50" />
+			<line x1="-37.5" y1="42" x2="-37.5" y2="50" />
+			<line x1="-22.5" y1="42" x2="-22.5" y2="50" />
+			<line x1="-7.5" y1="42" x2="-7.5" y2="50" />
+			<line x1="7.5" y1="42" x2="7.5" y2="50" />
+			<line x1="22.5" y1="42" x2="22.5" y2="50" />
+			<line x1="37.5" y1="42" x2="37.5" y2="50" />
+			<line x1="52.5" y1="42" x2="52.5" y2="50" />
+		</g>
+		<g fill="#d6dbe0" stroke="#98a0a6" stroke-width="0.5">
+			<circle cx="-52.5" cy="42" r="1.8" />
+			<circle cx="-37.5" cy="42" r="1.8" />
+			<circle cx="-22.5" cy="42" r="1.8" />
+			<circle cx="-7.5" cy="42" r="1.8" />
+			<circle cx="7.5" cy="42" r="1.8" />
+			<circle cx="22.5" cy="42" r="1.8" />
+			<circle cx="37.5" cy="42" r="1.8" />
+			<circle cx="52.5" cy="42" r="1.8" />
+		</g>
+		<rect x="-60" y="-44" width="120" height="86" rx="5" fill="url(#frame)" stroke="#70787e" stroke-width="1" />
+		<rect x="-57" y="-41" width="114" height="80" rx="3.5" fill="none" stroke="#f4f6f7" stroke-width="0.8" opacity="0.55" />
+		<circle cx="-53" cy="-37" r="2.5" fill="#6f777d" />
+		<circle cx="-53" cy="-37" r="1.2" fill="#9aa2a8" />
+		<circle cx="53" cy="-37" r="2.5" fill="#6f777d" />
+		<circle cx="53" cy="-37" r="1.2" fill="#9aa2a8" />
+		<circle cx="-53" cy="35" r="2.5" fill="#6f777d" />
+		<circle cx="-53" cy="35" r="1.2" fill="#9aa2a8" />
+		<circle cx="53" cy="35" r="2.5" fill="#6f777d" />
+		<circle cx="53" cy="35" r="1.2" fill="#9aa2a8" />
+		<rect x="-48" y="-32" width="96" height="58" rx="2" fill="#0a1620" stroke="#071018" stroke-width="1" />
+		<path d="M -48 -32 L -8 -32 L -48 -2 Z" fill="#ffffff" opacity="0.06" />
+		<rect data-overlay="panel" x="-48" y="-32" width="96" height="58" rx="2" fill="none" stroke="none" />
+		<g font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" fill="#3f474d" text-anchor="middle" letter-spacing="0.4">
+			<text x="0" y="-36.4">NOKIA 5110</text>
+			<text x="0" y="35.5" font-size="3.6">84 × 48</text>
+		</g>
+	</g>
+</svg>

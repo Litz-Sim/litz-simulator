@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-44 -44 88 92">
+	<defs>
+		<radialGradient id="glow" cx="0" cy="0" r="42" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#ffffff" stop-opacity="0.95" />
+			<stop offset="0.3" stop-color="#ffe985" stop-opacity="0.55" />
+			<stop offset="1" stop-color="#ffd429" stop-opacity="0" />
+		</radialGradient>
+		<radialGradient id="body" cx="-7" cy="-8" r="27" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#fffef2" />
+			<stop offset="0.3" stop-color="#fff0a0" />
+			<stop offset="0.75" stop-color="#ffd42e" />
+			<stop offset="1" stop-color="#a8840f" />
+		</radialGradient>
+	</defs>
+	<circle cx="0" cy="0" r="42" fill="url(#glow)" opacity="0.6" />
+	<g stroke-linecap="round">
+		<line x1="-8" y1="10" x2="-10" y2="42" stroke="#9aa2a9" stroke-width="3.4" />
+		<line x1="8" y1="10" x2="10" y2="42" stroke="#9aa2a9" stroke-width="3.4" />
+		<ellipse cx="0" cy="9" rx="20" ry="8.5" fill="#d9dfe3" stroke="#71797f" stroke-width="1.2" />
+		<circle cx="0" cy="0" r="18.5" fill="url(#body)" stroke="#8a6c0c" stroke-width="1.2" />
+		<ellipse cx="-7" cy="-8" rx="6" ry="3.6" fill="#ffffff" opacity="0.75" transform="rotate(-32 -7 -8)" />
+	</g>
+</svg>
