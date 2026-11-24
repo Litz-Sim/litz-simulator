@@ -16,10 +16,11 @@ export const NATIVE_FIRMWARE: Record<string, BundledFirmware> = {
 };
 
 /**
- * Stock Python interpreters shipped with the editor.
+ * Stock Python interpreters shipped with the editor. `scripts/fetch-firmware.mjs`
+ * downloads them from micropython.org and circuitpython.org into static/firmware.
  *
- * Both ESP32-C3 runtimes are paired with the chip's Mask ROM. The RP2040 runs
- * MicroPython from its own flash; the engine's flash helpers accept writes, so
+ * Every ESP32 runtime is paired with its chip's Mask ROM. The RP2040 runs
+ * Python from its own flash; the engine's flash helpers accept writes, so
  * `main.py` survives and runs.
  */
 export const PYTHON_FIRMWARE: Record<
@@ -36,6 +37,13 @@ export const PYTHON_FIRMWARE: Record<
 			name: 'circuitpython-esp32c3.bin',
 			url: asset('firmware/circuitpython-esp32c3.bin'),
 			rom: { name: 'esp32c3-rom.elf', url: asset('firmware/esp32c3-rom.elf') }
+		}
+	},
+	esp32c6: {
+		micropython: {
+			name: 'micropython-esp32c6.bin',
+			url: asset('firmware/micropython-esp32c6.bin'),
+			rom: { name: 'esp32c6-rom.elf', url: asset('firmware/esp32c6-rom.elf') }
 		}
 	},
 	rp2040: {

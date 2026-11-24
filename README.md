@@ -163,11 +163,13 @@ Run starts a WebAssembly session and boots every board on the canvas. Each board
 
 Every development board picks its own program in the inspector's Program section. The choice is per board, so one canvas can mix a C firmware and two Python boards.
 
-| Runtime       | Boots from                                          | Built-in images                                                            |
-| ------------- | --------------------------------------------------- | -------------------------------------------------------------------------- |
-| Native        | The image you upload or the packaged blinky fixture | ESP32-C3 `blinky.bin`, ATmega328P `uno-blink.hex`, RP2040 `pico-blink.bin` |
-| MicroPython   | `main.py` on the board's storage                    | ESP32-C3 `micropython-esp32c3.bin`, RP2040 `micropython-rp2040.bin`        |
-| CircuitPython | `code.py` on the board's storage                    | ESP32-C3 `circuitpython-esp32c3.bin`                                       |
+| Runtime       | Boots from                                          | Built-in images                                                                                         |
+| ------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Native        | The image you upload or the packaged blinky fixture | ESP32-C3 `blinky.bin`, ATmega328P `uno-blink.hex`, RP2040 `pico-blink.bin`                              |
+| MicroPython   | `main.py` on the board's storage                    | ESP32-C3 `micropython-esp32c3.bin`, ESP32-C6 `micropython-esp32c6.bin`, RP2040 `micropython-rp2040.bin` |
+| CircuitPython | `code.py` on the board's storage                    | ESP32-C3 `circuitpython-esp32c3.bin`                                                                    |
+
+The Python images and the Mask ROMs are not stored in git. `pnpm firmware` (also run by `pnpm dev` and `pnpm build`) downloads them from micropython.org, circuitpython.org and Espressif's `esp-rom-elfs` release, checks each SHA-256, and converts the RP2040 UF2 into the flat flash image the runner takes. The ESP32-C6 runs MicroPython only: CircuitPython enables BLE, which this engine models on the C3 alone. The RP2040 runs MicroPython only: CircuitPython's boot2 writes into ROM, which the RP2040 model refuses.
 
 A board with no matching built-in image needs an uploaded one. Uploads accept `.bin`, `.hex`, `.elf`, or `.uf2` and are cached in IndexedDB under a content hash; the document keeps only the file name and hash, so exporting a project does not embed megabytes of firmware. Files larger than the browser's storage quota fall back to the in-memory copy for the current tab. ESP32 boards that run a merged Python image also need a Mask ROM ELF; the packaged images pair one automatically.
 

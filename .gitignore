@@ -25,3 +25,8 @@ vite.config.ts.timestamp-*
 # Paraglide
 src/lib/paraglide
 project.inlang/cache/
+
+# Pulled from micropython.org and circuitpython.org
+/static/firmware/micropython-*.bin
+/static/firmware/circuitpython-*.bin
+/static/firmware/esp32*-rom.elf

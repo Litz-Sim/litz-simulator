@@ -27,6 +27,11 @@ export default defineConfig(
 		}
 	},
 	{
+		// Build scripts are plain Node ESM and live outside the app's TS project.
+		files: ['scripts/**/*.mjs'],
+		extends: [ts.configs.disableTypeChecked]
+	},
+	{
 		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
 		languageOptions: {
 			parserOptions: {

@@ -9,8 +9,9 @@
 		"#lib/*": "./src/lib/*"
 	},
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
+		"firmware": "node scripts/fetch-firmware.mjs",
+		"dev": "node scripts/fetch-firmware.mjs && vite dev",
+		"build": "node scripts/fetch-firmware.mjs && vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
