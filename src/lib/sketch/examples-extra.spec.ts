@@ -1,10 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { partDef } from '#lib/parts/registry';
-import { buttonLedSketch, oledSketch, potSketch, trafficLightSketch } from './examples-extra';
+import {
+	buttonLedSketch,
+	oledSketch,
+	plotSketch,
+	potSketch,
+	trafficLightSketch
+} from './examples-extra';
 import type { Sketch } from './types';
 
 const examples: [string, (name: string) => Sketch][] = [
 	['pot', potSketch],
+	['plot', plotSketch],
 	['button', buttonLedSketch],
 	['oled', oledSketch],
 	['traffic', trafficLightSketch]
