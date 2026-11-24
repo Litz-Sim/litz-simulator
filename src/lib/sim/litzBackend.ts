@@ -59,7 +59,8 @@ export class LitzBackend implements SimBackend {
 			boot: assets?.boot ?? null,
 			ptable: assets?.ptable ?? null,
 			analog: options?.analog ?? false,
-			manifests: options?.manifests ?? []
+			manifests: options?.manifests ?? [],
+			storage: options?.storage ?? {}
 		});
 		const chip = this.#session.chip();
 		this.#chipName = chip.name;
@@ -296,6 +297,16 @@ export class LitzBackend implements SimBackend {
 
 	debugRun(board: number | string, steps: number): DebugStop {
 		return this.#session?.debug.run(board, steps) ?? 'unsupported';
+	}
+
+	storageFiles(part: string): { path: string; data: Uint8Array }[] {
+		const session = this.#session;
+		if (!session) return [];
+		return session.storageFiles(part).map((file) => ({ path: file.path, data: file.data }));
+	}
+
+	flashImage(board: number | string = 0): Uint8Array | null {
+		return this.#session?.flashImage(board) ?? null;
 	}
 
 	dispose(): void {

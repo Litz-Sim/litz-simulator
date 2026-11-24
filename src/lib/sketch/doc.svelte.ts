@@ -3,6 +3,7 @@ import { boardDef } from '#lib/parts/breadboard';
 import { partDef } from '#lib/parts/registry';
 import { snapToGrid } from './geometry';
 import {
+	DEFAULT_PROBE_COLOR,
 	DEFAULT_WIRE_COLOR,
 	GRID,
 	type BoardInstance,
@@ -11,12 +12,14 @@ import {
 	type Endpoint,
 	type FirmwareRef,
 	type PartInstance,
+	type ProbeInstance,
 	type ProgramFile,
 	type ProjectInfo,
 	type Rotation,
 	type RuntimeMode,
 	type Selection,
 	type Sketch,
+	type VolumeFile,
 	type WireStyle
 } from './types';
 import { normalizeProjectInfo } from './project-info';
@@ -41,7 +44,9 @@ export function blankSketch(name: string = m.untitled()): Sketch {
 		parts: [],
 		wires: [],
 		view: { panX: 0, panY: 0, zoom: 1 },
-		programs: {}
+		programs: {},
+		probes: [],
+		volumes: {}
 	};
 }
 
@@ -108,6 +113,32 @@ function orthoWires(sketch: Sketch): Sketch {
 		...sketch,
 		wires: (sketch.wires ?? []).map((wire) => ({ ...wire, style: 'ortho' as const }))
 	};
+}
+
+/** Drop probes and volume files that do not name what they claim to. */
+export function normalizeProbes(raw: ProbeInstance[] | undefined): ProbeInstance[] {
+	if (!Array.isArray(raw)) return [];
+	return raw.filter(
+		(probe) =>
+			typeof probe?.id === 'string' &&
+			typeof probe?.part === 'string' &&
+			typeof probe?.pin === 'string' &&
+			typeof probe?.name === 'string'
+	);
+}
+
+export function normalizeVolumes(
+	raw: Record<string, VolumeFile[]> | undefined
+): Record<string, VolumeFile[]> {
+	if (!raw || typeof raw !== 'object') return {};
+	const volumes: Record<string, VolumeFile[]> = {};
+	for (const [part, files] of Object.entries(raw)) {
+		if (!Array.isArray(files)) continue;
+		volumes[part] = files.filter(
+			(file): file is VolumeFile => typeof file?.path === 'string' && typeof file?.data === 'string'
+		);
+	}
+	return volumes;
 }
 
 class DocumentStore {
@@ -471,7 +502,8 @@ class DocumentStore {
 	#freeId(prefix: string): string {
 		const used = new Set([
 			...this.sketch.parts.map((p) => p.id),
-			...this.sketch.wires.map((w) => w.id)
+			...this.sketch.wires.map((w) => w.id),
+			...(this.sketch.probes ?? []).map((probe) => probe.id)
 		]);
 		let n = 1;
 		while (used.has(`${prefix}${n}`)) n++;
@@ -578,6 +610,144 @@ class DocumentStore {
 		});
 	}
 
+	// ---------------------------------------------------------------- probes
+
+	probes(): ProbeInstance[] {
+		return this.sketch.probes ?? [];
+	}
+
+	probe(id: string): ProbeInstance | undefined {
+		return this.probes().find((probe) => probe.id === id);
+	}
+
+	probeAt(partId: string, pin: string): ProbeInstance | undefined {
+		return this.probes().find((probe) => probe.part === partId && probe.pin === pin);
+	}
+
+	#probeName(): string {
+		let n = this.probes().length + 1;
+		const used = new Set(this.probes().map((probe) => probe.name));
+		while (used.has(`p${n}`)) n += 1;
+		return `p${n}`;
+	}
+
+	/** Clip a probe to a pin; a pin already probed is selected instead. */
+	addProbe(partId: string, pin: string): ProbeInstance | null {
+		const part = this.part(partId);
+		if (!part || !partDef(part.type).pins.some((entry) => entry.name === pin)) return null;
+		const existing = this.probeAt(partId, pin);
+		if (existing) {
+			this.selected = [{ kind: 'probe', id: existing.id }];
+			return existing;
+		}
+		const probe: ProbeInstance = {
+			id: this.#freeId('pr'),
+			part: partId,
+			pin,
+			dx: 26,
+			dy: -26,
+			name: this.#probeName(),
+			color: DEFAULT_PROBE_COLOR
+		};
+		this.mutate(() => {
+			this.sketch.probes = [...this.probes(), probe];
+		});
+		this.selected = [{ kind: 'probe', id: probe.id }];
+		return probe;
+	}
+
+	setProbeName(id: string, name: string): void {
+		const probe = this.probe(id);
+		const trimmed = name.trim();
+		if (!probe || !trimmed || trimmed === probe.name) return;
+		if (this.probes().some((entry) => entry.name === trimmed)) return;
+		this.mutate(() => {
+			probe.name = trimmed;
+		});
+	}
+
+	setProbeColor(id: string, color: string): void {
+		const probe = this.probe(id);
+		if (!probe) return;
+		this.mutate(() => {
+			probe.color = color;
+		});
+	}
+
+	/** Live label drag; the undo step is taken by the caller's beginDrag/endDrag. */
+	moveProbeLabel(id: string, dx: number, dy: number): void {
+		const probe = this.probe(id);
+		if (!probe) return;
+		probe.dx = dx;
+		probe.dy = dy;
+		this.bump();
+	}
+
+	removeProbe(id: string): void {
+		if (!this.probe(id)) return;
+		this.mutate(() => {
+			this.sketch.probes = this.probes().filter((probe) => probe.id !== id);
+		});
+		this.selected = this.selected.filter((item) => !(item.kind === 'probe' && item.id === id));
+	}
+
+	selectedProbes(): ProbeInstance[] {
+		const ids = new Set(this.selectedOf('probe'));
+		return this.probes().filter((probe) => ids.has(probe.id));
+	}
+
+	// --------------------------------------------------------------- volumes
+
+	volume(partId: string): VolumeFile[] {
+		return this.sketch.volumes?.[partId] ?? [];
+	}
+
+	/** Storage parts whose volume holds something the host placed. */
+	storageParts(): PartInstance[] {
+		return this.sketch.parts.filter(
+			(part) => part.type === 'litz-microsd-card' || part.type === 'litz-w25q32'
+		);
+	}
+
+	setVolume(partId: string, files: VolumeFile[]): void {
+		this.mutate(() => {
+			this.sketch.volumes = { ...(this.sketch.volumes ?? {}), [partId]: files };
+		});
+	}
+
+	/** A run's volumes as the guest left them; not an edit to undo. */
+	syncVolumes(volumes: Record<string, VolumeFile[]>, tabId?: string): void {
+		const target = tabId ? this.tabs.find((tab) => tab.id === tabId) : this.tabs[this.activeTab];
+		if (!target) return;
+		target.sketch.volumes = { ...(target.sketch.volumes ?? {}), ...volumes };
+		this.bump();
+	}
+
+	addVolumeFile(partId: string, file: VolumeFile): boolean {
+		const path = file.path.trim().replace(/^\/+/, '');
+		if (!path || path.includes('..') || path.includes('\\')) return false;
+		const files = this.volume(partId);
+		if (files.some((entry) => entry.path === path)) return false;
+		this.setVolume(partId, [...files, { path, data: file.data }]);
+		return true;
+	}
+
+	removeVolumeFile(partId: string, path: string): void {
+		this.setVolume(
+			partId,
+			this.volume(partId).filter((file) => file.path !== path)
+		);
+	}
+
+	setVolumeFile(partId: string, path: string, data: string): void {
+		const files = this.volume(partId);
+		if (!files.some((file) => file.path === path)) return;
+		this.setVolume(
+			partId,
+			files.map((file) => (file.path === path ? { path, data } : file))
+		);
+	}
+
 	// ----------------------------------------------------------------- wires
 
 	addWire(from: Endpoint, to: Endpoint, color = this.wireColor): void {
@@ -665,6 +835,7 @@ class DocumentStore {
 		const parts = new Set(this.selectedOf('part'));
 		const boards = new Set(this.selectedOf('board'));
 		const wires = new Set(this.selectedOf('wire'));
+		const probes = new Set(this.selectedOf('probe'));
 		this.mutate(() => {
 			this.sketch.wires = this.sketch.wires.filter(
 				(wire) =>
@@ -672,12 +843,20 @@ class DocumentStore {
 					!this.#touchesAny(wire.from, parts, boards) &&
 					!this.#touchesAny(wire.to, parts, boards)
 			);
+			this.sketch.probes = this.probes().filter(
+				(probe) => !probes.has(probe.id) && !parts.has(probe.part)
+			);
 			this.sketch.parts = this.sketch.parts.filter((part) => !parts.has(part.id));
 			this.sketch.boards = this.sketch.boards.filter((board) => !boards.has(board.id));
 			if (this.sketch.programs) {
 				const programs = { ...this.sketch.programs };
 				for (const id of parts) delete programs[id];
 				this.sketch.programs = programs;
+			}
+			if (this.sketch.volumes) {
+				const volumes = { ...this.sketch.volumes };
+				for (const id of parts) delete volumes[id];
+				this.sketch.volumes = volumes;
 			}
 		});
 		this.selected = [];
@@ -776,7 +955,9 @@ class DocumentStore {
 							? sketch.wires.map((wire) => ({ ...wire, style: 'ortho' as const }))
 							: [],
 						view: sketch.view ?? { panX: 0, panY: 0, zoom: 1 },
-						programs: normalizePrograms(sketch.programs)
+						programs: normalizePrograms(sketch.programs),
+						probes: normalizeProbes(sketch.probes),
+						volumes: normalizeVolumes(sketch.volumes)
 					}
 				});
 			}
@@ -826,7 +1007,9 @@ class DocumentStore {
 					? parsed.wires.map((wire) => ({ ...wire, style: 'ortho' as const }))
 					: [],
 				view: parsed.view ?? this.sketch.view,
-				programs: normalizePrograms(parsed.programs)
+				programs: normalizePrograms(parsed.programs),
+				probes: normalizeProbes(parsed.probes),
+				volumes: normalizeVolumes(parsed.volumes)
 			};
 			this.sketch = next;
 			this.selected = [];
@@ -859,7 +1042,12 @@ class DocumentStore {
 						return {
 							id,
 							name: tab.name,
-							sketch: { ...sketch, programs: normalizePrograms(sketch.programs) }
+							sketch: {
+								...sketch,
+								programs: normalizePrograms(sketch.programs),
+								probes: normalizeProbes(sketch.probes),
+								volumes: normalizeVolumes(sketch.volumes)
+							}
 						};
 					});
 					this.activeTab = Math.min(parsed.active ?? 0, this.tabs.length - 1);

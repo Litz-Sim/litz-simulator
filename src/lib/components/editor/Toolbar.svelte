@@ -80,6 +80,17 @@
 			>
 				<Icon name="wire" />
 			</button>
+			<button
+				type="button"
+				title={m.tool_probe()}
+				class="flex h-7 w-9 items-center justify-center rounded transition-colors [@media(pointer:coarse)]:h-10 [@media(pointer:coarse)]:w-12 {tool ===
+				'probe'
+					? 'bg-white text-stone-900 shadow-sm ring-1 ring-stone-300'
+					: 'text-stone-600 hover:text-stone-900'}"
+				onclick={() => (tool = 'probe')}
+			>
+				<Icon name="probe" />
+			</button>
 		</div>
 
 		<span class="mx-1 h-5 w-px bg-stone-300"></span>

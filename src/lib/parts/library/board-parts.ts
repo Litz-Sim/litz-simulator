@@ -64,7 +64,7 @@ function board(spec: BoardSpec): PartDef {
 		width: spec.width,
 		height,
 		pins,
-		attrs: [],
+		attrs: [{ name: 'power', type: 'bool', default: true }],
 		...(spec.chip === undefined ? {} : { chip: spec.chip }),
 		draw: (ctx, _part, zoom) =>
 			drawBoard(ctx, {

@@ -29,6 +29,7 @@ import {
 	type Endpoint,
 	type PartInstance,
 	type Point,
+	type ProbeInstance,
 	type Selection,
 	type Sketch,
 	type WireInstance
@@ -58,7 +59,7 @@ function panelGlass(type: string): { x: number; y: number; w: number; h: number 
 	}
 }
 
-export type Tool = 'select' | 'wire';
+export type Tool = 'select' | 'wire' | 'probe';
 
 type Hit =
 	| { kind: 'pin'; part: PartInstance; pin: PinDef; point: Point }
@@ -76,6 +77,7 @@ type Drag =
 	| { kind: 'connect'; from: Endpoint; point: Point }
 	| { kind: 'marquee'; start: Point; current: Point; base: Selection[] }
 	| { kind: 'control'; partId: string }
+	| { kind: 'probe'; id: string; start: Point; dx: number; dy: number }
 	| null;
 
 const MIN_ZOOM = 0.06;
@@ -194,7 +196,7 @@ export class CanvasEngine {
 
 	setTool(tool: Tool): void {
 		this.#tool = tool;
-		this.#canvas.style.cursor = tool === 'wire' ? 'crosshair' : 'default';
+		this.#canvas.style.cursor = tool === 'select' ? 'default' : 'crosshair';
 	}
 
 	invalidate(): void {
@@ -367,6 +369,7 @@ export class CanvasEngine {
 
 		for (const wire of sketch.wires) this.#drawWire(ctx, wire, view.zoom);
 		for (const part of sketch.parts) this.#drawPart(ctx, part, view.zoom);
+		this.#drawProbes(ctx, view.zoom);
 
 		if (this.#drag?.kind === 'connect') {
 			const from = doc.endpointPoint(this.#drag.from);
@@ -424,6 +427,104 @@ export class CanvasEngine {
 			ctx.strokeRect(-def.width / 2 - 5, -def.height / 2 - 5, def.width + 10, def.height + 10);
 			ctx.restore();
 		}
+	}
+
+	#probeFont(zoom: number): string {
+		return `600 ${11 / zoom}px ui-sans-serif, system-ui, sans-serif`;
+	}
+
+	/** Where a probe's clip sits and the box its label occupies. */
+	#probeBox(
+		probe: { part: string; pin: string; dx: number; dy: number; name: string },
+		zoom: number
+	): {
+		anchor: Point;
+		label: Point;
+		box: { x0: number; y0: number; x1: number; y1: number };
+	} | null {
+		const part = doc.part(probe.part);
+		if (!part) return null;
+		const pin = partDef(part.type).pins.find((entry) => entry.name === probe.pin);
+		if (!pin) return null;
+		const anchor = this.#pinWorld(part, pin);
+		const label = { x: anchor.x + probe.dx, y: anchor.y + probe.dy };
+		const ctx = this.#ctx;
+		ctx.save();
+		ctx.font = this.#probeFont(zoom);
+		const width = ctx.measureText(probe.name).width + 12 / zoom;
+		ctx.restore();
+		const height = 17 / zoom;
+		return {
+			anchor,
+			label,
+			box: {
+				x0: label.x - width / 2,
+				y0: label.y - height / 2,
+				x1: label.x + width / 2,
+				y1: label.y + height / 2
+			}
+		};
+	}
+
+	#drawProbes(ctx: CanvasRenderingContext2D, zoom: number): void {
+		for (const probe of doc.probes()) {
+			const geometry = this.#probeBox(probe, zoom);
+			if (!geometry) continue;
+			const { anchor, label, box } = geometry;
+			const selected = doc.isSelected('probe', probe.id);
+
+			ctx.save();
+			// Leader from the clip to the label, then the label over it.
+			ctx.strokeStyle = probe.color;
+			ctx.lineWidth = 1.6 / zoom;
+			ctx.beginPath();
+			ctx.moveTo(anchor.x, anchor.y);
+			ctx.lineTo(label.x, label.y);
+			ctx.stroke();
+
+			ctx.fillStyle = '#ffffff';
+			ctx.strokeStyle = probe.color;
+			ctx.lineWidth = 2 / zoom;
+			ctx.beginPath();
+			ctx.arc(anchor.x, anchor.y, 5.5 / zoom, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.stroke();
+			ctx.fillStyle = probe.color;
+			ctx.beginPath();
+			ctx.arc(anchor.x, anchor.y, 2.2 / zoom, 0, Math.PI * 2);
+			ctx.fill();
+
+			roundRectPath(ctx, box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0, 4 / zoom);
+			ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+			ctx.fill();
+			ctx.strokeStyle = selected ? '#1f2937' : probe.color;
+			ctx.lineWidth = (selected ? 1.8 : 1.2) / zoom;
+			ctx.stroke();
+
+			ctx.font = this.#probeFont(zoom);
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			ctx.fillStyle = probe.color;
+			ctx.fillText(probe.name, label.x, label.y);
+			ctx.restore();
+		}
+	}
+
+	/** A probe whose clip or label contains the point, topmost first. */
+	#probeAt(point: Point): { id: string; probe: ProbeInstance } | null {
+		const zoom = doc.sketch.view.zoom;
+		const probes = doc.probes();
+		for (let index = probes.length - 1; index >= 0; index -= 1) {
+			const probe = probes[index];
+			if (!probe) continue;
+			const geometry = this.#probeBox(probe, zoom);
+			if (!geometry) continue;
+			const inLabel = pointInBox(point, geometry.box);
+			const nearClip =
+				Math.hypot(point.x - geometry.anchor.x, point.y - geometry.anchor.y) < 9 / zoom;
+			if (inLabel || nearClip) return { id: probe.id, probe };
+		}
+		return null;
 	}
 
 	#drawWire(ctx: CanvasRenderingContext2D, wire: WireInstance, zoom: number): void {
@@ -907,6 +1008,36 @@ export class CanvasEngine {
 			return;
 		}
 
+		const probeHit = this.#tool === 'wire' ? null : this.#probeAt(point);
+		if (probeHit) {
+			doc.select('probe', probeHit.id, event.shiftKey);
+			if (event.shiftKey) {
+				this.invalidate();
+				return;
+			}
+			doc.beginDrag();
+			this.#drag = {
+				kind: 'probe',
+				id: probeHit.id,
+				start: point,
+				dx: probeHit.probe.dx,
+				dy: probeHit.probe.dy
+			};
+			this.invalidate();
+			return;
+		}
+
+		if (this.#tool === 'probe') {
+			const pinHit = this.#hitTest(point);
+			if (pinHit?.kind === 'pin') {
+				doc.addProbe(pinHit.part.id, pinHit.pin.name);
+			} else {
+				doc.clearSelection();
+			}
+			this.invalidate();
+			return;
+		}
+
 		const hit = this.#hitTest(point);
 		// A finger hides what it covers; resting on a pin names it.
 		if (event.pointerType === 'touch' && hit?.kind === 'pin') {
@@ -1101,6 +1232,18 @@ export class CanvasEngine {
 			return;
 		}
 
+		if (this.#drag?.kind === 'probe') {
+			const drag = this.#drag;
+			doc.moveProbeLabel(
+				drag.id,
+				drag.dx + point.x - drag.start.x,
+				drag.dy + point.y - drag.start.y
+			);
+			this.#moved = true;
+			this.invalidate();
+			return;
+		}
+
 		if (this.#touching) {
 			const part = doc.part(this.#touching);
 			if (part) this.#touchPanel(part, point, true);
@@ -1116,6 +1259,13 @@ export class CanvasEngine {
 			return;
 		}
 
+		if (this.#tool === 'select' && this.#probeAt(point)) {
+			this.#hover = null;
+			this.#canvas.style.cursor = 'move';
+			this.invalidate();
+			return;
+		}
+
 		const hover = this.#hitTest(point);
 		this.#hover = hover;
 		this.#canvas.style.cursor = this.#cursorFor(hover);
@@ -1124,7 +1274,7 @@ export class CanvasEngine {
 
 	#cursorFor(hit: Hit | null): string {
 		if (this.#space) return 'grab';
-		if (this.#tool === 'wire') return 'crosshair';
+		if (this.#tool !== 'select') return 'crosshair';
 		if (!hit) return 'default';
 		if (hit.kind === 'pin' || hit.kind === 'hole') return 'crosshair';
 		if (hit.kind === 'wire') return 'move';
@@ -1186,6 +1336,13 @@ export class CanvasEngine {
 				const permille = this.#turnControl(part, this.#pointerPos(event));
 				doc.setAttr(part.id, 'value', String(Math.round(permille / 10)));
 			}
+			this.invalidate();
+			return;
+		}
+
+		if (drag?.kind === 'probe') {
+			doc.endDrag();
+			if (!this.#moved) doc.bump();
 			this.invalidate();
 			return;
 		}

@@ -68,7 +68,24 @@ export interface WireInstance {
 	style?: WireStyle;
 }
 
-export type SelectKind = 'part' | 'board' | 'wire';
+/**
+ * A scope probe clipped to one part pin. Visibility does not depend on the
+ * simulation: the probe is part of the document, and a run binds its name to
+ * the pin's net.
+ */
+export interface ProbeInstance {
+	id: string;
+	/** Part the probe clips to; a development board is a part too. */
+	part: string;
+	pin: string;
+	/** Label position relative to the pin, in world units. */
+	dx: number;
+	dy: number;
+	name: string;
+	color: string;
+}
+
+export type SelectKind = 'part' | 'board' | 'wire' | 'probe';
 
 export interface Selection {
 	kind: SelectKind;
@@ -120,6 +137,16 @@ export interface Sketch {
 	view: View;
 	/** Keyed by development-board part id. */
 	programs?: Record<string, BoardProgram>;
+	/** Scope probes on part pins. */
+	probes?: ProbeInstance[];
+	/** Files the host puts on a microSD card or W25Q flash, keyed by part id. */
+	volumes?: Record<string, VolumeFile[]>;
+}
+
+/** One file on a storage part's FAT volume; `data` is base64. */
+export interface VolumeFile {
+	path: string;
+	data: string;
 }
 
 /** Project-level details the workspace saves beside its tabs. */
@@ -156,3 +183,15 @@ export const WIRE_COLORS = [
 ] as const;
 
 export const DEFAULT_WIRE_COLOR = '#c8352c';
+
+/** Probe label accents, distinct from the wire palette. */
+export const PROBE_COLORS = [
+	{ name: 'green', value: '#3f7f5f' },
+	{ name: 'orange', value: '#b06a2c' },
+	{ name: 'blue', value: '#3d6fb4' },
+	{ name: 'purple', value: '#8a5ab8' },
+	{ name: 'red', value: '#b23b3b' },
+	{ name: 'grey', value: '#5b6470' }
+] as const;
+
+export const DEFAULT_PROBE_COLOR = '#3f7f5f';

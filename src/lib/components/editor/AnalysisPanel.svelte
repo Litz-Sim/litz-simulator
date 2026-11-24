@@ -6,8 +6,6 @@
 	import { doc } from '#lib/sketch/doc.svelte';
 	import Waveform from './Waveform.svelte';
 
-	let probeName = $state('');
-	let probePoint = $state('');
 	let decoderSpec = $state('');
 
 	onMount(() => {
@@ -38,30 +36,6 @@
 		if (level === 'low') return 'bg-stone-400';
 		if (level === 'high-z') return 'bg-amber-400';
 		return 'bg-stone-200';
-	}
-
-	function nextProbeName(): string {
-		let n = sim.probes.length + 1;
-		while (sim.probes.some((probe) => probe.name === `p${n}`)) n += 1;
-		return `p${n}`;
-	}
-
-	function addProbe(event: SubmitEvent): void {
-		event.preventDefault();
-		const point = probePoint.trim() || `${sim.boardId}:GPIO8`;
-		if (sim.addProbe(probeName.trim() || nextProbeName(), point)) {
-			probeName = '';
-			probePoint = '';
-		}
-	}
-
-	function probePin(boardId: string, pin: string, gpio: number): void {
-		const point = `${boardId}:${gpio}`;
-		const base = pin.replace(/[^A-Za-z0-9]/g, '_');
-		let name = sim.boards.length > 1 ? `${boardId}_${base}` : base;
-		let suffix = 2;
-		while (sim.probes.some((probe) => probe.name === name)) name = `${base}_${suffix++}`;
-		sim.addProbe(name, point);
 	}
 
 	function addDecoder(event: SubmitEvent): void {
@@ -175,51 +149,29 @@
 				<div class="mt-1 flex flex-wrap gap-1">
 					{#each board.pins as pin (pin.name)}
 						{@const level = sim.levels[board.id]?.[pin.name] ?? null}
-						<button
-							type="button"
+						<span
 							title={levelLabel(level)}
-							class="flex items-center gap-1 rounded border border-stone-300 bg-white px-1.5 py-0.5 font-mono text-[10px] hover:border-stone-500"
-							onclick={() => probePin(board.id, pin.name, pin.gpio)}
+							class="flex items-center gap-1 rounded border border-stone-200 bg-white px-1.5 py-0.5 font-mono text-[10px]"
 						>
 							<span class="h-2 w-2 rounded-full {levelClass(level)}"></span>
 							{pin.name}
-						</button>
+						</span>
 					{/each}
 				</div>
 			</div>
 		{/each}
 
-		<div class="mt-3 flex items-center gap-2">
+		<div class="mt-3 flex flex-wrap items-center gap-2">
 			<h3 class="text-[11px] font-medium text-stone-600">{m.analysis_probes()}</h3>
-			<span class="text-[10px] text-stone-400">
-				{m.analysis_probe_hint({ board: sim.boardId })}
-			</span>
-		</div>
-		<form class="mt-1 flex flex-wrap items-center gap-1" onsubmit={addProbe}>
-			<input
-				bind:value={probeName}
-				placeholder={m.analysis_name()}
-				class="w-20 rounded border border-stone-300 bg-white px-1.5 py-0.5 font-mono text-[10px]"
-			/>
-			<input
-				bind:value={probePoint}
-				placeholder={`${sim.boardId}:GPIO8`}
-				class="w-40 rounded border border-stone-300 bg-white px-1.5 py-0.5 font-mono text-[10px]"
-			/>
-			<button
-				type="submit"
-				class="rounded border border-stone-300 bg-stone-100 px-2 py-0.5 text-[10px] hover:bg-stone-200"
-			>
-				{m.analysis_add()}
-			</button>
+			<span class="text-[10px] text-stone-400">{m.probe_hint()}</span>
 			<button
 				type="button"
-				class="rounded border border-stone-300 bg-white px-2 py-0.5 text-[10px] hover:bg-stone-100"
+				class="ml-auto rounded border border-stone-300 bg-white px-2 py-0.5 text-[10px] hover:bg-stone-100"
 				onclick={() => sim.refreshScope(true)}
 			>
 				{m.analysis_refresh()}
 			</button>
-		</form>
+		</div>
 		{#if sim.actionError}
 			<p class="mt-1 font-mono text-[10px] text-red-600">{sim.actionError}</p>
 		{/if}
@@ -235,7 +187,6 @@
 						<th class="py-0.5 pr-2 font-normal">{m.analysis_freq()}</th>
 						<th class="py-0.5 pr-2 font-normal">{m.analysis_duty()}</th>
 						<th class="py-0.5 pr-2 font-normal">{m.analysis_volts()}</th>
-						<th class="py-0.5"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -254,16 +205,6 @@
 									{formatVolts(probe.maxVolts)}
 								{/if}
 							</td>
-							<td class="py-0.5 text-right">
-								<button
-									type="button"
-									class="text-stone-400 hover:text-red-600"
-									title={m.analysis_remove()}
-									onclick={() => sim.removeProbe(probe.name)}
-								>
-									×
-								</button>
-							</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -276,6 +217,7 @@
 			<h3 class="text-[11px] font-medium text-stone-600">{m.analysis_wave()}</h3>
 			<Waveform
 				probes={waves?.probes ?? []}
+				decodes={waves?.decodes ?? []}
 				endMs={waves?.ms ?? 0}
 				emptyLabel={m.analysis_wave_empty()}
 				hint={m.analysis_wave_hint()}

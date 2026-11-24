@@ -44,6 +44,27 @@
 		saveTimer = setTimeout(() => doc.save(), 500);
 	});
 
+	// Each document runs its own session: a tab switch never leaves another
+	// project's console on screen.
+	let lastTab = doc.activeTab;
+	$effect(() => {
+		const tab = doc.activeTab;
+		if (tab === lastTab) return;
+		lastTab = tab;
+		if (sim.running || sim.loading) sim.stop();
+		sim.clearSerial();
+		sim.clearFlash();
+		ui.serialBoard = null;
+		ui.codeFile = 'diagram.json';
+	});
+
+	// Probes live in the document, so a rename or a deletion reaches the
+	// running scope without a restart.
+	$effect(() => {
+		void doc.rev;
+		sim.syncProbes();
+	});
+
 	function shortcut(event: KeyboardEvent): void {
 		if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
 			event.preventDefault();
@@ -59,6 +80,7 @@
 		if (event.metaKey || event.ctrlKey || event.altKey) return;
 		if (event.key === 'v') tool = 'select';
 		else if (event.key === 'w') tool = 'wire';
+		else if (event.key === 'p') tool = 'probe';
 		else if (event.key === 'f') {
 			canvasControl.engine?.fit();
 		}

@@ -3,6 +3,7 @@
 	import Activity from '@lucide/svelte/icons/activity';
 	import Bug from '@lucide/svelte/icons/bug';
 	import Cable from '@lucide/svelte/icons/cable';
+	import Crosshair from '@lucide/svelte/icons/crosshair';
 	import ChartLine from '@lucide/svelte/icons/chart-line';
 	import Check from '@lucide/svelte/icons/check';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
@@ -59,6 +60,7 @@
 		close: X,
 		code: FileCode,
 		cursor: MousePointer2,
+		probe: Crosshair,
 		download: Download,
 		file: FileCode,
 		'file-plus': FilePlus,

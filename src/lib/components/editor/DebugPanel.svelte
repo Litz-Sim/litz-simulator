@@ -30,6 +30,18 @@
 		void sim.revision;
 		return sim.registers;
 	});
+	const registerLabels = $derived.by((): { label: string; value: number }[] => {
+		const values = registers?.values ?? [];
+		const arm = /^rp2040/i.test(sim.boardRuntime[sim.debugBoard]?.name ?? '');
+		return values.flatMap((value, index) => {
+			if (arm) {
+				if (index > 14) return [];
+				const label = index < 13 ? `r${index}` : index === 13 ? 'sp' : 'lr';
+				return [{ label, value }];
+			}
+			return [{ label: `x${index}`, value }];
+		});
+	});
 
 	onMount(() => {
 		sim.refreshDebug();
@@ -176,10 +188,10 @@
 				<p class="mt-1 text-[11px] text-stone-500">{m.debug_registers()}</p>
 				{#if registers}
 					<div class="mt-1 grid grid-cols-2 gap-x-2 font-mono text-[10px] text-stone-600">
-						{#each registers.values as value, index (index)}
+						{#each registerLabels as entry, index (index)}
 							<span class="flex justify-between">
-								<span class="text-stone-400">x{index}</span>
-								<span>{hex(value)}</span>
+								<span class="text-stone-400">{entry.label}</span>
+								<span>{hex(entry.value)}</span>
 							</span>
 						{/each}
 						<span class="flex justify-between text-stone-800">

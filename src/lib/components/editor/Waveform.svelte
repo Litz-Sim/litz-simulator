@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { m } from '#lib/paraglide/messages.js';
-	import type { ProbeRecord } from '#lib/sim/backend';
+	import type { DecodeRecord, DecoderFrame, ProbeRecord } from '#lib/sim/backend';
 
 	const GUTTER = 110;
 	const LANE_HEIGHT = 30;
+	const DECODE_HEIGHT = 26;
 	const AXIS_HEIGHT = 18;
 	const PAD_TOP = 4;
 	const RIGHT_PAD = 12;
@@ -25,11 +26,13 @@
 
 	let {
 		probes,
+		decodes = [],
 		endMs,
 		emptyLabel,
 		hint
 	}: {
 		probes: ProbeRecord[];
+		decodes?: DecodeRecord[];
 		endMs: number;
 		emptyLabel: string;
 		hint: string;
@@ -45,11 +48,15 @@
 	let scrollLeft = $state(0);
 
 	const cssHeight = $derived(
-		Math.max(MIN_HEIGHT, PAD_TOP * 2 + probes.length * LANE_HEIGHT + AXIS_HEIGHT)
+		Math.max(
+			MIN_HEIGHT,
+			PAD_TOP * 2 + probes.length * LANE_HEIGHT + decodes.length * DECODE_HEIGHT + AXIS_HEIGHT
+		)
 	);
 
 	const isEmpty = $derived(
-		probes.length === 0 || !probes.some((probe) => probe.digital.length > 0)
+		!probes.some((probe) => probe.digital.length > 0) &&
+			!decodes.some((decode) => decode.frames.length > 0)
 	);
 
 	const durationMs = $derived.by(() => {
@@ -65,7 +72,7 @@
 		return Math.max(requested, fromSamples, 1);
 	});
 
-	const layout = $derived(computeLayout(viewWidth, cssHeight, probes.length));
+	const layout = $derived(computeLayout(viewWidth, cssHeight, probes.length, decodes.length));
 	const currentScale = $derived(scale > 0 ? scale : fitScale());
 	const contentWidth = $derived(
 		Math.max(viewWidth, Math.ceil(durationMs * currentScale) + RIGHT_PAD)
@@ -74,16 +81,25 @@
 
 	const hoverTimeLabel = $derived(hover ? formatHoverTime(hover.t) : '');
 	const hoverLevelLabel = $derived.by(() => {
-		if (!hover || hover.lane < 0) return '';
+		if (!hover || hover.lane < 0 || hover.lane >= probes.length) return '';
 		const probe = probes[hover.lane];
 		if (!probe) return '';
 		const level = levelAt(probe, hover.t);
 		return level === null ? '' : `${probe.name} ${levelGlyph(level)}`;
 	});
+	const hoverFrameLabel = $derived.by(() => {
+		if (!hover || hover.lane < probes.length) return '';
+		const decode = decodes[hover.lane - probes.length];
+		if (!decode) return '';
+		const frame = frameAt(decode.frames, hover.t);
+		if (!frame) return '';
+		const suffix = frame.error ? ' · error' : '';
+		return `${formatHoverTime(frame.at / 1e6)} ${frame.text}${suffix}`;
+	});
 
 	const labelTop = $derived.by(() => {
 		if (!hover) return 0;
-		const preferred = hover.lane >= 0 ? layout.laneTop + hover.lane * LANE_HEIGHT + 2 : PAD_TOP + 2;
+		const preferred = hover.lane >= 0 ? laneTopFor(hover.lane, layout.laneTop) + 2 : PAD_TOP + 2;
 		return Math.max(2, Math.min(cssHeight - 38, preferred));
 	});
 	const labelFlipped = $derived(hover !== null && hover.x > viewWidth - 118);
@@ -146,14 +162,46 @@
 		return best;
 	}
 
-	function computeLayout(width: number, height: number, count: number): Layout {
+	function computeLayout(
+		width: number,
+		height: number,
+		probeCount: number,
+		decodeCount: number
+	): Layout {
 		const plotRight = Math.max(1, width - RIGHT_PAD);
 		const laneAreaTop = PAD_TOP;
 		const axisY = Math.max(laneAreaTop, height - AXIS_HEIGHT);
 		const laneAreaHeight = Math.max(0, axisY - laneAreaTop);
-		const lanesHeight = count * LANE_HEIGHT;
+		const lanesHeight = probeCount * LANE_HEIGHT + decodeCount * DECODE_HEIGHT;
 		const laneTop = laneAreaTop + Math.max(0, (laneAreaHeight - lanesHeight) / 2);
 		return { laneTop, plotRight, axisY };
+	}
+
+	/** Top of a lane, probes first and decoders after them. */
+	function laneTopFor(index: number, laneTop: number): number {
+		if (index < probes.length) return laneTop + index * LANE_HEIGHT;
+		return laneTop + probes.length * LANE_HEIGHT + (index - probes.length) * DECODE_HEIGHT;
+	}
+
+	/** The frame under a time, or null when the time falls in a gap. */
+	function frameAt(frames: DecoderFrame[], timeMs: number): DecoderFrame | null {
+		let low = 0;
+		let high = frames.length - 1;
+		let found = -1;
+		while (low <= high) {
+			const middle = (low + high) >> 1;
+			const frame = frames[middle];
+			if (!frame) break;
+			if (frame.at / 1e6 <= timeMs) {
+				found = middle;
+				low = middle + 1;
+			} else {
+				high = middle - 1;
+			}
+		}
+		const frame = frames[found];
+		if (!frame) return null;
+		return timeMs <= frame.end / 1e6 ? frame : null;
 	}
 
 	function axisUnit(step: number): { unit: string; scale: number } {
@@ -236,6 +284,28 @@
 		return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 	}
 
+	function roundedRect(
+		ctx: CanvasRenderingContext2D,
+		x: number,
+		y: number,
+		width: number,
+		height: number,
+		radius: number
+	): void {
+		const r = Math.max(0, Math.min(radius, width / 2, height / 2));
+		ctx.beginPath();
+		ctx.moveTo(x + r, y);
+		ctx.lineTo(x + width - r, y);
+		ctx.arcTo(x + width, y, x + width, y + r, r);
+		ctx.lineTo(x + width, y + height - r);
+		ctx.arcTo(x + width, y + height, x + width - r, y + height, r);
+		ctx.lineTo(x + r, y + height);
+		ctx.arcTo(x, y + height, x, y + height - r, r);
+		ctx.lineTo(x, y + r);
+		ctx.arcTo(x, y, x + r, y, r);
+		ctx.closePath();
+	}
+
 	function drawHorizontal(
 		ctx: CanvasRenderingContext2D,
 		start: number,
@@ -278,8 +348,9 @@
 		ctx.fillRect(0, 0, width, height);
 		if (isEmpty) return;
 
-		const layoutNow = computeLayout(width, height, probes.length);
+		const layoutNow = computeLayout(width, height, probes.length, decodes.length);
 		const count = probes.length;
+		const decodeCount = decodes.length;
 		const duration = durationMs;
 		const pxPerMs = currentScale;
 		const offset = scrollLeft;
@@ -297,6 +368,19 @@
 			ctx.beginPath();
 			ctx.moveTo(0, top + LANE_HEIGHT + 0.5);
 			ctx.lineTo(width, top + LANE_HEIGHT + 0.5);
+			ctx.stroke();
+		}
+
+		const decodeTop = layoutNow.laneTop + count * LANE_HEIGHT;
+		for (let index = 0; index < decodeCount; index += 1) {
+			const top = decodeTop + index * DECODE_HEIGHT;
+			ctx.fillStyle = tint(accentFor(count + index), 0.055);
+			ctx.fillRect(0, top, width, DECODE_HEIGHT);
+			ctx.strokeStyle = '#f1efec';
+			ctx.lineWidth = 1;
+			ctx.beginPath();
+			ctx.moveTo(0, top + DECODE_HEIGHT + 0.5);
+			ctx.lineTo(width, top + DECODE_HEIGHT + 0.5);
 			ctx.stroke();
 		}
 
@@ -399,6 +483,50 @@
 		}
 		ctx.restore();
 
+		if (decodeCount > 0) {
+			ctx.save();
+			ctx.beginPath();
+			ctx.rect(0, decodeTop, layoutNow.plotRight, decodeCount * DECODE_HEIGHT);
+			ctx.clip();
+			ctx.font = '9px ui-monospace, SFMono-Regular, Menlo, monospace';
+			ctx.textBaseline = 'middle';
+			ctx.textAlign = 'left';
+			const boxTop = 4;
+			const boxHeight = DECODE_HEIGHT - 9;
+			for (let index = 0; index < decodeCount; index += 1) {
+				const decode = decodes[index];
+				if (!decode) continue;
+				const top = decodeTop + index * DECODE_HEIGHT;
+				const color = accentFor(count + index);
+				for (const frame of decode.frames) {
+					if (!Number.isFinite(frame.at) || !Number.isFinite(frame.end)) continue;
+					const x0 = xOf(frame.at / 1e6);
+					const x1 = xOf(frame.end / 1e6);
+					if (x1 < 0 || x0 > layoutNow.plotRight) continue;
+					const left = Math.max(0, x0);
+					const right = Math.min(layoutNow.plotRight, Math.max(left, x1));
+					const boxWidth = Math.max(2, right - left);
+					const y = top + boxTop;
+					ctx.fillStyle = frame.error ? 'rgba(178, 59, 59, 0.16)' : tint(color, 0.16);
+					ctx.strokeStyle = frame.error ? '#b23b3b' : tint(color, 0.7);
+					ctx.lineWidth = 1;
+					roundedRect(ctx, left, y, boxWidth, boxHeight, 3);
+					ctx.fill();
+					ctx.stroke();
+					if (boxWidth >= 30) {
+						ctx.save();
+						ctx.beginPath();
+						ctx.rect(left + 1, y, boxWidth - 2, boxHeight);
+						ctx.clip();
+						ctx.fillStyle = frame.error ? '#b23b3b' : '#44403c';
+						ctx.fillText(frame.text, left + 4, y + boxHeight / 2);
+						ctx.restore();
+					}
+				}
+			}
+			ctx.restore();
+		}
+
 		ctx.strokeStyle = '#dedbd7';
 		ctx.beginPath();
 		ctx.moveTo(0.5, layoutNow.laneTop);
@@ -441,18 +569,22 @@
 		const rect = element.getBoundingClientRect();
 		const width = Math.max(1, rect.width);
 		const height = Math.max(MIN_HEIGHT, rect.height);
-		const layoutNow = computeLayout(width, height, probes.length);
+		const layoutNow = computeLayout(width, height, probes.length, decodes.length);
 		const x = event.clientX - rect.left;
 		const y = event.clientY - rect.top;
 		if (x > layoutNow.plotRight) {
 			hover = null;
 			return;
 		}
-		const lanesBottom = layoutNow.laneTop + probes.length * LANE_HEIGHT;
-		const lane =
-			y >= layoutNow.laneTop && y < lanesBottom
-				? Math.min(probes.length - 1, Math.floor((y - layoutNow.laneTop) / LANE_HEIGHT))
-				: -1;
+		const probeBottom = layoutNow.laneTop + probes.length * LANE_HEIGHT;
+		const lanesBottom = probeBottom + decodes.length * DECODE_HEIGHT;
+		let lane = -1;
+		if (probes.length > 0 && y >= layoutNow.laneTop && y < probeBottom) {
+			lane = Math.min(probes.length - 1, Math.floor((y - layoutNow.laneTop) / LANE_HEIGHT));
+		} else if (decodes.length > 0 && y >= probeBottom && y < lanesBottom) {
+			lane =
+				probes.length + Math.min(decodes.length - 1, Math.floor((y - probeBottom) / DECODE_HEIGHT));
+		}
 		const t = Math.max(0, Math.min(durationMs, (scrollLeft + x) / currentScale));
 		hover = { x, t, lane };
 	}
@@ -522,6 +654,7 @@
 		void scrollLeft;
 		void scale;
 		void contentWidth;
+		void decodes;
 		if (canvas) draw();
 	});
 </script>
@@ -537,6 +670,21 @@
 					<span class="h-3 w-[3px] shrink-0 rounded-sm" style="background: {accentFor(index)}"
 					></span>
 					<span class="truncate font-mono text-[11px] text-stone-700">{probe.name}</span>
+				</div>
+			{/each}
+			{#each decodes as decode, index (decode.spec)}
+				<div
+					class="flex items-center gap-1.5 px-1.5"
+					style="height: {DECODE_HEIGHT}px"
+					title={decode.spec}
+				>
+					<span
+						class="h-3 w-[3px] shrink-0 rounded-sm"
+						style="background: {accentFor(probes.length + index)}"
+					></span>
+					<span class="truncate font-mono text-[10px] text-stone-600">
+						{decode.name || decode.kind}
+					</span>
 				</div>
 			{/each}
 		</div>
@@ -575,6 +723,9 @@
 					<div>{hoverTimeLabel}</div>
 					{#if hoverLevelLabel}
 						<div class="text-stone-500">{hoverLevelLabel}</div>
+					{/if}
+					{#if hoverFrameLabel}
+						<div class="text-stone-500">{hoverFrameLabel}</div>
 					{/if}
 				</div>
 			{/if}

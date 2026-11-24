@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { m } from '#lib/paraglide/messages.js';
 	import { sim } from '#lib/sim/controller.svelte';
+	import { base64ToBytes, decodeText, encodeText, formatBytes } from '#lib/sim/volume';
 	import { doc } from '#lib/sketch/doc.svelte';
 	import { toLitzDiagram } from '#lib/sketch/export';
-	import { parseStorageFile, ui, type BottomTab } from '#lib/ui.svelte';
+	import {
+		parseFlashPath,
+		parseStorageFile,
+		parseVolumePath,
+		ui,
+		type BottomTab
+	} from '#lib/ui.svelte';
 	import AnalysisPanel from './AnalysisPanel.svelte';
 	import CodeFiles from './CodeFiles.svelte';
 	import CodeEditor from './CodeEditor.svelte';
@@ -37,6 +44,37 @@
 	const storageLabel = $derived(
 		storage ? `${doc.part(storage.boardId)?.type ?? storage.boardId} / ${storage.path}` : ''
 	);
+
+	const volume = $derived(parseVolumePath(ui.codeFile));
+	const volumeEntry = $derived(
+		volume ? doc.volume(volume.partId).find((file) => file.path === volume.path) : undefined
+	);
+	const volumeBytes = $derived(volumeEntry ? base64ToBytes(volumeEntry.data) : null);
+	const volumeText = $derived(volumeBytes ? decodeText(volumeBytes) : null);
+	const flashBoard = $derived(parseFlashPath(ui.codeFile));
+	const flashImage = $derived(flashBoard ? sim.flashFor(flashBoard) : null);
+
+	const fileLabel = $derived(
+		storage
+			? storageLabel
+			: volume
+				? `${doc.part(volume.partId)?.type ?? volume.partId} / ${volume.path}`
+				: flashBoard
+					? `${flashBoard}.flash`
+					: ui.codeFile
+	);
+
+	function downloadFlash(): void {
+		if (!flashBoard || !flashImage) return;
+		const url = URL.createObjectURL(
+			new Blob([flashImage.slice().buffer], { type: 'application/octet-stream' })
+		);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = `${flashBoard}.flash.bin`;
+		link.click();
+		URL.revokeObjectURL(url);
+	}
 
 	const serialBoards = $derived(
 		sim.boardRuntime.map((board) => ({ id: board.id, name: board.name }))
@@ -121,9 +159,7 @@
 						<div
 							class="flex h-7 shrink-0 items-center gap-2 border-b border-stone-200 bg-stone-100 px-2 text-[11px] text-stone-500"
 						>
-							<span class="truncate font-mono text-stone-700">
-								{storage ? storageLabel : ui.codeFile}
-							</span>
+							<span class="truncate font-mono text-stone-700">{fileLabel}</span>
 							<span class="ml-auto shrink-0 text-[10px] text-stone-400">
 								{sim.slotName}
 							</span>
@@ -139,6 +175,31 @@
 										onchange={(text: string) =>
 											doc.setBoardFile(storage.boardId, storageFile.name, text)}
 									/>
+								{:else if volume && volumeEntry && volumeText !== null}
+									<CodeEditor
+										value={volumeText}
+										onchange={(text: string) =>
+											doc.setVolumeFile(volume.partId, volume.path, encodeText(text))}
+									/>
+								{:else if volume && volumeEntry && volumeBytes}
+									<p class="px-3 py-2 text-[11px] text-stone-400">
+										{m.storage_binary({ size: formatBytes(volumeBytes.length) })}
+									</p>
+								{:else if flashBoard}
+									<div class="flex h-full flex-col gap-2 px-3 py-2 text-[11px] text-stone-600">
+										<p>{m.storage_flash_hint()}</p>
+										<p class="font-mono text-stone-500">
+											{flashImage ? formatBytes(flashImage.length) : m.level_none()}
+										</p>
+										<button
+											type="button"
+											class="w-fit rounded border border-stone-300 bg-white px-2 py-0.5 text-[10px] hover:bg-stone-100 disabled:opacity-40"
+											disabled={!flashImage}
+											onclick={downloadFlash}
+										>
+											{m.storage_export_flash()}
+										</button>
+									</div>
 								{:else}
 									<p class="px-3 py-2 text-[11px] text-stone-400">{m.code_choose_file()}</p>
 								{/if}

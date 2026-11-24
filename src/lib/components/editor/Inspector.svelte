@@ -7,7 +7,7 @@
 	import type { Level, PartState } from '#lib/sim/backend';
 	import { livePart } from '#lib/sim/live';
 	import { doc } from '#lib/sketch/doc.svelte';
-	import { GRID, WIRE_COLORS, type Rotation } from '#lib/sketch/types';
+	import { GRID, PROBE_COLORS, WIRE_COLORS, type Rotation } from '#lib/sketch/types';
 	import BoardProgram from './BoardProgram.svelte';
 	import PartControls from './PartControls.svelte';
 
@@ -18,6 +18,7 @@
 	const wire = $derived(
 		single && single.kind === 'wire' ? doc.sketch.wires.find((w) => w.id === single.id) : undefined
 	);
+	const probe = $derived(single && single.kind === 'probe' ? doc.probe(single.id) : undefined);
 	const def = $derived(part ? partDef(part.type) : null);
 
 	function setX(value: number): void {
@@ -67,6 +68,14 @@
 		if (!part || !def || !sim.running) return [];
 		return def.pins.map((pin) => ({ name: pin.name, level: sim.partPin(part.id, pin.name) }));
 	});
+
+	const powered = $derived(part ? part.attrs.power !== false : true);
+
+	function togglePower(): void {
+		if (!part) return;
+		sim.setNamedControl(part.id, 'power', powered ? 'off' : 'on');
+		doc.setAttr(part.id, 'power', !powered);
+	}
 
 	function stateLabel(state: PartState | undefined): string {
 		switch (state) {
@@ -202,6 +211,18 @@
 								<option {value}>{value}</option>
 							{/each}
 						</select>
+					{:else if attr.type === 'bool'}
+						<div class="flex items-center gap-2">
+							<input
+								type="checkbox"
+								checked={Boolean(part.attrs[attr.name] ?? attr.default)}
+								onchange={(event) => doc.setAttr(part.id, attr.name, event.currentTarget.checked)}
+								class="h-3.5 w-3.5 rounded border-stone-300"
+							/>
+							<span class="text-[11px] text-stone-500">
+								{(part.attrs[attr.name] ?? attr.default) ? m.power_on() : m.power_off()}
+							</span>
+						</div>
 					{:else if attr.type === 'number'}
 						<input
 							type="number"
@@ -230,6 +251,24 @@
 				<span class="font-mono text-stone-700">{stateLabel(live?.state)}</span>
 				<span class="text-stone-500">{m.live_value()}</span>
 				<span class="font-mono text-stone-700">{live ? live.value : m.level_none()}</span>
+			</div>
+		{/if}
+
+		{#if sim.running && def.chip}
+			<div
+				class="mt-2 flex items-center justify-between rounded border border-stone-200 bg-white px-2 py-1.5"
+			>
+				<span class="text-[12px] text-stone-600">{m.power_switch()}</span>
+				<button
+					type="button"
+					aria-pressed={powered}
+					class="rounded px-2 py-0.5 text-[11px] font-medium {powered
+						? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+						: 'bg-stone-200 text-stone-600 hover:bg-stone-300'}"
+					onclick={togglePower}
+				>
+					{powered ? m.power_on() : m.power_off()}
+				</button>
 			</div>
 		{/if}
 
@@ -316,6 +355,45 @@
 			onclick={() => doc.deleteSelection()}
 		>
 			{m.delete_board()}
+		</button>
+	{:else if probe}
+		<p class="text-[11px] font-medium tracking-wide text-stone-500">{m.section_probe()}</p>
+		<h2 class="mt-0.5 text-[15px] font-semibold text-stone-800">{probe.name}</h2>
+		<p class="text-[12px] break-all text-stone-500">{probe.part}:{probe.pin}</p>
+
+		<label class="mt-3 block">
+			<span class="block text-[11px] text-stone-500">{m.analysis_name()}</span>
+			<input
+				type="text"
+				value={probe.name}
+				onchange={(event) => doc.setProbeName(probe.id, event.currentTarget.value)}
+				class="mt-0.5 w-full rounded border border-stone-300 bg-white px-2 py-1 text-[13px]"
+			/>
+		</label>
+
+		<p class="mt-3 text-[11px] text-stone-500">{m.section_color()}</p>
+		<div class="mt-1 flex flex-wrap gap-1.5">
+			{#each PROBE_COLORS as color (color.value)}
+				<button
+					type="button"
+					title={colorLabel(color.name)}
+					class="h-6 w-6 rounded-full border-2 {probe.color === color.value
+						? 'border-stone-800'
+						: 'border-transparent'}"
+					style="background: {color.value}"
+					onclick={() => doc.setProbeColor(probe.id, color.value)}
+				></button>
+			{/each}
+		</div>
+
+		<p class="mt-4 text-[11px] text-stone-400">{m.probe_hint()}</p>
+
+		<button
+			type="button"
+			class="mt-4 rounded border border-red-300 bg-red-50 px-2 py-1.5 text-[12px] text-red-700 hover:bg-red-100"
+			onclick={() => doc.removeProbe(probe.id)}
+		>
+			{m.probe_remove()}
 		</button>
 	{:else if wire}
 		<p class="text-[11px] font-medium tracking-wide text-stone-500">{m.wire()}</p>

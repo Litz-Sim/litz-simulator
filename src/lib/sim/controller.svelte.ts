@@ -30,7 +30,8 @@ import {
 	setLiveStates
 } from './live';
 import { afterStaging, findEntry, rawPaste, storageBootstrap } from './python';
-import type { RuntimeMode } from '#lib/sketch/types';
+import { volumeFiles, volumeEntries } from './volume';
+import type { RuntimeMode, VolumeFile } from '#lib/sketch/types';
 
 const MANIFEST_KEY = 'litz.manifests';
 
@@ -139,6 +140,8 @@ class SimController {
 	debugStop = $state<DebugStop | null>(null);
 	/** Breakpoints per board id, as instruction addresses. */
 	breakpoints = $state<Record<string, number[]>>({});
+	/** The flash dump each board left behind when the last run stopped. */
+	flashImages = $state<Record<string, Uint8Array>>({});
 
 	#backend = new LitzBackend();
 	/** Python boards whose stored files still have to be seeded after boot. */
@@ -157,6 +160,8 @@ class SimController {
 	#boardSerial = new Map<string, string>();
 	/** Bumped by every stop, so a load that finishes late cannot start a session. */
 	#generation = 0;
+	/** Tab the running session belongs to, so a stop writes files back to it. */
+	#sessionTab: string | null = null;
 
 	get status(): string {
 		if (this.loading) return m.sim_loading();
@@ -254,6 +259,7 @@ class SimController {
 		}
 
 		this.loading = true;
+		this.#sessionTab = doc.tabs[doc.activeTab]?.id ?? null;
 		try {
 			const images: { id: string; app: Uint8Array; rom?: Uint8Array }[] = [];
 			const names: string[] = [];
@@ -320,6 +326,11 @@ class SimController {
 				}
 			}
 			this.firmwareName = names.join(' + ');
+			const storage: Record<string, { path: string; data: Uint8Array }[]> = {};
+			for (const part of doc.storageParts()) {
+				const files = doc.volume(part.id);
+				if (files.length) storage[part.id] = volumeEntries(files);
+			}
 			await this.#backend.load(
 				JSON.stringify(diagram),
 				{
@@ -331,7 +342,11 @@ class SimController {
 					ptable,
 					boards: images.length > 1 ? images : undefined
 				},
-				{ analog: this.analog, manifests: this.manifests.map((entry) => entry.text) }
+				{
+					analog: this.analog,
+					manifests: this.manifests.map((entry) => entry.text),
+					storage
+				}
 			);
 			if (generation !== this.#generation) {
 				this.#backend.dispose();
@@ -377,6 +392,7 @@ class SimController {
 		if (!this.running && !this.loading) return;
 		this.#generation += 1;
 		const wasRunning = this.running;
+		if (wasRunning) this.#captureStorage();
 		this.running = false;
 		this.paused = false;
 		this.loading = false;
@@ -701,6 +717,28 @@ class SimController {
 			: null;
 	}
 
+	/**
+	 * Make the live scope follow the probes in the document. The session cannot
+	 * unbind a name, so a probe that leaves the document is only hidden here; a
+	 * name already bound this run is reused rather than registered twice.
+	 */
+	syncProbes(): void {
+		if (!this.running) return;
+		const wanted = doc.probes().map((probe) => ({
+			name: probe.name,
+			point: `${probe.part}:${probe.pin}`
+		}));
+		const desired = new Map(wanted.map((probe) => [probe.name, probe.point]));
+		for (const probe of [...this.probes]) {
+			if (desired.get(probe.name) !== probe.point) this.removeProbe(probe.name);
+		}
+		const shown = new Map(this.probes.map((probe) => [probe.name, probe.point]));
+		for (const probe of wanted) {
+			if (shown.get(probe.name) === probe.point) continue;
+			this.addProbe(probe.name, probe.point);
+		}
+	}
+
 	addDecoder(spec: string): boolean {
 		const trimmed = spec.trim();
 		if (!trimmed) return false;
@@ -944,16 +982,19 @@ class SimController {
 
 	#registerInstruments(): void {
 		const missing: string[] = [];
-		for (const probe of this.probes) {
+		const shown: ProbeEntry[] = [];
+		for (const probe of doc.probes()) {
+			const point = `${probe.part}:${probe.pin}`;
 			try {
-				this.#backend.probe(probe.name, probe.point);
-				this.#boundProbes.set(probe.name, probe.point);
+				this.#backend.probe(probe.name, point);
+				this.#boundProbes.set(probe.name, point);
+				shown.push({ name: probe.name, point });
 			} catch {
 				missing.push(probe.name);
 			}
 		}
+		this.probes = shown;
 		if (missing.length) {
-			this.probes = this.probes.filter((probe) => !missing.includes(probe.name));
 			this.#log(m.analysis_probe_dropped({ names: missing.join(', ') }));
 		}
 		for (const spec of this.decoders) {
@@ -964,6 +1005,43 @@ class SimController {
 				this.actionError = errorText(error);
 			}
 		}
+	}
+
+	/**
+	 * Read the volumes and flash as the guest left them. Called before the
+	 * session is disposed, so a firmware that wrote settings hands them to the
+	 * sidebar and to the next run.
+	 */
+	#captureStorage(): void {
+		const volumes: Record<string, VolumeFile[]> = {};
+		for (const part of doc.storageParts()) {
+			try {
+				volumes[part.id] = volumeFiles(this.#backend.storageFiles(part.id));
+			} catch {
+				// The part has no volume; keep what the document already holds.
+			}
+		}
+		if (Object.keys(volumes).length) doc.syncVolumes(volumes, this.#sessionTab ?? undefined);
+		const flash: Record<string, Uint8Array> = {};
+		for (const board of this.boardRuntime) {
+			try {
+				const image = this.#backend.flashImage(board.index);
+				if (image && image.length) flash[board.id] = image;
+			} catch {
+				// A backend without a flash array has nothing to hand over.
+			}
+		}
+		this.flashImages = flash;
+	}
+
+	/** The flash dump the last run left for a board. */
+	flashFor(boardId: string): Uint8Array | null {
+		return this.flashImages[boardId] ?? null;
+	}
+
+	/** Drop the dump when the workspace moves to another document. */
+	clearFlash(): void {
+		this.flashImages = {};
 	}
 
 	#resetReadouts(): void {
@@ -979,6 +1057,7 @@ class SimController {
 		this.conflicts = [];
 		this.levels = {};
 		this.serial = '';
+		this.flashImages = {};
 		this.#clearDebugReadouts();
 		this.entries = [];
 		this.waves = null;

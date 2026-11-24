@@ -51,3 +51,25 @@ export function parseStorageFile(value: string): { boardId: string; path: string
 	if (split <= 0) return null;
 	return { boardId: rest.slice(0, split), path: rest.slice(split + 1) };
 }
+
+/** Key for a file on a storage part's volume. */
+export function volumePath(partId: string, path: string): string {
+	return `volume:${partId}:${path}`;
+}
+
+export function parseVolumePath(value: string): { partId: string; path: string } | null {
+	if (!value.startsWith('volume:')) return null;
+	const rest = value.slice('volume:'.length);
+	const split = rest.indexOf(':');
+	if (split <= 0) return null;
+	return { partId: rest.slice(0, split), path: rest.slice(split + 1) };
+}
+
+/** Key for a development board's flash dump. */
+export function flashPath(boardId: string): string {
+	return `flash:${boardId}`;
+}
+
+export function parseFlashPath(value: string): string | null {
+	return value.startsWith('flash:') ? value.slice('flash:'.length) : null;
+}

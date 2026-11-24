@@ -50,6 +50,14 @@ export interface LoadOptions {
 	analog?: boolean;
 	/** Custom part/board TOML manifests, applied when the session boots. */
 	manifests?: string[];
+	/** Files to format onto a storage part, keyed by diagram id. */
+	storage?: Record<string, VolumeFileBytes[]>;
+}
+
+/** One file the host puts on a storage part. */
+export interface VolumeFileBytes {
+	path: string;
+	data: Uint8Array;
 }
 
 /** One board the running session booted. */
@@ -66,7 +74,7 @@ export interface RegisterSnapshot {
 	pc: number;
 }
 
-/** A debugger stop; `unsupported` when the board is not a RISC-V core. */
+/** A debugger stop; `unsupported` when the board's core has no debug surface. */
 export type DebugStop = StopWord | 'unsupported';
 
 export interface ChipInfo {
@@ -172,6 +180,10 @@ export interface SimBackend {
 	debugSetBreakpoints(board: number | string, pcs: number[]): void;
 	debugStep(board: number | string): DebugStop;
 	debugRun(board: number | string, steps: number): DebugStop;
+	/** Files on a storage part's volume as the guest left them. */
+	storageFiles(part: string): VolumeFileBytes[];
+	/** The MCU's own flash as the run left it, or null when it keeps none. */
+	flashImage(board?: number | string): Uint8Array | null;
 	dispose(): void;
 }
 
@@ -306,6 +318,14 @@ export class NullBackend implements SimBackend {
 
 	debugRun(): DebugStop {
 		return 'unsupported';
+	}
+
+	storageFiles(): VolumeFileBytes[] {
+		return [];
+	}
+
+	flashImage(): Uint8Array | null {
+		return null;
 	}
 
 	dispose(): void {}

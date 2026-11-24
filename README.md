@@ -2,7 +2,7 @@
 
 Litz Breadboard is a browser-based breadboard editor built on the Litz simulation engine. The editing flow follows Wokwi, wires are strictly orthogonal like Fritzing, and the canvas layout takes cues from LCEDA (EasyEDA). You place boards and parts on a virtual breadboard, wire them up, and the editor derives the `diagram.json` that Litz consumes.
 
-Everything runs client-side. Simulation uses [`@litz-sim/litz`](https://www.npmjs.com/package/@litz-sim/litz) 0.3 compiled to WebAssembly: pressing Run boots one chip per board on the canvas, all chips share the same circuit, and serial output, LEDs, buttons, and seven-segment displays update live.
+Everything runs client-side. Simulation uses [`@litz-sim/litz`](https://www.npmjs.com/package/@litz-sim/litz) 0.6.2 compiled to WebAssembly: pressing Run boots one chip per board on the canvas, all chips share the same circuit, and serial output, LEDs, buttons, and seven-segment displays update live.
 
 ## Quick start
 
@@ -48,9 +48,11 @@ Dragging a wire segment moves its middle channel, which is stored as the `bend` 
 
 ### Code panel
 
-The bottom Code tab embeds CodeMirror. The browser on the left lists each development board's storage next to the project's own file. `diagram.json` is read-only and regenerated from the canvas on every change, so you can inspect exactly what the simulator receives.
+The bottom Code tab embeds CodeMirror. The browser on the left lists each development board's storage, the volumes of every microSD card and W25Q flash in the circuit, and each board's flash dump, next to the project's own file. `diagram.json` is read-only and regenerated from the canvas on every change, so you can inspect exactly what the simulator receives.
 
 A board running MicroPython or CircuitPython shows its files as Python, with the entry file marked. Files can be added and deleted; they are stored in the document, not in the browser. Completion covers Python (`time`, `machine`, `board`, `microcontroller`) and identifiers already present in the document. The top edge of the bottom panel can be dragged to resize it.
+
+A storage part's volume is a FAT filesystem the firmware mounts: files added or imported there are formatted onto the card when the session starts, and the files the firmware writes come back into the sidebar when it stops. Text files open in the editor; binary files can be downloaded. The `size` attribute on the part sets the capacity. A board's flash is read the same way after a run: selecting it shows the size and exports the raw image.
 
 ### Touch and narrow screens
 
@@ -200,17 +202,17 @@ Each board boots its own image; a board that has no uploaded or built-in image s
 | Plot      | Plot up to four numeric channels parsed from the selected board's serial output.                                                                                                             |
 | Screen    | The circuit's whole-frame panels — OLED, TFT, e-paper, Nokia 5110, MAX7219 — at an integer zoom, with touch input for panels wired to an XPT2046.                                            |
 | Analysis  | Chip, clock, flash, heap, stop reason, fault, electrical conflicts, GPIO levels, probes, waveforms, protocol decoders, and VCD export.                                                       |
-| Debug     | RISC-V instruction stepping, registers, disassembly, breakpoints, and memory.                                                                                                                |
+| Debug     | Instruction stepping, registers, disassembly, breakpoints, and memory, for every chip with a debug surface.                                                                                  |
 | Manifests | Edit custom TOML part and board descriptions; saved in browser storage and passed to the engine on restart.                                                                                  |
 | Log       | Timestamped engine events, including errors.                                                                                                                                                 |
 
 The Serial panel is a terminal emulator, so arrow keys, Tab, Esc, and control keys reach the board instead of staying in the browser. Ctrl+C sends `^C` and Ctrl+D sends `^D`; to copy selected text, use ⌘C on macOS or the browser's context menu elsewhere. On touch screens a key strip adds Esc, Tab, `^C`, `^D`, and the arrow keys.
 
-The Analysis panel reads GPIO levels through hidden probes, so it works for every board. Clicking a pin attaches a named probe. Each probe reports frequency, duty cycle, voltage range, and a digital waveform. Adding a UART, I²C, or SPI decoder shows decoded frames alongside the waveform. User probes and decoders are reattached automatically after a restart.
+The Analysis panel reads GPIO levels through hidden probes, so it works for every board. The probe tool (`P`) clips a probe to any part pin, including a development board's header pins and pins on parts away from the board; the label can be dragged and the probe renamed or recoloured in the inspector. Each probe reports frequency, duty cycle, voltage range, and a digital waveform. Decoders draw their frames in lanes under the probes, on the same scrollable time axis. Probes and decoders are reattached automatically after a restart.
 
 ### Debugger
 
-The Debug panel works on RISC-V boards (ESP32-C3/C6/P4/S31). Pick a board when the canvas has more than one, then step a single instruction or continue until a breakpoint or step budget is reached. The panel shows `x0`–`x31` and `pc`, a disassembly listing, and hexadecimal memory.
+The Debug panel works on every board whose core the engine can debug: the RISC-V ESP32 family and the ARMv6-M RP2040, plus any custom WebAssembly chip that answers the debug calls. Pick a board when the canvas has more than one, then step a single instruction or continue until a breakpoint or step budget is reached. The register file is labelled for the core (`x0`–`x31` on RISC-V, `r0`–`r12`, `sp` and `lr` on the RP2040), with a disassembly listing and hexadecimal memory.
 
 Click any disassembly line to toggle a breakpoint at its address; addresses can also be entered manually. Hitting a breakpoint while running pauses the session automatically. This debugger reads and writes machine state directly inside the browser and does not use the GDB protocol.
 
@@ -243,7 +245,8 @@ The inspector exposes device-specific controls and live state: distance for an H
 - Built-in native firmware exists only for ESP32-C3, ATmega328P, and RP2040. C6/P4/S31 boards need a matching `.bin`, and the Litz RV32 board needs a WebAssembly MCU component.
 - MicroPython on the RP2040 runs the entry file from the raw REPL rather than through a soft reset, so a program that returns leaves the interpreter in raw mode instead of at the friendly prompt.
 - Classic ESP32 and ESP32-S3 are Xtensa. The current WebAssembly build does not include those cores, so the part library omits both boards.
-- Only RISC-V targets support register-level debugging. AVR and RP2040 boards have no debugger.
+- AVR boards have no debugger: the panel reports that the core cannot be debugged.
+- Storage volumes live in the workspace (browser storage), so a multi-megabyte file can exceed the browser quota; the status bar reports a failed save. A board's flash dump is read from the last run and exported, not stored in the project.
 - There is no project sharing, cloud storage, account system, or CI pipeline.
 - Uploaded firmware is cached per browser. Opening a project on another browser or after clearing site data requires uploading the image again.
 - Flash size and MAC address are available from the engine API but are not exposed in the UI.

@@ -563,7 +563,7 @@ export const COMMS_PARTS: PartDef[] = [
 			{ name: 'DI', x: 24, y: 58 },
 			{ name: 'CS', x: 36, y: 58 }
 		],
-		attrs: [{ name: 'image', type: 'string', default: '' }],
+		attrs: [{ name: 'size', type: 'string', default: '32MB' }],
 		draw: (ctx, _part, zoom) => drawMicroSd(ctx, zoom)
 	},
 	{
@@ -602,7 +602,7 @@ export const COMMS_PARTS: PartDef[] = [
 			{ name: 'WP', label: 'write protect, active low', x: -48, y: 10 },
 			{ name: 'HOLD', label: 'hold, active low', x: 48, y: -10 }
 		],
-		attrs: [],
+		attrs: [{ name: 'size', type: 'string', default: '4MB' }],
 		draw: (ctx, _part, zoom) => drawSpiFlash(ctx, zoom)
 	}
 ];
