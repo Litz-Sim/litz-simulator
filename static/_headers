@@ -1,2 +1,6 @@
 /_app/immutable/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Browsers must be able to see a new build's worker; a cached copy keeps the old one alive.
+/service-worker.js
+  Cache-Control: public, max-age=0, must-revalidate
