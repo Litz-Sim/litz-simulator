@@ -177,6 +177,8 @@ The classic ESP32 line runs its own bootloader first. Upload a bootloader and pa
 
 Program files belong to the board, like files on a real device. Files are written to the simulated storage when the session starts: the editor waits for the interpreter's prompt, writes every file over the raw REPL, then resets the interpreter so its normal boot sequence runs `main.py` or `code.py`. On the RP2040 the entry file is executed from the raw REPL instead, because the engine has no second core for MicroPython's soft reset to synchronize with. Staging output is hidden from the Serial panel, which shows only what the program prints. A board with no entry file reports it instead of running.
 
+The Code panel's board list imports text files from the computer (up to 256 KB, no NUL bytes) and exports each one back out. Imported files are ordinary board files: a program can `import` them like any module.
+
 ### Multiple boards
 
 A session can hold any number of boards. Each board has its own UART, GPIO state, display buffer, firmware, and storage, so one board's serial output does not appear on another's console.
@@ -250,6 +252,8 @@ The site is a static SPA and deploys to Cloudflare Pages without a Workers runti
 
 `adapter-static` emits `index.html` as the SPA fallback. `static/_redirects` sends unknown paths to the client router, and `static/_headers` caches hashed assets under `_app/immutable/` for a year. Cloudflare Pages serves the WASM binary with `application/wasm`; firmware images in `static/firmware/` are published with the rest of the site.
 
+`src/service-worker/index.ts` keeps the editor usable offline. It precaches the hashed build assets and one shell document; navigations go to the network first and only fall back to the cached shell when that fails. Firmware images are cached the first time they are used and revalidated in the background. The app cache is named after a fingerprint of that build's asset list, and `_headers` marks `service-worker.js` for revalidation, so a new deploy is never answered from the previous deploy's cache.
+
 To upload a build without Git integration:
 
 ```sh
@@ -265,6 +269,7 @@ src/lib/parts/               part definitions and Canvas drawing
 src/lib/canvas/              Canvas 2D engine, viewport, input state
 src/lib/components/editor/   menus, toolbar, tabs, parts library, canvas, inspector, bottom panel
 src/lib/sim/                 Litz WASM backend, run controller, firmware cache, Python staging
+src/service-worker/          offline cache and update behaviour
 static/firmware/             built-in native images and Python interpreters
 ```
 

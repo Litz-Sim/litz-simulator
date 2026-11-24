@@ -7,6 +7,7 @@
 	import Check from '@lucide/svelte/icons/check';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
+	import Download from '@lucide/svelte/icons/download';
 	import CircleCheck from '@lucide/svelte/icons/circle-check';
 	import CircleDashed from '@lucide/svelte/icons/circle-dashed';
 	import CircleX from '@lucide/svelte/icons/circle-x';
@@ -58,6 +59,7 @@
 		close: X,
 		code: FileCode,
 		cursor: MousePointer2,
+		download: Download,
 		file: FileCode,
 		'file-plus': FilePlus,
 		fit: Maximize2,
