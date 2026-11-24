@@ -12,12 +12,14 @@ import {
 	type FirmwareRef,
 	type PartInstance,
 	type ProgramFile,
+	type ProjectInfo,
 	type Rotation,
 	type RuntimeMode,
 	type Selection,
 	type Sketch,
 	type WireStyle
 } from './types';
+import { normalizeProjectInfo } from './project-info';
 import { defaultBend } from './wire';
 
 const WORKSPACE_KEY = 'litz-board.workspace.v1';
@@ -122,6 +124,13 @@ class DocumentStore {
 	wireStyle: WireStyle = 'ortho';
 	/** Whether dragging snaps to the 20-unit grid. */
 	snap = $state(true);
+	/** Author, description, version and licence saved with the workspace. */
+	info = $state<ProjectInfo>({
+		author: '',
+		description: '',
+		version: '',
+		license: ''
+	});
 	/** Autosave status, shown in the status bar. */
 	saveState = $state<'saved' | 'pending' | 'error'>('saved');
 	/** Why the last project import failed, or null. */
@@ -280,6 +289,11 @@ class DocumentStore {
 		this.#redo = [];
 		this.canUndo = false;
 		this.canRedo = false;
+		this.bump();
+	}
+
+	setProjectInfo(info: Partial<ProjectInfo>): void {
+		this.info = normalizeProjectInfo({ ...this.info, ...info });
 		this.bump();
 	}
 
@@ -714,6 +728,7 @@ class DocumentStore {
 				version: 1,
 				name: this.name,
 				active: this.activeTab,
+				info: clone(this.info),
 				tabs: clone(this.tabs)
 			},
 			null,
@@ -728,6 +743,7 @@ class DocumentStore {
 				format?: string;
 				tabs?: Partial<Tab>[];
 				active?: number;
+				info?: unknown;
 			};
 			if (parsed.format !== 'litz-project' || !Array.isArray(parsed.tabs)) return false;
 			const tabs: Tab[] = [];
@@ -767,6 +783,7 @@ class DocumentStore {
 			if (tabs.length === 0) return false;
 			this.tabs = tabs;
 			this.activeTab = Math.min(Math.max(parsed.active ?? 0, 0), tabs.length - 1);
+			this.info = normalizeProjectInfo(parsed.info);
 			this.#syncSeq(tabs);
 			this.selected = [];
 			this.#undo = [];
@@ -830,7 +847,7 @@ class DocumentStore {
 		try {
 			const saved = localStorage.getItem(WORKSPACE_KEY);
 			if (saved) {
-				const parsed = JSON.parse(saved) as { tabs?: Tab[]; active?: number };
+				const parsed = JSON.parse(saved) as { tabs?: Tab[]; active?: number; info?: unknown };
 				if (Array.isArray(parsed.tabs) && parsed.tabs.length) {
 					this.#syncSeq(parsed.tabs);
 					const seen: { id: string }[] = [];
@@ -846,6 +863,7 @@ class DocumentStore {
 						};
 					});
 					this.activeTab = Math.min(parsed.active ?? 0, this.tabs.length - 1);
+					this.info = normalizeProjectInfo(parsed.info);
 					this.selected = [];
 					this.bump();
 					return true;
@@ -868,7 +886,7 @@ class DocumentStore {
 		try {
 			localStorage.setItem(
 				WORKSPACE_KEY,
-				JSON.stringify({ tabs: this.tabs, active: this.activeTab })
+				JSON.stringify({ tabs: this.tabs, active: this.activeTab, info: this.info })
 			);
 			this.saveState = 'saved';
 			this.saveError = null;

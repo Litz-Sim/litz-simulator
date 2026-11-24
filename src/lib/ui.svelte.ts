@@ -2,6 +2,7 @@ export type BottomTab = 'code' | 'serial' | 'plot' | 'screen' | 'analysis' | 'de
 
 interface UiState {
 	settingsOpen: boolean;
+	projectOpen: boolean;
 	examplesOpen: boolean;
 	bottomOpen: boolean;
 	bottomTab: BottomTab;
@@ -21,6 +22,7 @@ interface UiState {
 /** Small pieces of chrome state shared by the menu bar, canvas and page. */
 export const ui: UiState = $state({
 	settingsOpen: false,
+	projectOpen: false,
 	examplesOpen: false,
 	bottomOpen: true,
 	bottomTab: 'code',

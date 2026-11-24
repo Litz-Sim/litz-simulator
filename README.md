@@ -91,6 +91,12 @@ A `.litzproject.json` file is a thin wrapper around tabs. Each tab stores its co
 	"version": 1,
 	"name": "Blink",
 	"active": 0,
+	"info": {
+		"author": "",
+		"description": "",
+		"version": "",
+		"license": ""
+	},
 	"tabs": [
 		{
 			"id": "t1",
@@ -109,7 +115,7 @@ A `.litzproject.json` file is a thin wrapper around tabs. Each tab stores its co
 }
 ```
 
-`active` is the index of the open tab. Import restores the tab order, active tab, code, layout, wire bends, and view, so the project opens exactly where it was left.
+`active` is the index of the open tab. Import restores the tab order, active tab, code, layout, wire bends, and view, so the project opens exactly where it was left. `info` holds the author, description, version, and license entered in File → Project info; the dialog's name field renames the open tab, which is where `name` comes from.
 
 ### Board documents
 

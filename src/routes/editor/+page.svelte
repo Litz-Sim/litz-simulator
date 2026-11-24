@@ -11,6 +11,7 @@
 	import Inspector from '#lib/components/editor/Inspector.svelte';
 	import MenuBar from '#lib/components/editor/MenuBar.svelte';
 	import PartsBin from '#lib/components/editor/PartsBin.svelte';
+	import ProjectInfoDialog from '#lib/components/editor/ProjectInfoDialog.svelte';
 	import SettingsDialog from '#lib/components/editor/SettingsDialog.svelte';
 	import StatusBar from '#lib/components/editor/StatusBar.svelte';
 	import TabRow from '#lib/components/editor/TabRow.svelte';
@@ -206,4 +207,5 @@
 	<StatusBar />
 	<SettingsDialog />
 	<ExamplesDialog />
+	<ProjectInfoDialog />
 </div>

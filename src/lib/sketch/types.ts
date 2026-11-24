@@ -122,6 +122,14 @@ export interface Sketch {
 	programs?: Record<string, BoardProgram>;
 }
 
+/** Project-level details the workspace saves beside its tabs. */
+export interface ProjectInfo {
+	author: string;
+	description: string;
+	version: string;
+	license: string;
+}
+
 export interface Point {
 	x: number;
 	y: number;
