@@ -1,5 +1,4 @@
-export type BottomTab =
-	'code' | 'serial' | 'plot' | 'screen' | 'analysis' | 'debug' | 'manifests' | 'log';
+export type BottomTab = 'code' | 'serial' | 'plot' | 'screen' | 'analysis' | 'debug' | 'log';
 
 interface UiState {
 	settingsOpen: boolean;

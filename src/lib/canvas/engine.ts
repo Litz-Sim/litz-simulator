@@ -261,11 +261,6 @@ export class CanvasEngine {
 		doc.addPart(type, snapped.x, snapped.y, { snap: false });
 	}
 
-	addBoardAtCenter(type: 'breadboard-full' | 'breadboard-half'): void {
-		const center = this.centerWorld();
-		doc.addBoard(type, center.x, center.y);
-	}
-
 	fit(): void {
 		const box = this.#contentBox();
 		const view = doc.sketch.view;

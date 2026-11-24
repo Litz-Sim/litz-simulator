@@ -9,7 +9,6 @@
 	import CodeEditor from './CodeEditor.svelte';
 	import DebugPanel from './DebugPanel.svelte';
 	import Icon from './Icon.svelte';
-	import ManifestsPanel from './ManifestsPanel.svelte';
 	import ScreenPanel from './ScreenPanel.svelte';
 	import SerialMonitor from './SerialMonitor.svelte';
 	import SerialPlot from './SerialPlot.svelte';
@@ -21,7 +20,6 @@
 		{ key: 'screen', label: m.panel_screen(), icon: 'monitor' },
 		{ key: 'analysis', label: m.panel_analysis(), icon: 'activity' },
 		{ key: 'debug', label: m.panel_debug(), icon: 'bug' },
-		{ key: 'manifests', label: m.panel_manifests(), icon: 'sliders' },
 		{ key: 'log', label: m.panel_log(), icon: 'log' }
 	];
 
@@ -172,19 +170,6 @@
 				<AnalysisPanel />
 			{:else if ui.bottomTab === 'debug'}
 				<DebugPanel />
-			{:else if ui.bottomTab === 'manifests'}
-				<ManifestsPanel
-					manifests={sim.manifests}
-					title={m.manifest_title()}
-					hint={m.manifest_hint()}
-					nameLabel={m.manifest_name()}
-					textLabel={m.manifest_text()}
-					addLabel={m.analysis_add()}
-					removeLabel={m.analysis_remove()}
-					emptyLabel={m.manifest_empty()}
-					onadd={(name: string, text: string) => sim.addManifest(name, text)}
-					onremove={(name: string) => sim.removeManifest(name)}
-				/>
 			{:else}
 				<div
 					class="h-full overflow-y-auto px-3 py-1.5 font-mono text-[11px] leading-relaxed text-stone-500"

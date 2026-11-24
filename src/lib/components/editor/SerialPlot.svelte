@@ -1,20 +1,25 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { m } from '#lib/paraglide/messages.js';
 
 	let { text, emptyLabel }: { text: string; emptyLabel: string } = $props();
 
 	const CHANNELS = 4;
-	const MAX_SAMPLES = 600;
-	const MAX_LINES = 800;
+	const MAX_SAMPLES = 1000;
+	const MAX_LINES = 2000;
 	const PAD_LEFT = 48;
 	const PAD_RIGHT = 10;
 	const PAD_TOP = 22;
-	const PAD_BOTTOM = 16;
+	const PAD_BOTTOM = 20;
+	/** Horizontal zoom limits, in pixels per sample. */
+	const MIN_SCALE = 1;
+	const MAX_SCALE = 40;
+	const DEFAULT_SCALE = 8;
+	const ZOOM_STEP = 1.6;
 
 	const NUMBER_RE = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
 	const COLORS: readonly string[] = ['#2563eb', '#059669', '#d97706', '#dc2626'];
 	const AXIS_FONT = '10px ui-monospace, SFMono-Regular, Menlo, monospace';
-	const EMPTY_FONT = '11px ui-monospace, SFMono-Regular, Menlo, monospace';
 
 	type Sample = number | null;
 
@@ -26,8 +31,21 @@
 	}
 
 	let canvas = $state<HTMLCanvasElement | null>(null);
+	let scroller = $state<HTMLDivElement | null>(null);
+	let viewWidth = $state(1);
+	let viewHeight = $state(1);
+	let pixelRatio = $state(1);
+	/** Pixels per sample. Fixed unless the user zooms, so history scrolls instead of shrinking. */
+	let scale = $state(DEFAULT_SCALE);
+	let scrollLeft = $state(0);
+	/** Follow new samples while the view sits at the right edge. */
+	let followEnd = $state(true);
 
-	const series = $derived.by(() => parseSeries(text));
+	const series = $derived(parseSeries(text));
+	const count = $derived(series.channels[0]?.length ?? 0);
+	const contentWidth = $derived(
+		Math.max(viewWidth, Math.ceil(PAD_LEFT + count * scale + PAD_RIGHT))
+	);
 
 	function tailLines(source: string, max: number): string {
 		let pos = source.length;
@@ -40,7 +58,9 @@
 	}
 
 	function parseSeries(source: string): Series {
-		const lines = tailLines(source, MAX_LINES).split(/\r?\n/);
+		// A lone CR is a line break in terminal output; splitting on it also keeps
+		// two short lines from merging into one row with too many values.
+		const lines = tailLines(source.replace(/\r\n?/g, '\n'), MAX_LINES).split('\n');
 		const rows: number[][] = [];
 
 		for (const line of lines) {
@@ -103,28 +123,107 @@
 		return value.toFixed(3);
 	}
 
+	function clampScale(value: number): number {
+		if (!Number.isFinite(value) || value <= 0) return MIN_SCALE;
+		return Math.min(MAX_SCALE, Math.max(MIN_SCALE, value));
+	}
+
+	function setScroll(value: number): void {
+		scrollLeft = value;
+		if (scroller) scroller.scrollLeft = value;
+	}
+
+	function maxScroll(): number {
+		return Math.max(0, contentWidth - viewWidth);
+	}
+
+	function fit(): void {
+		const width = Math.max(1, viewWidth - PAD_LEFT - PAD_RIGHT);
+		scale = clampScale(width / Math.max(1, count));
+		followEnd = true;
+		setScroll(0);
+	}
+
+	function zoomBy(factor: number, anchorX = (PAD_LEFT + viewWidth) / 2): void {
+		const next = clampScale(scale * factor);
+		if (Math.abs(next - scale) < scale * 1e-6) return;
+		const index = (scrollLeft + anchorX - PAD_LEFT) / scale;
+		scale = next;
+		if (followEnd) {
+			setScroll(maxScroll());
+		} else {
+			setScroll(Math.max(0, PAD_LEFT + index * next - anchorX));
+		}
+	}
+
+	/** Pick a 1-2-5 step in samples for the visible span. */
+	function chooseSampleStep(): number {
+		const visible = Math.max(1, (viewWidth - PAD_LEFT - PAD_RIGHT) / scale);
+		const divisions = Math.max(2, Math.min(8, Math.round(visible / 110)));
+		const target = visible / divisions;
+		const exponent = Math.floor(Math.log10(target));
+		const candidates: number[] = [];
+		for (let e = exponent - 1; e <= exponent + 1; e += 1) {
+			const base = 10 ** e;
+			for (const multiplier of [1, 2, 5]) candidates.push(multiplier * base);
+		}
+		let best = 1;
+		let bestScore = Number.POSITIVE_INFINITY;
+		for (const step of candidates) {
+			if (!(step >= 1) || !Number.isFinite(step)) continue;
+			const score = Math.abs(visible / step - divisions);
+			if (score < bestScore) {
+				bestScore = score;
+				best = step;
+			}
+		}
+		return Math.max(1, Math.round(best));
+	}
+
+	function handleScroll(): void {
+		if (!scroller) return;
+		scrollLeft = scroller.scrollLeft;
+		followEnd = scrollLeft >= maxScroll() - 2;
+	}
+
+	function handleWheel(event: WheelEvent): void {
+		if (event.ctrlKey || event.metaKey) {
+			event.preventDefault();
+			const rect = scroller?.getBoundingClientRect();
+			const anchorX = rect ? event.clientX - rect.left : viewWidth / 2;
+			zoomBy(event.deltaY < 0 ? ZOOM_STEP : 1 / ZOOM_STEP, anchorX);
+			return;
+		}
+		const horizontal =
+			Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+		if (horizontal === 0) return;
+		event.preventDefault();
+		followEnd = false;
+		setScroll(scrollLeft + horizontal);
+	}
+
 	function draw(): void {
 		const element = canvas;
 		if (!element) return;
 		const ctx = element.getContext('2d');
 		if (!ctx) return;
 
-		const width = element.clientWidth;
-		const height = element.clientHeight;
-		if (width < 2 || height < 2) return;
-
-		const dpr = window.devicePixelRatio || 1;
+		const width = Math.max(1, viewWidth);
+		const height = Math.max(1, viewHeight);
+		const dpr = Math.max(1, pixelRatio);
 		const pixelWidth = Math.max(1, Math.round(width * dpr));
 		const pixelHeight = Math.max(1, Math.round(height * dpr));
 		if (element.width !== pixelWidth) element.width = pixelWidth;
 		if (element.height !== pixelHeight) element.height = pixelHeight;
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, width, height);
+		ctx.fillStyle = '#ffffff';
+		ctx.fillRect(0, 0, width, height);
 
 		const data = series;
-		if (!data.hasData) {
+		if (!data.hasData || width < 2 || height < 2) {
 			ctx.fillStyle = '#a8a29e';
-			ctx.font = EMPTY_FONT;
+			ctx.font = '11px ui-monospace, SFMono-Regular, Menlo, monospace';
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'middle';
 			ctx.fillText(emptyLabel, width / 2, height / 2);
@@ -140,6 +239,12 @@
 		const yMin = data.min - padding;
 		const yMax = data.max + padding;
 		const yFor = (value: number): number => PAD_TOP + ((yMax - value) / (yMax - yMin)) * plotHeight;
+		const xFor = (index: number): number => PAD_LEFT + index * scale - scrollLeft;
+
+		const step = chooseSampleStep();
+		const startIndex = Math.max(0, (scrollLeft - PAD_LEFT) / scale);
+		const endIndex = Math.min(count - 1, (scrollLeft + width - PAD_LEFT) / scale);
+		const axisY = PAD_TOP + plotHeight;
 
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = '#e7e5e4';
@@ -149,10 +254,11 @@
 			ctx.moveTo(PAD_LEFT, y);
 			ctx.lineTo(PAD_LEFT + plotWidth, y);
 		}
-		for (let i = 0; i <= 6; i += 1) {
-			const x = Math.round(PAD_LEFT + (i / 6) * plotWidth) + 0.5;
+		for (let tick = Math.ceil(startIndex / step) * step; tick <= endIndex; tick += step) {
+			const x = Math.round(xFor(tick)) + 0.5;
+			if (x < PAD_LEFT - 1 || x > PAD_LEFT + plotWidth + 1) continue;
 			ctx.moveTo(x, PAD_TOP);
-			ctx.lineTo(x, PAD_TOP + plotHeight);
+			ctx.lineTo(x, axisY);
 		}
 		ctx.stroke();
 
@@ -162,10 +268,15 @@
 		ctx.textBaseline = 'top';
 		ctx.fillText(formatTick(yMax), PAD_LEFT - 6, PAD_TOP - 1);
 		ctx.textBaseline = 'bottom';
-		ctx.fillText(formatTick(yMin), PAD_LEFT - 6, PAD_TOP + plotHeight + 2);
+		ctx.fillText(formatTick(yMin), PAD_LEFT - 6, axisY + 2);
 
-		const xAt = (index: number, count: number): number =>
-			count <= 1 ? PAD_LEFT + plotWidth / 2 : PAD_LEFT + (index / (count - 1)) * plotWidth;
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'top';
+		for (let tick = Math.ceil(startIndex / step) * step; tick <= endIndex; tick += step) {
+			const x = xFor(tick);
+			if (x < PAD_LEFT + 8 || x > PAD_LEFT + plotWidth - 8) continue;
+			ctx.fillText(String(tick), x, axisY + 4);
+		}
 
 		ctx.save();
 		ctx.beginPath();
@@ -189,7 +300,7 @@
 					open = false;
 					continue;
 				}
-				const x = xAt(i, channel.length);
+				const x = xFor(i);
 				const y = yFor(value);
 				if (open) ctx.lineTo(x, y);
 				else ctx.moveTo(x, y);
@@ -205,7 +316,7 @@
 				const next = i + 1 < channel.length ? channel[i + 1] : null;
 				if (typeof previous === 'number' || typeof next === 'number') continue;
 				ctx.beginPath();
-				ctx.arc(xAt(i, channel.length), yFor(value), 1.8, 0, Math.PI * 2);
+				ctx.arc(xFor(i), yFor(value), 1.8, 0, Math.PI * 2);
 				ctx.fill();
 			}
 		}
@@ -232,22 +343,91 @@
 		}
 	}
 
-	$effect(() => {
-		draw();
+	onMount(() => {
+		const element = scroller;
+		if (!element) return;
+		const sync = (): void => {
+			pixelRatio = window.devicePixelRatio || 1;
+			viewWidth = Math.max(1, element.clientWidth);
+			viewHeight = Math.max(1, element.clientHeight);
+		};
+		sync();
+		const observer = new ResizeObserver(sync);
+		observer.observe(element);
+		const wheel = (event: WheelEvent): void => handleWheel(event);
+		element.addEventListener('wheel', wheel, { passive: false });
+		window.addEventListener('resize', sync);
+		return () => {
+			observer.disconnect();
+			element.removeEventListener('wheel', wheel);
+			window.removeEventListener('resize', sync);
+		};
 	});
 
-	onMount(() => {
-		const element = canvas;
-		if (!element) return;
-		const observer = new ResizeObserver(() => draw());
-		observer.observe(element);
-		draw();
-		return () => observer.disconnect();
+	$effect(() => {
+		const max = maxScroll();
+		if (followEnd) {
+			if (Math.abs(scrollLeft - max) > 0.5) scrollLeft = max;
+		} else if (scrollLeft > max) {
+			scrollLeft = max;
+		}
+		if (scroller && Math.abs(scroller.scrollLeft - scrollLeft) > 0.5) {
+			scroller.scrollLeft = scrollLeft;
+		}
+	});
+
+	$effect(() => {
+		void series;
+		void scrollLeft;
+		void scale;
+		void viewWidth;
+		void viewHeight;
+		if (canvas) draw();
 	});
 </script>
 
-<div
-	class="relative h-full min-h-0 w-full overflow-hidden border border-stone-300 bg-white font-mono"
->
-	<canvas bind:this={canvas} class="block h-full w-full"></canvas>
+<div class="flex h-full min-h-0 flex-col border border-stone-300 bg-white font-mono">
+	<div class="relative min-h-0 flex-1">
+		<div
+			bind:this={scroller}
+			class="absolute inset-0 overflow-x-auto overflow-y-hidden"
+			onscroll={handleScroll}
+		>
+			<div style="width: {contentWidth}px; height: {viewHeight}px">
+				<canvas
+					bind:this={canvas}
+					class="sticky top-0 left-0 block"
+					style="width: {viewWidth}px; height: {viewHeight}px"
+				></canvas>
+			</div>
+		</div>
+	</div>
+
+	<div class="flex shrink-0 items-center gap-1 border-t border-stone-200 px-1.5 py-1">
+		<button
+			type="button"
+			aria-label={m.zoom_out()}
+			title={m.zoom_out()}
+			class="grid h-5 w-5 place-items-center rounded border border-stone-300 bg-white text-[12px] leading-none text-stone-600 hover:border-stone-400"
+			onclick={() => zoomBy(1 / ZOOM_STEP)}
+		>
+			−
+		</button>
+		<button
+			type="button"
+			aria-label={m.zoom_in()}
+			title={m.zoom_in()}
+			class="grid h-5 w-5 place-items-center rounded border border-stone-300 bg-white text-[12px] leading-none text-stone-600 hover:border-stone-400"
+			onclick={() => zoomBy(ZOOM_STEP)}
+		>
+			+
+		</button>
+		<button
+			type="button"
+			class="ml-1 rounded border border-stone-300 bg-white px-1.5 py-0.5 text-[10px] text-stone-600 hover:border-stone-400"
+			onclick={fit}
+		>
+			{m.zoom_fit()}
+		</button>
+	</div>
 </div>

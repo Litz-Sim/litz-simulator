@@ -284,9 +284,6 @@
 
 		<div class="mt-3 flex items-center gap-2">
 			<h3 class="text-[11px] font-medium text-stone-600">{m.analysis_trace()}</h3>
-			<span class="text-[10px] text-stone-400">
-				{m.analysis_transitions({ count: traceCount })}
-			</span>
 			<button
 				type="button"
 				class="rounded border border-stone-300 bg-white px-2 py-0.5 text-[10px] hover:bg-stone-100 disabled:opacity-40"

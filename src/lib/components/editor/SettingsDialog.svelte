@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { getLocale, setLocale } from '#lib/paraglide/runtime.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { installPackage, packages, removePackage } from '#lib/parts/custom.svelte';
@@ -47,11 +46,6 @@
 	function setSpeed(value: string): void {
 		sim.setSpeed(Number(value));
 	}
-
-	const choice =
-		'flex-1 rounded-md border px-2.5 py-1.5 text-[12px] transition-colors [@media(pointer:coarse)]:py-2.5';
-	const selected = 'border-stone-900 bg-stone-800 text-white';
-	const unselected = 'border-stone-300 bg-white text-stone-600 hover:border-stone-400';
 </script>
 
 <svelte:window
@@ -87,22 +81,15 @@
 
 			<div class="min-h-0 flex-1 overflow-y-auto">
 				<section class="border-b border-stone-200 px-3 py-3">
-					<h3 class="text-[11px] font-medium tracking-wide text-stone-500">{m.language()}</h3>
-					<div class="mt-2 flex gap-1.5">
-						<button
-							type="button"
-							class="{choice} {getLocale() === 'zh' ? selected : unselected}"
-							onclick={() => void chooseLocale('zh')}
+					<div class="flex items-center justify-between gap-3">
+						<h3 class="text-[11px] font-medium tracking-wide text-stone-500">{m.language()}</h3>
+						<select
+							class="rounded border border-stone-300 bg-white px-2 py-1 text-[12px] [@media(pointer:coarse)]:py-2"
+							onchange={(event) => void chooseLocale(event.currentTarget.value as 'en' | 'zh')}
 						>
-							{m.language_zh()}
-						</button>
-						<button
-							type="button"
-							class="{choice} {getLocale() === 'en' ? selected : unselected}"
-							onclick={() => void chooseLocale('en')}
-						>
-							{m.language_en()}
-						</button>
+							<option value="zh" selected={getLocale() === 'zh'}>{m.language_zh()}</option>
+							<option value="en" selected={getLocale() === 'en'}>{m.language_en()}</option>
+						</select>
 					</div>
 				</section>
 
@@ -198,21 +185,6 @@
 							{m.settings_import_failed({ detail: error })}
 						</p>
 					{/if}
-
-					<div class="mt-3 flex flex-wrap gap-1.5">
-						<a
-							href={resolve('/author/part')}
-							class="rounded-md border border-stone-300 bg-white px-2.5 py-1.5 text-[12px] text-stone-700 hover:border-stone-400"
-						>
-							{m.settings_author_part()}
-						</a>
-						<a
-							href={resolve('/author/board')}
-							class="rounded-md border border-stone-300 bg-white px-2.5 py-1.5 text-[12px] text-stone-700 hover:border-stone-400"
-						>
-							{m.settings_author_board()}
-						</a>
-					</div>
 				</section>
 			</div>
 		</div>

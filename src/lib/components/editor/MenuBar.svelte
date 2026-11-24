@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { canvasControl } from '#lib/canvas/control';
 	import { m } from '#lib/paraglide/messages.js';
 	import { sim } from '#lib/sim/controller.svelte';
@@ -155,6 +157,16 @@
 					}
 				},
 				{ label: m.menu_examples(), run: () => (ui.examplesOpen = true) },
+				{ separator: true },
+				{
+					label: m.settings_author_part(),
+					run: () => void goto(resolve('/author/part'))
+				},
+				{
+					label: m.settings_author_board(),
+					run: () => void goto(resolve('/author/board'))
+				},
+				{ separator: true },
 				{ label: m.menu_close_tab(), run: () => doc.closeTab(doc.activeTab) },
 				{ separator: true },
 				{ label: m.menu_save_project(), hint: '⌘S', run: () => doc.save() },
@@ -189,19 +201,6 @@
 				{ label: m.menu_zoom_out(), hint: '−', run: () => canvasControl.engine?.zoomBy(1 / 1.2) },
 				{ separator: true },
 				{ label: m.menu_toggle_bottom(), run: () => (ui.bottomOpen = !ui.bottomOpen) }
-			]
-		},
-		{
-			label: m.menu_place(),
-			items: [
-				{
-					label: m.menu_add_bb_full(),
-					run: () => canvasControl.engine?.addBoardAtCenter('breadboard-full')
-				},
-				{
-					label: m.menu_add_bb_half(),
-					run: () => canvasControl.engine?.addBoardAtCenter('breadboard-half')
-				}
 			]
 		},
 		{
@@ -305,10 +304,6 @@
 				{
 					label: m.panel_debug(),
 					run: () => ((ui.bottomOpen = true), (ui.bottomTab = 'debug'))
-				},
-				{
-					label: m.menu_manifests(),
-					run: () => ((ui.bottomOpen = true), (ui.bottomTab = 'manifests'))
 				},
 				{ label: m.menu_code_panel(), run: () => ((ui.bottomOpen = true), (ui.bottomTab = 'code')) }
 			]
