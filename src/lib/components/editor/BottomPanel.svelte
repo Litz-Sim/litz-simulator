@@ -156,8 +156,6 @@
 					selected={serialBoard}
 					onselect={(board: string) => (ui.serialBoard = board)}
 					onClear={() => sim.clearSerial()}
-					placeholder={m.serial_placeholder()}
-					sendLabel={m.serial_send()}
 					clearLabel={m.serial_clear()}
 					waitingLabel={m.serial_waiting()}
 					idleLabel={m.serial_idle()}

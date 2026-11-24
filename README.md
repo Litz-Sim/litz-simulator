@@ -193,16 +193,18 @@ Each board boots its own image; a board that has no uploaded or built-in image s
 
 ### Bottom panels
 
-| Panel     | Purpose                                                                                                                                                                                 |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Code      | Inspect the generated `diagram.json`.                                                                                                                                                   |
-| Serial    | Live console for one board at a time, with tabs to switch boards when the session has several. ANSI colors, auto-scroll, and text sent to the shown board. The badge shows 115200 baud. |
-| Plot      | Plot up to four numeric channels parsed from the selected board's serial output.                                                                                                        |
-| Screen    | The circuit's whole-frame panels — OLED, TFT, e-paper, Nokia 5110, MAX7219 — at an integer zoom, with touch input for panels wired to an XPT2046.                                       |
-| Analysis  | Chip, clock, flash, heap, stop reason, fault, electrical conflicts, GPIO levels, probes, waveforms, protocol decoders, and VCD export.                                                  |
-| Debug     | RISC-V instruction stepping, registers, disassembly, breakpoints, and memory.                                                                                                           |
-| Manifests | Edit custom TOML part and board descriptions; saved in browser storage and passed to the engine on restart.                                                                             |
-| Log       | Timestamped engine events, including errors.                                                                                                                                            |
+| Panel     | Purpose                                                                                                                                                                                      |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Code      | Inspect the generated `diagram.json`.                                                                                                                                                        |
+| Serial    | Live terminal for one board at a time, with tabs to switch boards when the session has several. Keys go to the board as typed, and Enter sends LF, CR, or CRLF. The badge shows 115200 baud. |
+| Plot      | Plot up to four numeric channels parsed from the selected board's serial output.                                                                                                             |
+| Screen    | The circuit's whole-frame panels — OLED, TFT, e-paper, Nokia 5110, MAX7219 — at an integer zoom, with touch input for panels wired to an XPT2046.                                            |
+| Analysis  | Chip, clock, flash, heap, stop reason, fault, electrical conflicts, GPIO levels, probes, waveforms, protocol decoders, and VCD export.                                                       |
+| Debug     | RISC-V instruction stepping, registers, disassembly, breakpoints, and memory.                                                                                                                |
+| Manifests | Edit custom TOML part and board descriptions; saved in browser storage and passed to the engine on restart.                                                                                  |
+| Log       | Timestamped engine events, including errors.                                                                                                                                                 |
+
+The Serial panel is a terminal emulator, so arrow keys, Tab, Esc, and control keys reach the board instead of staying in the browser. Ctrl+C sends `^C` and Ctrl+D sends `^D`; to copy selected text, use ⌘C on macOS or the browser's context menu elsewhere. On touch screens a key strip adds Esc, Tab, `^C`, `^D`, and the arrow keys.
 
 The Analysis panel reads GPIO levels through hidden probes, so it works for every board. Clicking a pin attaches a named probe. Each probe reports frequency, duty cycle, voltage range, and a digital waveform. Adding a UART, I²C, or SPI decoder shows decoded frames alongside the waveform. User probes and decoders are reattached automatically after a restart.
 

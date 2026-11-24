@@ -1,5 +1,8 @@
 export type BottomTab = 'code' | 'serial' | 'plot' | 'screen' | 'analysis' | 'debug' | 'log';
 
+/** What the Enter key sends after the terminal translates it from CR. */
+export type SerialEnding = 'lf' | 'cr' | 'crlf';
+
 interface UiState {
 	settingsOpen: boolean;
 	projectOpen: boolean;
@@ -15,6 +18,8 @@ interface UiState {
 	codeFile: string;
 	/** Board whose console the Serial and Plot panels show; the first one when unset. */
 	serialBoard: string | null;
+	/** Line ending the Serial terminal sends for Enter. */
+	serialEnding: SerialEnding;
 	/** Display part the Screen panel shows; the first one in the circuit when unset. */
 	screenPart: string | null;
 }
@@ -29,6 +34,7 @@ export const ui: UiState = $state({
 	bottomHeight: 216,
 	codeFile: 'diagram.json',
 	serialBoard: null,
+	serialEnding: 'lf',
 	screenPart: null
 });
 

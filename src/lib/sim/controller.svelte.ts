@@ -767,19 +767,14 @@ class SimController {
 		return boardId ? (this.serialBoards[boardId] ?? '') : this.serial;
 	}
 
-	/** Bytes typed into the serial monitor, delivered to one board's UART0. */
+	/**
+	 * Bytes typed into the terminal, delivered as-is to one board's UART0.
+	 * Nothing is echoed here: a terminal shows what the board sends back.
+	 */
 	writeSerial(text: string, board?: string): void {
 		if (!this.running || !text) return;
-		if (board) {
-			this.#backend.serialWriteBoard(board, text);
-			this.serial =
-				this.boardRuntime.length > 1
-					? (this.serial + `[${board}] ${text}`).slice(-40000)
-					: (this.serial + text).slice(-40000);
-			return;
-		}
-		this.#backend.serialWrite(text);
-		this.serial = (this.serial + text).slice(-40000);
+		if (board) this.#backend.serialWriteBoard(board, text);
+		else this.#backend.serialWrite(text);
 	}
 
 	#appendBoardSerial(boardId: string, text: string): void {

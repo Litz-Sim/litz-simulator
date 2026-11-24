@@ -1,123 +1,54 @@
 <script lang="ts">
-	type AnsiState = {
-		bold: boolean;
-		dim: boolean;
-		color: string | undefined;
+	import '@xterm/xterm/css/xterm.css';
+	import { onMount } from 'svelte';
+	import type { Terminal } from '@xterm/xterm';
+	import { m } from '#lib/paraglide/messages.js';
+	import { feedDelta, withCarriageReturns } from '#lib/sim/terminalStream';
+	import { ui, type SerialEnding } from '#lib/ui.svelte';
+
+	/** The bytes Enter sends, after xterm hands it a CR. */
+	const ENDINGS: Record<SerialEnding, string> = {
+		lf: '\n',
+		cr: '\r',
+		crlf: '\r\n'
 	};
 
-	type Token = {
-		text: string;
-		color?: string;
-		bold?: boolean;
-		dim?: boolean;
-	};
-
-	type RenderedOutput = {
-		lines: Token[][];
-		truncated: boolean;
-	};
-
-	const MAX_LINES = 2000;
-	const STICK_THRESHOLD = 24;
-
-	const ANSI_COLORS: readonly string[] = [
-		'#1c1917',
-		'#b91c1c',
-		'#15803d',
-		'#a16207',
-		'#1d4ed8',
-		'#a21caf',
-		'#0e7490',
-		'#57534e'
+	/** Touch screens have no Esc, Ctrl or arrow keys of their own. */
+	const KEYS: { label: string; data: string }[] = [
+		{ label: 'Esc', data: '\x1b' },
+		{ label: 'Tab', data: '\t' },
+		{ label: '^C', data: '\x03' },
+		{ label: '^D', data: '\x04' },
+		{ label: '↑', data: '\x1b[A' },
+		{ label: '↓', data: '\x1b[B' },
+		{ label: '←', data: '\x1b[D' },
+		{ label: '→', data: '\x1b[C' }
 	];
 
-	const ANSI_BRIGHT_COLORS: readonly string[] = [
-		'#78716c',
-		'#dc2626',
-		'#16a34a',
-		'#ca8a04',
-		'#2563eb',
-		'#c026d3',
-		'#0891b2',
-		'#a8a29e'
-	];
-
-	// CSI sequences, OSC sequences, then any other two/three-byte escape sequence.
-	/* eslint-disable no-control-regex */
-	const ANSI_PATTERN =
-		/\x1b\[[0-?]*[ -/]*[@-~]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)?|\x1b[ -/]*[0-~]/g;
-
-	function applySgr(params: string, state: AnsiState): void {
-		const parts = params.length === 0 ? ['0'] : params.split(';');
-		for (const part of parts) {
-			const code = part.length === 0 ? 0 : Number.parseInt(part, 10);
-			if (Number.isNaN(code)) continue;
-			if (code === 0) {
-				state.bold = false;
-				state.dim = false;
-				state.color = undefined;
-			} else if (code === 1) {
-				state.bold = true;
-			} else if (code === 2) {
-				state.dim = true;
-			} else if (code === 22) {
-				state.bold = false;
-				state.dim = false;
-			} else if (code === 39) {
-				state.color = undefined;
-			} else if (code >= 30 && code <= 37) {
-				state.color = ANSI_COLORS[code - 30];
-			} else if (code >= 90 && code <= 97) {
-				state.color = ANSI_BRIGHT_COLORS[code - 90];
-			}
-		}
-	}
-
-	function pushToken(tokens: Token[], text: string, state: AnsiState): void {
-		if (!text) return;
-		const previous: Token | undefined = tokens[tokens.length - 1];
-		if (
-			previous !== undefined &&
-			previous.color === state.color &&
-			(previous.bold ?? false) === state.bold &&
-			(previous.dim ?? false) === state.dim
-		) {
-			previous.text += text;
-			return;
-		}
-		const token: Token = { text };
-		if (state.color !== undefined) token.color = state.color;
-		if (state.bold) token.bold = true;
-		if (state.dim) token.dim = true;
-		tokens.push(token);
-	}
-
-	function parseLine(line: string): Token[] {
-		const tokens: Token[] = [];
-		const state: AnsiState = { bold: false, dim: false, color: undefined };
-		let lastIndex = 0;
-		ANSI_PATTERN.lastIndex = 0;
-		let match: RegExpExecArray | null = ANSI_PATTERN.exec(line);
-		while (match !== null) {
-			if (match.index > lastIndex) {
-				pushToken(tokens, line.slice(lastIndex, match.index), state);
-			}
-			const sequence = match[0];
-			if (
-				sequence.length > 2 &&
-				sequence.charCodeAt(1) === 0x5b &&
-				sequence.charCodeAt(sequence.length - 1) === 0x6d
-			) {
-				applySgr(sequence.slice(2, -1), state);
-			}
-			lastIndex = ANSI_PATTERN.lastIndex;
-			match = ANSI_PATTERN.exec(line);
-		}
-		if (lastIndex < line.length) {
-			pushToken(tokens, line.slice(lastIndex), state);
-		}
-		return tokens;
-	}
+	// Same tones as the rest of the editor, mapped onto the terminal's palette.
+	const THEME = {
+		background: '#fbfaf7',
+		foreground: '#44403c',
+		cursor: '#57534e',
+		cursorAccent: '#fbfaf7',
+		selectionBackground: 'rgba(120, 113, 108, 0.3)',
+		black: '#1c1917',
+		red: '#b91c1c',
+		green: '#15803d',
+		yellow: '#a16207',
+		blue: '#1d4ed8',
+		magenta: '#a21caf',
+		cyan: '#0e7490',
+		white: '#d6d3d1',
+		brightBlack: '#78716c',
+		brightRed: '#dc2626',
+		brightGreen: '#16a34a',
+		brightYellow: '#ca8a04',
+		brightBlue: '#2563eb',
+		brightMagenta: '#c026d3',
+		brightCyan: '#0891b2',
+		brightWhite: '#f5f5f4'
+	};
 
 	let {
 		text,
@@ -128,8 +59,6 @@
 		boards = [],
 		selected = null,
 		onselect,
-		placeholder,
-		sendLabel,
 		clearLabel,
 		waitingLabel,
 		idleLabel
@@ -142,60 +71,122 @@
 		boards?: { id: string; name: string }[];
 		selected?: string | null;
 		onselect?: (board: string) => void;
-		placeholder: string;
-		sendLabel: string;
 		clearLabel: string;
 		waitingLabel: string;
 		idleLabel: string;
 	} = $props();
 
-	let input = $state('');
 	const destination = $derived(selected ?? boards[0]?.id ?? '');
-	let scroller = $state<HTMLDivElement | undefined>();
-	let inputElement: HTMLInputElement | undefined;
-	let stickToBottom = true;
+	let host: HTMLDivElement | undefined;
+	let term = $state.raw<Terminal>();
+	/** What the terminal currently shows, so each tick writes only the new tail. */
+	let shown = '';
+	let shownBoard = '';
+	let afterCR = false;
 
-	const rendered: RenderedOutput = $derived.by(() => {
-		const source = text;
-		if (source.length === 0) {
-			return { lines: [], truncated: false };
-		}
-		const rawLines = source.split('\n');
-		const start = Math.max(0, rawLines.length - MAX_LINES);
-		const lines: Token[][] = [];
-		for (let index = start; index < rawLines.length; index += 1) {
-			let line = rawLines[index] ?? '';
-			// CRLF ends every normal line; a lone CR only rewrites the line
-			// already on screen. Strip the terminator before looking for the
-			// last in-line redraw, or every CRLF line would render empty.
-			while (line.endsWith('\r')) line = line.slice(0, -1);
-			const carriageReturn = line.lastIndexOf('\r');
-			if (carriageReturn !== -1) line = line.slice(carriageReturn + 1);
-			lines.push(parseLine(line));
-		}
-		return { lines, truncated: start > 0 };
+	onMount(() => {
+		let disposed = false;
+		let observer: ResizeObserver | undefined;
+		void (async () => {
+			const [core, fitModule] = await Promise.all([
+				import('@xterm/xterm'),
+				import('@xterm/addon-fit')
+			]);
+			if (disposed || !host) return;
+			const instance = new core.Terminal({
+				cols: 80,
+				rows: 12,
+				scrollback: 2000,
+				// Bare line feeds are normalised before they reach the terminal.
+				convertEol: false,
+				cursorBlink: true,
+				cursorStyle: 'bar',
+				fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+				fontSize: window.matchMedia('(pointer: coarse)').matches ? 13 : 11,
+				lineHeight: 1.25,
+				theme: THEME
+			});
+			const fit = new fitModule.FitAddon();
+			instance.loadAddon(fit);
+			instance.open(host);
+			requestAnimationFrame(() => {
+				try {
+					fit.fit();
+				} catch {
+					// The panel can still be at zero height on its first frame.
+				}
+			});
+			instance.onData((data) => send(data));
+			observer = new ResizeObserver(() => {
+				try {
+					fit.fit();
+				} catch {
+					// Same as above: a collapsed panel has nothing to fit.
+				}
+			});
+			observer.observe(host);
+			term = instance;
+		})();
+		return () => {
+			disposed = true;
+			observer?.disconnect();
+			term?.dispose();
+			term = undefined;
+		};
 	});
 
-	function handleScroll(): void {
-		const element = scroller;
-		if (!element) return;
-		stickToBottom =
-			element.scrollHeight - element.scrollTop - element.clientHeight <= STICK_THRESHOLD;
+	/** Typed bytes reach the board unchanged, except the Enter key's line ending. */
+	function send(data: string): void {
+		const out = data === '\r' ? ENDINGS[ui.serialEnding] : data;
+		onSend(out, destination || undefined);
 	}
 
-	function submit(event: SubmitEvent): void {
-		event.preventDefault();
-		onSend(`${input}\n`, destination || undefined);
-		input = '';
-		inputElement?.focus();
+	// xterm parses writes asynchronously, so a reset issued while chunks are
+	// still queued would land in the middle of them and scramble the screen.
+	// Both go through one chain, in the order the console produced them.
+	let pending: Promise<void> = Promise.resolve();
+	function enqueue(action: () => void | Promise<void>): void {
+		pending = pending.then(action, action);
+	}
+	function resetTerminal(terminal: Terminal): void {
+		enqueue(() => terminal.reset());
+	}
+	function writeTerminal(terminal: Terminal, data: string): void {
+		enqueue(
+			() =>
+				new Promise<void>((done) => {
+					terminal.write(data, () => done());
+				})
+		);
 	}
 
 	$effect(() => {
-		void text;
-		const element = scroller;
-		if (element && stickToBottom) {
-			element.scrollTop = element.scrollHeight;
+		const terminal = term;
+		if (!terminal) return;
+		const board = selected ?? '';
+		const source = text;
+		if (board !== shownBoard) {
+			resetTerminal(terminal);
+			shown = '';
+			afterCR = false;
+			shownBoard = board;
 		}
+		const feed = feedDelta(shown, source);
+		if (feed.reset) {
+			resetTerminal(terminal);
+			afterCR = false;
+		}
+		shown = source;
+		if (!feed.write) return;
+		const normalized = withCarriageReturns(feed.write, afterCR);
+		afterCR = normalized.afterCR;
+		writeTerminal(terminal, normalized.text);
+	});
+
+	$effect(() => {
+		if (!term) return;
+		term.options.disableStdin = !running;
+		term.options.cursorInactiveStyle = running ? 'outline' : 'none';
 	});
 </script>
 
@@ -220,30 +211,13 @@
 			{/each}
 		</div>
 	{/if}
-	<div
-		bind:this={scroller}
-		onscroll={handleScroll}
-		class="min-h-0 flex-1 overflow-y-auto bg-[#fbfaf7] px-3 py-1.5 font-mono text-[11px] leading-relaxed break-all whitespace-pre-wrap text-stone-700"
-	>
-		{#if text}
-			{#if rendered.truncated}
-				<div class="min-h-[1.625em] text-stone-400">…</div>
-			{/if}
-			{#each rendered.lines as line, lineIndex (lineIndex)}
-				<div class="min-h-[1.625em]">
-					{#each line as token, tokenIndex (tokenIndex)}
-						<span
-							class:font-bold={token.bold}
-							class:opacity-60={token.dim}
-							style:color={token.color}
-						>
-							{token.text}
-						</span>
-					{/each}
-				</div>
-			{/each}
-		{:else}
-			<span class="text-stone-400">{running ? waitingLabel : idleLabel}</span>
+
+	<div class="relative min-h-0 flex-1">
+		<div bind:this={host} class="h-full w-full bg-[#fbfaf7] px-2 py-1"></div>
+		{#if !text}
+			<p class="pointer-events-none absolute inset-x-3 top-2 font-mono text-[11px] text-stone-400">
+				{running ? waitingLabel : idleLabel}
+			</p>
 		{/if}
 	</div>
 
@@ -255,28 +229,43 @@
 		</p>
 	{/if}
 
-	<form class="flex items-center gap-1 border-t border-stone-200 px-2 py-1" onsubmit={submit}>
-		<input
-			bind:this={inputElement}
-			bind:value={input}
-			{placeholder}
-			spellcheck="false"
-			autocomplete="off"
-			class="min-w-0 flex-1 rounded border border-stone-300 bg-white px-2 py-0.5 font-mono text-[11px] [@media(pointer:coarse)]:py-2"
-		/>
-		<button
-			type="submit"
-			class="rounded border border-stone-300 bg-stone-100 px-2 py-0.5 text-[11px] hover:bg-stone-200 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:py-2"
+	<div
+		role="group"
+		class="hidden shrink-0 items-center gap-1 border-t border-stone-200 bg-stone-100 px-2 py-1 [@media(pointer:coarse)]:flex"
+		aria-label={m.serial_keys()}
+	>
+		{#each KEYS as key (key.label)}
+			<button
+				type="button"
+				aria-label={key.label}
+				class="flex h-7 min-w-8 items-center justify-center rounded border border-stone-300 bg-white px-1.5 font-mono text-[11px] text-stone-600 hover:border-stone-400"
+				onclick={() => send(key.data)}
+			>
+				{key.label}
+			</button>
+		{/each}
+	</div>
+
+	<div class="flex shrink-0 items-center gap-1 border-t border-stone-200 px-2 py-1">
+		<select
+			bind:value={ui.serialEnding}
+			title={m.serial_ending()}
+			aria-label={m.serial_ending()}
+			class="h-6 rounded border border-stone-300 bg-white px-1 font-mono text-[10px] text-stone-600 [@media(pointer:coarse)]:h-8"
 		>
-			{sendLabel}
-		</button>
+			<option value="lf">LF</option>
+			<option value="cr">CR</option>
+			<option value="crlf">CRLF</option>
+		</select>
 		<button
 			type="button"
-			class="rounded border border-stone-300 bg-stone-100 px-2 py-0.5 text-[11px] hover:bg-stone-200 [@media(pointer:coarse)]:px-3 [@media(pointer:coarse)]:py-2"
+			class="h-6 rounded border border-stone-300 bg-stone-100 px-2 text-[11px] hover:bg-stone-200 [@media(pointer:coarse)]:h-8 [@media(pointer:coarse)]:px-3"
 			onclick={() => onClear()}
 		>
 			{clearLabel}
 		</button>
-		<span class="rounded bg-stone-200 px-1.5 py-0.5 text-[10px] text-stone-500">115200</span>
-	</form>
+		<span class="ml-auto rounded bg-stone-200 px-1.5 py-0.5 text-[10px] text-stone-500">
+			115200
+		</span>
+	</div>
 </div>
