@@ -8,6 +8,7 @@ import { LOGIC_PARTS } from './library/logic';
 import { OUTPUT_PARTS } from './library/outputs';
 import { SENSOR_PARTS } from './library/sensors';
 import { withArt } from './svgArt.svelte';
+import { withFritzingGeometry } from './fritzing-geometry';
 import type { PartDef, PinDef } from './types';
 
 /** Header names that reach a GPIO without spelling it out. */
@@ -433,8 +434,12 @@ const CATALOG: PartDef[] = [
 	...INSTRUMENT_PARTS
 ];
 
-/** A part draws from its SVG asset when it has one, and from its vector code otherwise. */
-export const PART_DEFS: PartDef[] = CATALOG.map(withArt);
+/**
+ * A part draws from its SVG asset when it has one, and from its vector code
+ * otherwise. Assets taken from Fritzing carry the connector positions they were
+ * drawn around, so their pins move onto those coordinates here.
+ */
+export const PART_DEFS: PartDef[] = CATALOG.map(withFritzingGeometry).map(withArt);
 
 const BY_TYPE = new Map(PART_DEFS.map((def) => [def.type, def]));
 

@@ -30,6 +30,30 @@ export type Overlay =
 	  }
 	| { kind: 'knob' | 'cap'; cx: number; cy: number; r: number };
 
+/**
+ * Parts whose asset carries a runtime layer. Their art is drawn by hand around
+ * the markers, so it must never be replaced by a plain photographed part.
+ */
+export const LIVE_ART_TYPES: ReadonlySet<string> = new Set([
+	'litz-7segment',
+	'litz-7segment-4digit',
+	'litz-tm1637-7segment',
+	'litz-lcd1602',
+	'litz-lcd1602-i2c',
+	'litz-lcd2004',
+	'litz-lcd2004-i2c',
+	'litz-ssd1306',
+	'litz-sh1106',
+	'litz-nokia-5110-screen',
+	'litz-st7735',
+	'litz-ili9341',
+	'litz-epaper-1in54',
+	'litz-epaper-2in13',
+	'litz-potentiometer',
+	'litz-slide-potentiometer',
+	'litz-trimmer-potentiometer'
+]);
+
 const TAG = /<(?:rect|circle)\b[^>]*\bdata-overlay="([a-z]+)"[^>]*>/g;
 const ATTR = /\b(x|y|width|height|cx|cy|r|data-mask)="([-\d.]+)"/g;
 

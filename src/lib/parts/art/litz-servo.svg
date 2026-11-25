@@ -1,54 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-47 -30 94 70">
-	<defs>
-		<linearGradient id="shell" x1="0" y1="-18" x2="0" y2="22" gradientUnits="userSpaceOnUse">
-			<stop offset="0" stop-color="#3d76b4" />
-			<stop offset="1" stop-color="#1d4a7c" />
-		</linearGradient>
-		<radialGradient id="boss" cx="0.35" cy="0.3" r="0.8">
-			<stop offset="0" stop-color="#f3f1e9" />
-			<stop offset="0.7" stop-color="#ddd9cd" />
-			<stop offset="1" stop-color="#b9b4a6" />
-		</radialGradient>
-	</defs>
-	<g stroke-linecap="round">
-		<line x1="-30" y1="22" x2="-30" y2="36" stroke="#9aa2a9" stroke-width="2.8" />
-		<line x1="-10" y1="22" x2="-10" y2="36" stroke="#9aa2a9" stroke-width="2.8" />
-		<line x1="10" y1="22" x2="10" y2="36" stroke="#9aa2a9" stroke-width="2.8" />
-		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
-			<rect x="-33.5" y="33" width="7" height="6" rx="1" />
-			<rect x="-13.5" y="33" width="7" height="6" rx="1" />
-			<rect x="6.5" y="33" width="7" height="6" rx="1" />
-		</g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-119.97 -97.7 239.95 195.4">
+<g transform="translate(-113.9781 -91.7028) scale(2.000000)">
+<g id="breadboard" transform="translate(-0.555968,45.0334)"><rect id="connector0pin" x="101.453" y="27.986" fill="none" width="1" height="1" /><rect id="connector1pin" x="101.562" y="25.163" fill="none" width="1" height="1" /><rect id="connector2pin" x="101.453" y="22.38" fill="none" width="1" height="1" /><line id="connector0leg" stroke-linecap="round" x1="112.353" y1="38.406" x2="113.976032" y2="39.406" stroke="#000000" fill="none" stroke-width="3" /><line id="connector1leg" stroke-linecap="round" x1="112.667" y1="29.063" x2="113.976032" y2="29.406" stroke="#FF0000" fill="none" stroke-width="3" /><line id="connector2leg" stroke-linecap="round" x1="112.506" y1="19.68" x2="113.976032" y2="19.406" stroke="#FFFF00" fill="none" stroke-width="3" /><path id="path7" fill="none" stroke="#000000" stroke-width="3" d="M101.453,27.986c0,0,-7.079-1.869,10.900,10.42" /><path id="path9" fill="none" stroke="#FF0000" stroke-width="3" d="M101.562,25.163c5.604,0,5.705,1.629,11.105,3.9" /><path id="path11" fill="none" stroke="#FFFF00" stroke-width="3" d="M101.453,22.38c7.475,0,10.553,-4.412,11.053,-1.3" /><polygon id="polygon13" fill="#333333" points="0.556,9.302 17.372,9.302 17.372,-9.384 97.717,-9.384 97.717,9.302 114.532,9.302    114.532,11.169 97.717,11.169 97.717,46.669 17.372,46.669 17.372,11.169 0.556,11.169  " /><polygon id="polygon15" points="11.766,11.169 17.372,11.169 17.372,46.669 11.766,41.065  " /><polygon id="polygon17" fill="#999999" points="17.372,9.302 0.556,9.302 0.556,-0.042 11.766,-0.042 11.766,3.695  " /><polygon id="polygon19" fill="#999999" points="17.372,-9.384 11.766,-14.989 11.766,-26.2 17.372,-31.805 97.717,-31.805    103.321,-26.2 103.321,-14.989 97.717,-9.384  " /><polygon id="polygon21" fill="#666666" points="103.321,11.169 97.717,11.169 97.717,46.669 103.321,41.065  " /><polygon id="polygon23" fill="#999999" points="97.717,9.302 114.533,9.302 114.533,-0.042 103.321,-0.042 103.321,3.695  " /><polygon id="polygon25" points="11.766,-14.989 17.372,-9.384 17.372,9.302 11.766,3.695  " /><polygon id="polygon27" fill="#666666" points="103.321,-14.989 97.717,-9.384 97.717,9.302 103.321,3.695  " /><path id="path29" fill="#CCCCCC" d="M44.471-17.606c-6.562,3.61-13.786,1.541-16.543-0.162C25.17-19.471,8.869-33.338,6.681-34.717   c-2.19-1.379-1.947-3.32-1.947-6.131c0-3.577,1.784,2.676,5.516,4.379c3.729,1.703,37.683,5.893,37.683,12.11   C47.931-22.467,48.688-19.926,44.471-17.606z" /><path id="path31" fill="#FFFFFF" d="M44.471-19.52c-6.244,4.136-13.786,1.541-16.543-0.163C25.17-21.386,8.869-35.253,6.681-36.632   c-2.19-1.378-3.082-5.433-0.081-7.379c3-1.946,7.136-0.812,10.866,0.892c3.73,1.703,19.383,8.271,24.734,11.435   C47.553-28.522,50.717-23.656,44.471-19.52z M11.654-38.362c2.628,0,4.759-1.065,4.759-2.379s-2.131-2.378-4.759-2.378   c-2.628,0-4.758,1.064-4.758,2.378S9.026-38.362,11.654-38.362z" /><g id="g33"><path id="path35" fill="#CCCCCC" d="M16.35-40.229c-0.472-1.065-2.369-1.862-4.643-1.862c-2.272,0-4.231,0.796-4.703,1.861    l0.004,0.001c-0.072-0.165-0.112-0.335-0.112-0.511c0-1.314,2.13-2.378,4.758-2.378c2.628,0,4.759,1.064,4.759,2.378    c0,0.176,0,0.356-0.072,0.521L16.35-40.229z" /></g><g id="g37"><ellipse id="ellipse39" fill="#999999" cx="36.092" cy="-25.386" rx="8.002" ry="4.465" /><g id="g41"><path id="path43" fill="#666666" d="M28.234-25.429c0.794,1.919,3.985,3.356,7.807,3.356c3.822,0,7.116-1.436,7.912-3.356h-0.008     c0.121,0.296,0.188,0.604,0.188,0.92c0,2.368-3.582,4.288-8.002,4.288c-4.42,0-8.002-1.92-8.002-4.288     c0-0.316-0.001-0.642,0.12-0.938L28.234-25.429z" /></g></g><g id="g45"><path id="path47" fill="#FFCC33" d="M56.535-23.224v1.136h3.406v1.135h1.135v1.135h-1.135v1.136h-5.678v-1.136h4.541v-1.135    h-3.406v-1.135h-1.135v-1.136h1.135v-1.135h5.678v1.135H56.535z" /><path id="path49" fill="#FFCC33" d="M69.023-24.359v1.135h-4.541v1.136h3.406v1.135h-3.406v1.135h4.541v1.136h-6.812v-5.677    H69.023L69.023-24.359z" /><path id="path51" fill="#FFCC33" d="M75.836-23.224h1.137v2.271h-1.137v1.135h1.137v1.136h-3.406v-1.136H72.43v1.136h-2.271    v-5.677h5.677L75.836-23.224L75.836-23.224z M74.7-23.224H72.43v2.271H74.7V-23.224z" /><path id="path53" fill="#FFCC33" d="M84.919-24.359v2.271h-1.135v2.27h-1.138v1.136h-2.271v-1.136h-1.135v-2.27h-1.136v-2.271    h2.271v2.271h2.271v-2.271H84.919z" /><path id="path55" fill="#FFCC33" d="M87.189-18.682v-1.136h-1.135v-3.406h1.135v-1.135h4.541v1.135h1.136v3.406H91.73v1.136    H87.189L87.189-18.682z M90.596-19.818v-3.406h-2.271v3.406H90.596z" /></g></g>
+</g>
 
-		<g fill="url(#shell)" stroke="#163a60" stroke-width="1">
-			<rect x="-46" y="-8" width="12" height="20" rx="2" />
-			<rect x="34" y="-8" width="12" height="20" rx="2" />
-		</g>
-		<circle cx="-40" cy="2" r="3" fill="#0f2a46" />
-		<circle cx="40" cy="2" r="3" fill="#0f2a46" />
-
-		<rect x="-34" y="-18" width="68" height="40" rx="3" fill="url(#shell)" stroke="#163a60" stroke-width="1.2" />
-		<rect x="-30" y="-14" width="60" height="3" rx="1.5" fill="#ffffff" opacity="0.12" />
-		<rect x="-31" y="14" width="62" height="3" rx="1.5" fill="#0b2138" opacity="0.5" />
-
-		<circle cx="0" cy="-18" r="10" fill="url(#boss)" stroke="#8b8880" stroke-width="1" />
-		<circle cx="0" cy="-18" r="7" fill="none" stroke="#a09a8c" stroke-width="0.8" />
-		<g stroke="#a8a294" stroke-width="0.9">
-			<path d="M0 -25 v3" />
-			<path d="M0 -11 v-3" />
-			<path d="M-7 -18 h3" />
-			<path d="M7 -18 h-3" />
-			<path d="M-4.9 -22.1 l2.1 -2.1" />
-			<path d="M4.9 -13.9 l-2.1 2.1" />
-			<path d="M4.9 -22.1 l-2.1 -2.1" />
-			<path d="M-4.9 -13.9 l2.1 2.1" />
-		</g>
-		<line x1="0" y1="-18" x2="14" y2="-28" stroke="#8b8880" stroke-width="5.6" stroke-linecap="round" />
-		<line x1="0" y1="-18" x2="14" y2="-28" stroke="#e8e6df" stroke-width="4" stroke-linecap="round" />
-		<circle cx="0" cy="-18" r="4.2" fill="#c9c4b6" stroke="#8b8880" stroke-width="0.7" />
-		<circle cx="0" cy="-18" r="1.7" fill="#4d4a43" />
-
-		<text x="0" y="7" font-family="ui-sans-serif, system-ui, sans-serif" font-size="8" font-weight="700" text-anchor="middle" fill="#d6e6f8">SG90</text>
-		<text x="0" y="16" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" fill="#9fc0e6">MICRO SERVO</text>
-	</g>
 </svg>

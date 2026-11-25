@@ -288,3 +288,5 @@ static/firmware/             built-in native images and Python interpreters
 ```
 
 The editor draws everything on a single Canvas 2D layer. Parts and wires are rendered directly by `src/lib/canvas/engine.ts`; there are no DOM nodes per component, so zooming and panning are redraws rather than CSS transforms.
+
+Some part artwork is derived from Fritzing breadboard views and keeps Fritzing's CC BY-SA 3.0 license; see `src/lib/parts/art/README.md`.

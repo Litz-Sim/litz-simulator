@@ -1,57 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -40 100 80">
-	<defs>
-		<linearGradient id="glass" x1="0" y1="-28" x2="0" y2="28" gradientUnits="userSpaceOnUse">
-			<stop offset="0" stop-color="#5a6166" />
-			<stop offset="1" stop-color="#2a2e31" />
-		</linearGradient>
-	</defs>
-	<g stroke-linecap="round">
-		<g stroke="#b7bdc2" stroke-width="2.4">
-			<line x1="-42" y1="-12" x2="-34" y2="-12" />
-			<line x1="34" y1="-12" x2="42" y2="-12" />
-			<line x1="-42" y1="12" x2="-34" y2="12" />
-			<line x1="34" y1="12" x2="42" y2="12" />
-		</g>
-		<g fill="#d6dbe0" stroke="#98a0a6" stroke-width="0.5">
-			<circle cx="-42" cy="-12" r="1.9" />
-			<circle cx="-42" cy="12" r="1.9" />
-			<circle cx="42" cy="-12" r="1.9" />
-			<circle cx="42" cy="12" r="1.9" />
-		</g>
-		<g stroke="#e8895a" stroke-width="1.4" fill="none">
-			<line x1="-42" y1="-12" x2="-20" y2="-12" />
-			<line x1="-20" y1="-12" x2="-20" y2="-4" />
-			<path d="M -25 0 L -15 0 L -20 7 Z" fill="#e8895a" stroke="none" />
-			<line x1="-26" y1="7" x2="-14" y2="7" />
-			<line x1="-20" y1="7" x2="-20" y2="12" />
-			<line x1="-20" y1="12" x2="-42" y2="12" />
-		</g>
-		<g stroke="#f2c14e" stroke-width="1.2" fill="none">
-			<line x1="-8" y1="-4" x2="8" y2="-4" />
-			<path d="M 5 -7 L 9 -4 L 5 -1" fill="none" />
-			<line x1="-8" y1="4" x2="8" y2="4" />
-			<path d="M 5 1 L 9 4 L 5 7" fill="none" />
-		</g>
-		<g stroke="#7fc3e8" stroke-width="1.4" fill="none">
-			<line x1="42" y1="-12" x2="20" y2="-12" />
-			<line x1="20" y1="-12" x2="20" y2="-6" />
-			<line x1="20" y1="-6" x2="12" y2="0" />
-			<line x1="16" y1="-3" x2="16" y2="9" />
-			<line x1="16" y1="2" x2="26" y2="6" />
-			<line x1="26" y1="6" x2="26" y2="12" />
-			<line x1="26" y1="12" x2="42" y2="12" />
-		</g>
-		<rect x="-34" y="-28" width="68" height="56" rx="3" fill="url(#glass)" fill-opacity="0.55" stroke="#0b0c0d" stroke-width="1.3" />
-		<rect x="-31" y="-25" width="62" height="50" rx="2" fill="none" stroke="#8a9197" stroke-width="0.5" opacity="0.5" />
-		<path d="M -7 -28 C -7 -21.6 7 -21.6 7 -28" fill="none" stroke="#0b0c0d" stroke-width="1.6" />
-		<circle cx="-26" cy="-20" r="2" fill="#c9b06a" stroke="#8f7d40" stroke-width="0.5" />
-		<g font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" fill="#d8d2c4">
-			<text x="-30" y="-8.5" text-anchor="start">1</text>
-			<text x="-30" y="15.5" text-anchor="start">2</text>
-			<text x="30" y="15.5" text-anchor="end">3</text>
-			<text x="30" y="-8.5" text-anchor="end">4</text>
-		</g>
-		<text x="0" y="-13" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.6" letter-spacing="1" fill="#d7d2c6">OPTO</text>
-		<text x="0" y="24" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6" letter-spacing="0.6" fill="#a9a396">4N25 / PC817</text>
-	</g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-7.62 -8.97 15.25 17.94">
+<g transform="translate(-1.6276 -2.9736) scale(0.180000)">
+<metadata xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" id="metadata3376"><RDF><Work rdf:about=""><format>image/svg+xml</format><type rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><title /></Work></RDF></metadata><defs id="defs3374"><perspective id="perspective3424" /></defs><namedview fit-margin-top="0" fit-margin-left="0" showgrid="false" fit-margin-bottom="0" objecttolerance="10" pagecolor="#ffffff" bordercolor="#666666" id="namedview3372" borderopacity="1" guidetolerance="10" showguides="false" gridtolerance="10" fit-margin-right="0"><grid empspacing="5" snapvisiblegridlinesonly="true" enabled="true" visible="true" type="xygrid" id="grid3422" /></namedview><rect width="3" x="2.5144427" y="28.662626" height="4.3400002" style="fill:#8c8c8c" id="connector0pin" /><rect width="3" x="12.514442" y="28.662626" height="4.3400002" style="fill:#8c8c8c" id="connector1pin" /><rect width="3" x="2.5144427" y="0.037584879" height="4.3400002" style="fill:#8c8c8c" id="connector3pin" /><rect width="3" x="2.5144427" y="30.002626" height="3" style="fill:#8c8c8c" id="connector0terminal" /><rect width="3" x="12.514442" y="30.002626" height="3" style="fill:#8c8c8c" id="connector1terminal" /><rect width="3" x="12.514442" y="0.0026272479" height="3" style="fill:#8c8c8c" id="rect3426" /><rect width="3" x="2.5144427" y="0.0026272479" height="3" style="fill:#8c8c8c" id="connector3terminal" /><g id="breadboard" transform="translate(-8.6238307e-7,0.00262725)"><g id="g3308" transform="translate(-0.98555629,0)"><rect width="3" x="3.5" y="26.319" height="6.6810002" style="fill:#8c8c8c" id="rect3310" /></g><g id="g3312" transform="translate(-0.98555629,0)"><rect width="3" x="13.5" y="26.319" height="6.6810002" style="fill:#8c8c8c" id="rect3314" /></g><g id="g3320" transform="translate(0.82150424,0.10487288)"><rect width="3" x="1.6929395" y="-0.10487288" height="6.6799998" style="fill:#8c8c8c" id="rect3322" /></g><g id="g3324" transform="translate(-0.98888988,0)"><rect width="3" x="13.5" y="0" height="6.6799998" style="fill:#8c8c8c" id="rect3326" /></g><polygon points="30,3 29.25,11.5 0,11.5 0,3 " style="fill:#f0eacc" id="polygon3332" transform="scale(0.60104985,1)" /><polygon points="29.25,21.5 30,30 0,30 0,21.5 " style="fill:#c2bda5" id="polygon3334" transform="scale(0.60104985,1)" /><polygon points="8.5,4.34 8.5,3.26 6.5,2.34 3.5,2.34 3.5,4.34 " style="fill:#8c8c8c" id="polygon3336" transform="translate(-0.98555618,0)" /><polygon points="26.5,2.34 23.5,2.34 21.5,3.26 21.5,4.34 26.5,4.34 " style="fill:#8c8c8c" id="polygon3340" transform="translate(-10.983334,0.01747881)" /><polygon points="3.5,28.66 3.5,30.66 6.5,30.66 8.5,29.74 8.5,28.66 " style="fill:#8c8c8c" id="polygon3342" transform="translate(-0.98555629,0)" /><polygon points="21.5,29.74 23.5,30.66 26.5,30.66 26.5,28.66 21.5,28.66 " style="fill:#8c8c8c" id="polygon3344" transform="translate(-10.983438,0)" /><polygon points="29.25,5.46 28.438,5.46 28.438,27.53 29.25,27.54 30,30 30,3 " style="fill:#c9c4ab" id="polygon3348" transform="translate(-11.972987,-0.01747881)" /><polygon points="0,3 0.75,5.46 0.75,11.5 5,11.5 5,21.5 0.75,21.5 0.75,27.54 0,30 " style="fill:#d6d2b6" id="polygon3350" /><polygon points="0.56,19.42 0.75,21.55 5,21.55 5,16.49 0.56,16.49 " style="fill:#e6e0c3" id="polygon3352" /><polygon points="5,16.49 5,11.5 0.75,11.46 0.56,13.58 0.56,16.49 " style="fill:#c4bfa6" id="polygon3354" /><path style="fill:#dbd6ba" id="path3356" d="m 0.75,5.46 v 5.99 c 1.3752278,0.45 2.4210943,2.529 2.4210943,5.04 0,2.51 -1.0400883,4.6 -2.4210943,5.05 v 5.99 H 17.218064 V 5.46 H 0.75 z" /><path style="fill:#ccc7ad" id="path3358" d="m 0.56,13.58 v 5.83 c 1.47,-0.17 2.62,-1.4 2.62,-2.92 0,-1.52 -1.14,-2.74 -2.62,-2.91 z" /><circle cx="6.5" cy="23.469999" style="fill:#c4bfa6" r="2.0599999" id="circle3360" d="m 8.5599999,23.469999 c 0,1.137707 -0.9222933,2.06 -2.0599999,2.06 -1.1377066,0 -2.0599999,-0.922293 -2.0599999,-2.06 0,-1.137706 0.9222933,-2.06 2.0599999,-2.06 1.1377066,0 2.0599999,0.922294 2.0599999,2.06 z" /><g id="g3362"><g style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans" id="text3382" xml:space="preserve" transform="scale(1.1111111,1.1111111)" /><g style="font-size:4.44444418px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans" id="text3394" xml:space="preserve"><text x="3.6355925" y="9.6483049" id="tspan3396">TLP</text></g><g style="font-size:4.44444418px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans" id="text3398" xml:space="preserve"><text x="7.5508461" y="15.241526" id="tspan3400">621</text></g></g><rect width="2.283637009697121" x="12.70319125047952" y="0.2765583351955528" fill="none" height="3.942987156369717" id="connector5pin" /></g><g style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans" id="text3378" xml:space="preserve" transform="matrix(1.1111111,0,0,1.1111111,-8.6238307e-7,0.00262725)" /><rect width="3" x="12.514442" y="0" height="4.3400002" style="fill:#8c8c8c" />
+</g>
+
 </svg>

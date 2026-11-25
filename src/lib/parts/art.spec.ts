@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { parseOverlays } from './overlays';
+import { LIVE_ART_TYPES, parseOverlays } from './overlays';
 import { PART_DEFS } from './registry';
 
 const ART_DIR = new URL('./art/', import.meta.url);
@@ -78,6 +78,16 @@ describe('part art', () => {
 			for (const match of text.matchAll(/<(?:rect|circle)\b[^>]*\bdata-overlay="[^"]+"[^>]*>/g)) {
 				expect(match[0], file).toContain('fill="none"');
 			}
+		}
+	});
+
+	it('keeps a runtime layer on every live part', () => {
+		// A plain part photo would freeze a display or a knob at one value.
+		for (const file of files) {
+			const type = file.slice(0, -'.svg'.length).split('--')[0];
+			if (!LIVE_ART_TYPES.has(type)) continue;
+			const text = readFileSync(new URL(file, ART_DIR), 'utf8');
+			expect(parseOverlays(text).length, file).toBeGreaterThan(0);
 		}
 	});
 

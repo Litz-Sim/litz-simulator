@@ -24,11 +24,14 @@
 	<circle cx="-82" cy="156" r="4.6" fill="#e9f5ef" stroke="#9fc4b0" stroke-width="1" />
 	<circle cx="82" cy="156" r="4.6" fill="#e9f5ef" stroke="#9fc4b0" stroke-width="1" />
 
-	<!-- USB-C -->
+	<!-- USB-C, seen from above: the opening is the thin dark band at the tip -->
 	<rect x="-19" y="-180" width="38" height="25" rx="5" fill="url(#usb)" stroke="#6f787e" stroke-width="1.1" />
-	<rect x="-12.5" y="-176" width="25" height="10" rx="5" fill="#394146" />
-	<rect x="-15" y="-175" width="2.4" height="8" rx="1" fill="#737d84" />
-	<rect x="12.6" y="-175" width="2.4" height="8" rx="1" fill="#737d84" />
+	<rect x="-15.5" y="-177" width="31" height="19" rx="9" fill="#d6dbdf" opacity="0.5" />
+	<path d="M0 -176 v17" stroke="#9ba3a9" stroke-width="0.5" opacity="0.5" />
+	<rect x="-12.5" y="-180" width="25" height="4.4" rx="2.2" fill="#191b1e" />
+	<rect x="-10" y="-176.4" width="20" height="1.2" rx="0.6" fill="#000" opacity="0.3" />
+	<rect x="-17.6" y="-173" width="2.4" height="8" rx="1" fill="#8b949a" />
+	<rect x="15.2" y="-173" width="2.4" height="8" rx="1" fill="#8b949a" />
 
 	<!-- BOOT and RESET -->
 	<g stroke-width="0.9">

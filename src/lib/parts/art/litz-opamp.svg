@@ -1,38 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-54 -48 108 96">
-	<defs>
-		<linearGradient id="metal" x1="-32" y1="-36" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-			<stop offset="0" stop-color="#f3f1ea" />
-			<stop offset="0.5" stop-color="#dcd9cd" />
-			<stop offset="1" stop-color="#b9b6a8" />
-		</linearGradient>
-	</defs>
-	<g stroke-linecap="round">
-		<g stroke="#6f767d" stroke-width="2">
-			<line x1="-46" y1="-16" x2="-32" y2="-16" />
-			<line x1="-46" y1="16" x2="-32" y2="16" />
-			<line x1="36" y1="0" x2="46" y2="0" />
-			<line x1="0" y1="-19" x2="0" y2="-40" />
-			<line x1="0" y1="19" x2="0" y2="40" />
-		</g>
-		<path d="M -32 -36 L 36 0 L -32 36 Z" fill="url(#metal)" stroke="#2b2f33" stroke-width="1.5" />
-		<g font-family="ui-sans-serif, system-ui, sans-serif" font-weight="bold" fill="#2b2f33" text-anchor="middle">
-			<text x="-24" y="-12" font-size="10">+</text>
-			<text x="-24" y="20" font-size="10">−</text>
-		</g>
-		<text x="10" y="3" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="7" font-weight="bold" letter-spacing="0.6" fill="#2b2f33">OPAMP</text>
-		<g fill="#e2e6e9" stroke="#8f979e" stroke-width="0.6">
-			<circle cx="-46" cy="-16" r="2.1" />
-			<circle cx="-46" cy="16" r="2.1" />
-			<circle cx="46" cy="0" r="2.1" />
-			<circle cx="0" cy="-40" r="2.1" />
-			<circle cx="0" cy="40" r="2.1" />
-		</g>
-		<g font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.2" fill="#565d64">
-			<text x="-52" y="-19" text-anchor="start">+</text>
-			<text x="-52" y="19" text-anchor="start">−</text>
-			<text x="52" y="-4" text-anchor="end">OUT</text>
-			<text x="4" y="-43" text-anchor="start">V+</text>
-			<text x="4" y="44" text-anchor="start">V−</text>
-		</g>
-	</g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-46.06 -47.37 92.13 94.74">
+<g transform="translate(-40.0050 -41.3694) scale(2.777778)">
+<desc id="0.0"><referenceFile id="0.0.0">AD8541_Breadboard.svg</referenceFile></desc><path fill="#237B3D" id="0.1" d="M-0.023,0v13.403v2.98v13.402h28.847V0H-0.023L-0.023,0z" /><g id="ICpins"><rect width="5.5" x="5.74" y="8.091" fill="#8C8C8C" height="1.874" id="0.2.0" /><rect width="5.5" x="5.74" y="11.997" fill="#8C8C8C" height="1.88" id="0.2.1" /><rect width="5.5" x="5.74" y="15.911" fill="#8C8C8C" height="1.875" id="0.2.2" /><rect width="5.5" x="5.74" y="19.817" fill="#8C8C8C" height="1.879" id="0.2.3" /><rect width="5.87" x="17.19" y="19.817" fill="#8C8C8C" height="1.879" id="0.2.4" /><rect width="5.87" x="17.19" y="15.911" fill="#8C8C8C" height="1.875" id="0.2.5" /><rect width="5.87" x="17.19" y="11.997" fill="#8C8C8C" height="1.88" id="0.2.6" /><rect width="5.87" x="17.19" y="8.091" fill="#8C8C8C" height="1.874" id="0.2.7" /></g><g id="IC"><rect width="10.698" x="9.05" y="7.623" fill="#303030" height="14.542" id="0.3.0" /><polygon fill="#1F2020" points="19.748,7.623 19.748,22.165 19.029,21.383 19.029,8.404 " id="0.3.1" /><polygon fill="#1F2020" points="9.05,7.623 9.05,22.165 9.802,21.383 9.802,8.404 " id="0.3.2" /><polygon fill="#010101" points="19.75,7.623 9.049,7.623 9.802,8.404 18.998,8.404 " id="0.3.3" /><polygon fill="#3E3E3E" points="19.748,22.165 9.051,22.165 9.803,21.383 18.996,21.383 " id="0.3.4" /><ellipse fill="#1F2020" cx="10.958" cy="9.53" rx="0.5" ry="0.5" id="0.3.5" /></g><g id="Connectors"><rect width="3.5" x="1.852" y="23.944" fill="#403619" height="3.5" stroke="#9A916C" id="0.4.0" stroke-width="1.5" /><circle fill="#403619" cx="3.602" cy="25.692" stroke="#9A916C" id="connector1pin" r="1.75" stroke-width="1.5" /><circle fill="#403619" cx="10.803" cy="25.694" stroke="#9A916C" id="connector2pin" r="1.75" stroke-width="1.5" /><circle fill="#403619" cx="18.001" cy="25.694" stroke="#9A916C" id="connector3pin" r="1.75" stroke-width="1.5" /><circle fill="#403619" cx="25.197" cy="25.692" stroke="#9A916C" id="connector4pin" r="1.75" stroke-width="1.5" /><circle fill="#403619" cx="25.199" cy="4.094" stroke="#9A916C" id="connector5pin" r="1.75" stroke-width="1.5" /><circle fill="#403619" cx="18" cy="4.094" stroke="#9A916C" id="connector6pin" r="1.75" stroke-width="1.5" /><circle fill="#403619" cx="10.803" cy="4.092" stroke="#9A916C" id="connector7pin" r="1.75" stroke-width="1.5" /><circle fill="#403619" cx="3.603" cy="4.091" stroke="#9A916C" id="connector8pin" r="1.75" stroke-width="1.5" /></g><g id="ADI Logo"><rect width="3.5" x="12.801" y="8.649" fill="#A6A395" height="3.5" id="0.5.0" /><polygon fill="#3D3D3D" points="13.236,9.21 15.861,9.21 14.539,11.727  " id="0.5.1" /></g><g id="0.6" transform="matrix(0 1 -1 0 16.8022 8.6499)"><text fill="#A69595" font-family="Droid Sans" id="0.6.0" font-size="3">AD8541</text></g><g id="0.7" transform="matrix(1 0 0 1 2.6021 22.3833)"><text fill="#D6D8D6" font-family="Droid Sans" id="0.7.0" font-size="5">1</text></g><g id="0.8" transform="matrix(0 -1 1 0 26.9468 21.3833)"><text fill="#D6D8D6" font-family="Droid Sans" id="0.8.0" font-size="5">IC5</text></g>
+</g>
+
 </svg>

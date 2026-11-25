@@ -20,7 +20,7 @@ export function blinkySketch(name: string): Sketch {
 			attrs: {}
 		},
 		{ id: 'r1', type: 'litz-resistor', x: 180, y: 40, rotate: 0, attrs: { value: '220' } },
-		{ id: 'led1', type: 'litz-led', x: 330, y: 118, rotate: 0, attrs: { color: 'red' } }
+		{ id: 'led1', type: 'litz-led', x: 330, y: 129, rotate: 0, attrs: { color: 'red' } }
 	];
 
 	const wire = (
@@ -46,18 +46,18 @@ export function blinkySketch(name: string): Sketch {
 				{ kind: 'hole', board: 'bb1', col: 7, row: 2 },
 				'#2f8f4e'
 			),
-			// The resistor's right leg (col 11) to the LED anode (col 16, row 8).
+			// The resistor's right leg (col 11) to the LED anode (col 17, row 8).
 			wire(
 				'w2',
 				{ kind: 'hole', board: 'bb1', col: 11, row: 2 },
-				{ kind: 'hole', board: 'bb1', col: 16, row: 8 },
+				{ kind: 'hole', board: 'bb1', col: 17, row: 8 },
 				'#c8352c'
 			),
-			// The cathode (col 17) back to ground. The bend keeps the wire out of
+			// The cathode (col 16) back to ground. The bend keeps the wire out of
 			// the hole columns on its way up.
 			wire(
 				'w3',
-				{ kind: 'hole', board: 'bb1', col: 17, row: 8 },
+				{ kind: 'hole', board: 'bb1', col: 16, row: 8 },
 				{ kind: 'pin', part: 'esp', pin: 'GND.1' },
 				'#2f3235',
 				[{ u: 0.014, v: 0 }]
