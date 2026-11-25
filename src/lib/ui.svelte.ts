@@ -1,4 +1,5 @@
-export type BottomTab = 'code' | 'serial' | 'plot' | 'screen' | 'analysis' | 'debug' | 'log';
+export type BottomTab =
+	'code' | 'serial' | 'plot' | 'screen' | 'analysis' | 'meter' | 'debug' | 'log';
 
 /** What the Enter key sends after the terminal translates it from CR. */
 export type SerialEnding = 'lf' | 'cr' | 'crlf';

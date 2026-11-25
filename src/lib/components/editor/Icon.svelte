@@ -16,6 +16,7 @@
 	import FileCode from '@lucide/svelte/icons/file-code';
 	import FilePlus from '@lucide/svelte/icons/file-plus';
 	import FolderOpen from '@lucide/svelte/icons/folder-open';
+	import Gauge from '@lucide/svelte/icons/gauge';
 	import Grid3x3 from '@lucide/svelte/icons/grid-3x3';
 	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
@@ -66,6 +67,7 @@
 		'file-plus': FilePlus,
 		fit: Maximize2,
 		folder: FolderOpen,
+		gauge: Gauge,
 		grid: Grid3x3,
 		loader: LoaderCircle,
 		log: ScrollText,

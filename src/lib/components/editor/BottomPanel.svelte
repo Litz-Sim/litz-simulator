@@ -13,6 +13,7 @@
 	} from '#lib/ui.svelte';
 	import AnalysisPanel from './AnalysisPanel.svelte';
 	import CodeFiles from './CodeFiles.svelte';
+	import MeterPanel from './MeterPanel.svelte';
 	import CodeEditor from './CodeEditor.svelte';
 	import DebugPanel from './DebugPanel.svelte';
 	import Icon from './Icon.svelte';
@@ -26,6 +27,7 @@
 		{ key: 'plot', label: m.panel_plot(), icon: 'chart' },
 		{ key: 'screen', label: m.panel_screen(), icon: 'monitor' },
 		{ key: 'analysis', label: m.panel_analysis(), icon: 'activity' },
+		{ key: 'meter', label: m.panel_meter(), icon: 'gauge' },
 		{ key: 'debug', label: m.panel_debug(), icon: 'bug' },
 		{ key: 'log', label: m.panel_log(), icon: 'log' }
 	];
@@ -227,6 +229,8 @@
 				<ScreenPanel />
 			{:else if ui.bottomTab === 'analysis'}
 				<AnalysisPanel />
+			{:else if ui.bottomTab === 'meter'}
+				<MeterPanel />
 			{:else if ui.bottomTab === 'debug'}
 				<DebugPanel />
 			{:else}

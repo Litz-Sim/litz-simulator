@@ -2,7 +2,7 @@
 
 Litz Breadboard is a browser-based breadboard editor built on the Litz simulation engine. The editing flow follows Wokwi, wires are strictly orthogonal like Fritzing, and the canvas layout takes cues from LCEDA (EasyEDA). You place boards and parts on a virtual breadboard, wire them up, and the editor derives the `diagram.json` that Litz consumes.
 
-Everything runs client-side. Simulation uses [`@litz-sim/litz`](https://www.npmjs.com/package/@litz-sim/litz) 0.6.2 compiled to WebAssembly: pressing Run boots one chip per board on the canvas, all chips share the same circuit, and serial output, LEDs, buttons, and seven-segment displays update live.
+Everything runs client-side. Simulation uses [`@litz-sim/litz`](https://www.npmjs.com/package/@litz-sim/litz) 0.6.3 compiled to WebAssembly: pressing Run boots one chip per board on the canvas, all chips share the same circuit, and serial output, LEDs, buttons, and seven-segment displays update live.
 
 ## Quick start
 
@@ -202,6 +202,7 @@ Each board boots its own image; a board that has no uploaded or built-in image s
 | Plot      | Plot up to four numeric channels parsed from the selected board's serial output.                                                                                                             |
 | Screen    | The circuit's whole-frame panels — OLED, TFT, e-paper, Nokia 5110, MAX7219 — at an integer zoom, with touch input for panels wired to an XPT2046.                                            |
 | Analysis  | Chip, clock, flash, heap, stop reason, fault, electrical conflicts, GPIO levels, probes, waveforms, protocol decoders, and VCD export.                                                       |
+| Meter     | Voltage or current from every multimeter on the canvas, with the mode switch beside each reading.                                                                                            |
 | Debug     | Instruction stepping, registers, disassembly, breakpoints, and memory, for every chip with a debug surface.                                                                                  |
 | Manifests | Edit custom TOML part and board descriptions; saved in browser storage and passed to the engine on restart.                                                                                  |
 | Log       | Timestamped engine events, including errors.                                                                                                                                                 |
@@ -209,6 +210,8 @@ Each board boots its own image; a board that has no uploaded or built-in image s
 The Serial panel is a terminal emulator, so arrow keys, Tab, Esc, and control keys reach the board instead of staying in the browser. Ctrl+C sends `^C` and Ctrl+D sends `^D`; to copy selected text, use ⌘C on macOS or the browser's context menu elsewhere. On touch screens a key strip adds Esc, Tab, `^C`, `^D`, and the arrow keys.
 
 The Analysis panel reads GPIO levels through hidden probes, so it works for every board. The probe tool (`P`) clips a probe to any part pin, including a development board's header pins and pins on parts away from the board; the label can be dragged and the probe renamed or recoloured in the inspector. Each probe reports frequency, duty cycle, voltage range, and a digital waveform. Decoders draw their frames in lanes under the probes, on the same scrollable time axis. Probes and decoders are reattached automatically after a restart.
+
+A multimeter is a part, not a probe. Place one, wire its red `+` lead and black `-` lead across a point to read volts, or in series with the path to read amps, and pick the mode in the inspector or the Meter panel. The reading comes from the analog solve; changing the mode while running reboots the session, because the mode is the meter's resistance.
 
 ### Debugger
 

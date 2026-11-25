@@ -399,5 +399,12 @@
 	"code_flash": "Board flash",
 	"storage_flash_hint": "Read from the board after a run.",
 	"storage_export_flash": "Export flash",
-	"analysis_frames": "Frames"
+	"analysis_frames": "Frames",
+	"panel_meter": "Meter",
+	"meter_hint": "A meter reads what its two leads are wired across.",
+	"meter_empty": "No multimeter on the canvas.",
+	"meter_add": "Add multimeter",
+	"meter_idle": "Run to take readings.",
+	"meter_voltage": "Voltage",
+	"meter_current": "Current"
 }

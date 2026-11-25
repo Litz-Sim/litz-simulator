@@ -125,6 +125,14 @@ export class LitzBackend implements SimBackend {
 		return this.#session?.partPin(id, pin) ?? null;
 	}
 
+	partVoltage(id: string, pin: string): number | null {
+		return this.#session?.partVoltage(id, pin) ?? null;
+	}
+
+	partCurrent(id: string): number | null {
+		return this.#session?.partCurrent(id) ?? null;
+	}
+
 	gpio(pin: number): Level | null {
 		return this.#session?.gpio(pin) ?? null;
 	}

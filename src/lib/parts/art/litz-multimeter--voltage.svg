@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -44 100 90">
+	<defs>
+		<linearGradient id="case" x1="0" y1="-40" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#f4c84f" />
+			<stop offset="1" stop-color="#d09a24" />
+		</linearGradient>
+	</defs>
+	<g stroke-linecap="round">
+		<rect x="-46" y="-40" width="92" height="64" rx="7" fill="url(#case)" stroke="#9c6f14" stroke-width="1.4" />
+
+		<rect x="-36" y="-33" width="72" height="28" rx="2" fill="#12241c" stroke="#0a1410" stroke-width="1" />
+		<text x="-30" y="-24" fill="#7ee2a8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="6">DC</text>
+		<text x="24" y="-15" fill="#7ee2a8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="19" text-anchor="end">V</text>
+
+		<circle cx="0" cy="12" r="8" fill="#3b4044" stroke="#16181a" stroke-width="1.2" />
+		<line x1="0" y1="12" x2="-5.4" y2="8.4" stroke="#e9edf1" stroke-width="1.6" />
+		<text x="-20" y="14.5" fill="#5b4410" font-family="ui-sans-serif, system-ui, sans-serif" font-size="7" text-anchor="middle">V</text>
+		<text x="20" y="14.5" fill="#5b4410" font-family="ui-sans-serif, system-ui, sans-serif" font-size="7" text-anchor="middle">A</text>
+
+		<line x1="-30" y1="24" x2="-30" y2="40" stroke="#c0392b" stroke-width="2.6" />
+		<line x1="30" y1="24" x2="30" y2="40" stroke="#2b2b2b" stroke-width="2.6" />
+		<circle cx="-30" cy="40" r="2.6" fill="#c0392b" />
+		<circle cx="30" cy="40" r="2.6" fill="#2b2b2b" />
+		<text x="-30" y="34" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="7" text-anchor="middle">+</text>
+		<text x="30" y="34" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="7" text-anchor="middle">−</text>
+	</g>
+</svg>

@@ -3,6 +3,7 @@ import { BOARD_PARTS } from './library/board-parts';
 import { COMMS_PARTS } from './library/comms';
 import { DISPLAY_PARTS } from './library/displays';
 import { INPUT_PARTS } from './library/inputs';
+import { INSTRUMENT_PARTS } from './library/instruments';
 import { LOGIC_PARTS } from './library/logic';
 import { OUTPUT_PARTS } from './library/outputs';
 import { SENSOR_PARTS } from './library/sensors';
@@ -428,7 +429,8 @@ const CATALOG: PartDef[] = [
 	...INPUT_PARTS,
 	...OUTPUT_PARTS,
 	...LOGIC_PARTS,
-	...COMMS_PARTS
+	...COMMS_PARTS,
+	...INSTRUMENT_PARTS
 ];
 
 /** A part draws from its SVG asset when it has one, and from its vector code otherwise. */

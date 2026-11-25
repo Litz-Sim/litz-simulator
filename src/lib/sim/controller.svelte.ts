@@ -581,6 +581,21 @@ class SimController {
 		return this.#backend.partPin(id, pin);
 	}
 
+	/** Volts across a meter's leads; null when either lead floats. */
+	meterVolts(id: string): number | null {
+		if (!this.running) return null;
+		const positive = this.#backend.partVoltage(id, '+');
+		const negative = this.#backend.partVoltage(id, '-');
+		if (positive === null || negative === null) return null;
+		return positive - negative;
+	}
+
+	/** Amperes through a meter wired in series; null when it is not solved. */
+	meterAmps(id: string): number | null {
+		if (!this.running) return null;
+		return this.#backend.partCurrent(id);
+	}
+
 	/** The board the debug panel is looking at. */
 	get debugBoardId(): string {
 		return this.boardRuntime[this.debugBoard]?.id ?? this.boardId;

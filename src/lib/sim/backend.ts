@@ -148,6 +148,10 @@ export interface SimBackend {
 	partState(id: string): PartState;
 	/** The level on one of a part's pins. */
 	partPin(id: string, pin?: string): Level | null;
+	/** Volts on a part pin from the analog solve; null when it floats. */
+	partVoltage(id: string, pin: string): number | null;
+	/** Amperes through a part's main element; null when it is not solved. */
+	partCurrent(id: string): number | null;
 	/** The level the chip sees on its own pad, by GPIO number. */
 	gpio(pin: number): Level | null;
 	/** The level one board sees on one of its own pads. */
@@ -231,6 +235,14 @@ export class NullBackend implements SimBackend {
 	}
 
 	partPin(): Level | null {
+		return null;
+	}
+
+	partVoltage(): number | null {
+		return null;
+	}
+
+	partCurrent(): number | null {
 		return null;
 	}
 

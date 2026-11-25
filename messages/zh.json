@@ -399,5 +399,12 @@
 	"code_flash": "板载 Flash",
 	"storage_flash_hint": "运行后从板子读取。",
 	"storage_export_flash": "导出 Flash",
-	"analysis_frames": "帧"
+	"analysis_frames": "帧",
+	"panel_meter": "万用表",
+	"meter_hint": "表笔接在哪里，就读哪里的值。",
+	"meter_empty": "画布上没有万用表。",
+	"meter_add": "放置万用表",
+	"meter_idle": "运行后才有读数。",
+	"meter_voltage": "电压",
+	"meter_current": "电流"
 }
