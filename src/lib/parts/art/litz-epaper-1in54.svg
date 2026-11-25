@@ -17,7 +17,7 @@
 			<line x1="37.5" y1="48" x2="37.5" y2="56" />
 			<line x1="52.5" y1="48" x2="52.5" y2="56" />
 		</g>
-		<rect x="-62" y="-54" width="124" height="102" rx="3" fill="url(#pcb)" stroke="#08090a" stroke-width="1.2" />
+		<rect x="-62" y="-54" width="124" height="106.5" rx="3" fill="url(#pcb)" stroke="#08090a" stroke-width="1.2" />
 		<rect x="-58.5" y="-50.5" width="117" height="95" rx="2" fill="none" stroke="#3a4044" stroke-width="0.7" opacity="0.55" />
 		<rect x="-56" y="-48" width="112" height="90" rx="1" fill="#ece9df" stroke="#c7c2b4" stroke-width="1" />
 		<rect x="-53" y="-45" width="106" height="84" rx="0.5" fill="none" stroke="#d8d3c6" stroke-width="0.6" />

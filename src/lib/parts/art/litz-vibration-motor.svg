@@ -1,6 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9.91 -9.61 19.82 19.22">
-<g transform="translate(-1.7559 -3.6056) scale(0.200000)">
-<g id="breadboard"><rect x="-4.804" y="15.659" fill="#CCCCCC" width="5.395" height="5.605" /><rect x="-4.804" y="15.659" fill="#E6E6E6" width="5.395" height="5.103" /><circle id="connector0pin" fill="none" cx="5.094" cy="34.328" r="1.755" /><circle id="connector1pin" fill="none" cx="-9.035" cy="34.328" r="1.755" /><g><polygon points="5.313,34.328 4.874,34.328 4.874,31.662 -7.107,31.662 -7.107,19.129 0.656,19.129 0.656,19.567 -6.669,19.567     -6.668,31.224 5.313,31.224   " /></g><g><polygon fill="#FF0000" points="-9.31,34.221 -9.31,16.875 0.525,16.875 0.525,17.312 -8.872,17.312 -8.871,34.221   " /></g><circle fill="#CCCCCC" cx="14.154" cy="18.292" r="14.153" /><path opacity="0.2" d="M0,17.839c0,7.817,6.337,14.154,14.153,14.154s14.153-6.337,14.153-14.154v0.453  c0,7.817-6.337,14.154-14.153,14.154S0,26.11,0,18.292V17.839z" /><rect x="0" y="13.375" fill="#CCCCCC" width="28.307" height="4.807" /><circle fill="#E6E6E6" cx="14.154" cy="14.153" r="14.153" /><path opacity="0.3" fill="#FFFFFF" d="M0,14.646C0,6.83,6.337,0.494,14.154,0.494c7.816,0,14.153,6.336,14.153,14.152v-0.493  C28.307,6.336,21.97,0,14.154,0C6.337,0,0,6.336,0,14.153V14.646z" /><path opacity="0.3" fill="#FFFFFF" d="M28.307,13.662c0,7.815-6.336,14.152-14.153,14.152C6.337,27.814,0,21.477,0,13.662v0.492  c0,7.816,6.337,14.153,14.153,14.153c7.817,0,14.153-6.337,14.153-14.153V13.662z" /><circle fill="#CCCCCC" cx="14.174" cy="14.173" r="0.799" /></g>
-</g>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50.0 -46.0 100.0 118.0">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-1" x2="0" y2="1">
+			<stop offset="0" stop-color="#343a6b"/><stop offset="1" stop-color="#2b2f57"/>
+		</linearGradient>
+		<linearGradient id="can" x1="0" y1="-1" x2="0" y2="1">
+			<stop offset="0" stop-color="#d3d8db"/><stop offset="1" stop-color="#979fa4"/>
+		</linearGradient>
+	</defs>
+	<circle cx="0" cy="0" r="39.4" fill="url(#can)" stroke="#6d757b" stroke-width="1.2"/>
+	<circle cx="0" cy="0" r="30" fill="none" stroke="#7d858b" stroke-width="0.6" opacity="0.6"/>
+	<path d="M 0 0 a 20 20 0 0 1 20 20 l -20 0 z" fill="#59636a" opacity="0.85"/>
+	<rect x="-11.6" y="34" width="3.2" height="22" fill="#20262a" stroke="#59636a" stroke-width="0.4"/>
+	<rect x="-14.50" y="50.5" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<rect x="8.4" y="34" width="3.2" height="22" fill="#20262a" stroke="#59636a" stroke-width="0.4"/>
+	<rect x="5.50" y="50.5" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="0.00" y="-6.00" fill="#e6e2d6" font-family="ui-sans-serif, system-ui, sans-serif" font-size="6.0" text-anchor="middle" dominant-baseline="middle" opacity="0.85">VIB</text>
 </svg>

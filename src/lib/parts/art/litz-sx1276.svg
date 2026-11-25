@@ -15,20 +15,17 @@
 		</linearGradient>
 	</defs>
 	<g stroke-linecap="round">
-		<rect x="-64" y="-62" width="128" height="108" rx="3" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.2" />
+		<rect x="-64" y="-62" width="128" height="125.5" rx="3" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.2" />
 		<circle cx="-56" cy="-54" r="2.3" fill="#0c3220" />
 		<circle cx="56" cy="-54" r="2.3" fill="#0c3220" />
-
 		<!-- wire antenna on the SMA -->
 		<line x1="56" y1="-58" x2="56" y2="-74" stroke="#b7bdc2" stroke-width="2.6" />
 		<circle cx="56" cy="-75" r="2" fill="#9aa2a7" />
 		<ellipse cx="56" cy="-47" rx="10" ry="9" fill="url(#sma)" stroke="#6f787e" stroke-width="1" />
 		<ellipse cx="56" cy="-47" rx="6" ry="5.4" fill="#d7dde3" stroke="#8b949a" stroke-width="0.8" />
 		<circle cx="56" cy="-47" r="2.3" fill="#3c4247" />
-
 		<!-- chip antenna meander -->
 		<path d="M-58 -44 v22 M-58 -44 h7 v8 h-7 M-58 -36 h7 M-51 -28 v-8 M-58 -22 h7 v8 h-7" fill="none" stroke="#d8b45a" stroke-width="1.4" />
-
 		<!-- RF shield -->
 		<rect x="-30" y="-54" width="62" height="44" rx="2.5" fill="url(#shield)" stroke="#6f787e" stroke-width="1.1" />
 		<g stroke="#a2aab0" stroke-width="0.7" opacity="0.8">
@@ -42,13 +39,10 @@
 		</g>
 		<rect x="-10" y="-44" width="36" height="16" rx="1.5" fill="#c3cad0" opacity="0.75" />
 		<text x="8" y="-34" font-family="ui-sans-serif, system-ui, sans-serif" font-size="5" font-weight="600" fill="#3c4247" text-anchor="middle">SX1276</text>
-
 		<rect x="-52" y="4" width="12" height="8" rx="1.2" fill="#1d2124" />
 		<rect x="40" y="2" width="10" height="7" rx="3" fill="#cfd5da" stroke="#7d858a" stroke-width="0.8" />
-
 		<text x="6" y="14" font-family="ui-sans-serif, system-ui, sans-serif" font-size="5" letter-spacing="1" fill="#c8f0d6" text-anchor="middle">LoRa</text>
 		<text x="6" y="21" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.2" fill="#9fc9ab" text-anchor="middle">868 MHz</text>
-
 		<!-- 9-pin header -->
 		<rect x="-66" y="46" width="132" height="10" rx="1.5" fill="#161616" />
 		<g stroke="#b7bdc2" stroke-width="2.2">

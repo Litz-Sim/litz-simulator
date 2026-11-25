@@ -6,34 +6,12 @@
 		</linearGradient>
 	</defs>
 	<g stroke-linecap="round">
-		<rect x="-70" y="-104" width="140" height="208" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.3" />
+		<rect x="-85.5" y="-104" width="171" height="208" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.3" />
 		<circle cx="-60" cy="-94" r="3" fill="#0c3220" />
 		<circle cx="60" cy="-94" r="3" fill="#0c3220" />
 		<circle cx="-60" cy="94" r="3" fill="#0c3220" />
 		<circle cx="60" cy="94" r="3" fill="#0c3220" />
-
 		<g stroke="#b7bdc2" stroke-width="2.4">
-			<line x1="-70" y1="-90" x2="-80" y2="-90" />
-			<line x1="-70" y1="-72" x2="-80" y2="-72" />
-			<line x1="-70" y1="-54" x2="-80" y2="-54" />
-			<line x1="-70" y1="-36" x2="-80" y2="-36" />
-			<line x1="-70" y1="-18" x2="-80" y2="-18" />
-			<line x1="-70" y1="0" x2="-80" y2="0" />
-			<line x1="-70" y1="18" x2="-80" y2="18" />
-			<line x1="-70" y1="36" x2="-80" y2="36" />
-			<line x1="-70" y1="54" x2="-80" y2="54" />
-			<line x1="-70" y1="72" x2="-80" y2="72" />
-			<line x1="-70" y1="90" x2="-80" y2="90" />
-			<line x1="70" y1="-90" x2="80" y2="-90" />
-			<line x1="70" y1="-72" x2="80" y2="-72" />
-			<line x1="70" y1="-54" x2="80" y2="-54" />
-			<line x1="70" y1="-36" x2="80" y2="-36" />
-			<line x1="70" y1="-18" x2="80" y2="-18" />
-			<line x1="70" y1="0" x2="80" y2="0" />
-			<line x1="70" y1="18" x2="80" y2="18" />
-			<line x1="70" y1="36" x2="80" y2="36" />
-			<line x1="70" y1="54" x2="80" y2="54" />
-			<line x1="70" y1="72" x2="80" y2="72" />
 		</g>
 		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
 			<rect x="-82.5" y="-93" width="5" height="6" rx="1" />
@@ -58,7 +36,6 @@
 			<rect x="77.5" y="51" width="5" height="6" rx="1" />
 			<rect x="77.5" y="69" width="5" height="6" rx="1" />
 		</g>
-
 		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.4">
 			<text x="-64" y="-87.5">VCC</text>
 			<text x="-64" y="-69.5">GND</text>
@@ -82,7 +59,6 @@
 			<text x="64" y="56.5" text-anchor="end">PWM14</text>
 			<text x="64" y="74.5" text-anchor="end">PWM15</text>
 		</g>
-
 		<!-- TSSOP-28 -->
 		<rect x="-28" y="-30" width="56" height="60" rx="2.5" fill="#1d2124" stroke="#0a0c0d" stroke-width="1.2" />
 		<circle cx="-21" cy="-23" r="1.8" fill="#c9b06a" />

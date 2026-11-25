@@ -10,42 +10,14 @@
 		</linearGradient>
 	</defs>
 	<g stroke-linecap="round">
-		<rect x="-70" y="-122" width="140" height="244" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.3" />
+		<rect x="-85.5" y="-122" width="171" height="244" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.3" />
 		<circle cx="-60" cy="-112" r="3" fill="#0c3220" />
 		<circle cx="60" cy="-112" r="3" fill="#0c3220" />
 		<circle cx="-60" cy="112" r="3" fill="#0c3220" />
 		<circle cx="60" cy="112" r="3" fill="#0c3220" />
-
 		<text x="0" y="-104" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.2" letter-spacing="1.4" fill="#c8f0d6" text-anchor="middle">I2C GPIO EXPANDER</text>
-
 		<!-- 26 breakout pads, 13 a side -->
 		<g stroke="#b7bdc2" stroke-width="2.4">
-			<line x1="-70" y1="-108" x2="-80" y2="-108" />
-			<line x1="-70" y1="-90" x2="-80" y2="-90" />
-			<line x1="-70" y1="-72" x2="-80" y2="-72" />
-			<line x1="-70" y1="-54" x2="-80" y2="-54" />
-			<line x1="-70" y1="-36" x2="-80" y2="-36" />
-			<line x1="-70" y1="-18" x2="-80" y2="-18" />
-			<line x1="-70" y1="0" x2="-80" y2="0" />
-			<line x1="-70" y1="18" x2="-80" y2="18" />
-			<line x1="-70" y1="36" x2="-80" y2="36" />
-			<line x1="-70" y1="54" x2="-80" y2="54" />
-			<line x1="-70" y1="72" x2="-80" y2="72" />
-			<line x1="-70" y1="90" x2="-80" y2="90" />
-			<line x1="-70" y1="108" x2="-80" y2="108" />
-			<line x1="70" y1="-108" x2="80" y2="-108" />
-			<line x1="70" y1="-90" x2="80" y2="-90" />
-			<line x1="70" y1="-72" x2="80" y2="-72" />
-			<line x1="70" y1="-54" x2="80" y2="-54" />
-			<line x1="70" y1="-36" x2="80" y2="-36" />
-			<line x1="70" y1="-18" x2="80" y2="-18" />
-			<line x1="70" y1="0" x2="80" y2="0" />
-			<line x1="70" y1="18" x2="80" y2="18" />
-			<line x1="70" y1="36" x2="80" y2="36" />
-			<line x1="70" y1="54" x2="80" y2="54" />
-			<line x1="70" y1="72" x2="80" y2="72" />
-			<line x1="70" y1="90" x2="80" y2="90" />
-			<line x1="70" y1="108" x2="80" y2="108" />
 		</g>
 		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
 			<rect x="-82.5" y="-111" width="5" height="6" rx="1" />
@@ -75,7 +47,6 @@
 			<rect x="77.5" y="87" width="5" height="6" rx="1" />
 			<rect x="77.5" y="105" width="5" height="6" rx="1" />
 		</g>
-
 		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.6">
 			<text x="-64" y="-105.5">VCC</text>
 			<text x="-64" y="-87.5">GND</text>
@@ -104,7 +75,6 @@
 			<text x="64" y="92.5" text-anchor="end">GPB6</text>
 			<text x="64" y="110.5" text-anchor="end">GPB7</text>
 		</g>
-
 		<!-- DIP-28 body -->
 		<rect x="-36" y="-66" width="72" height="132" rx="3" fill="url(#dip)" stroke="#0b0c0d" stroke-width="1.3" />
 		<path d="M-10 -66 a10 10 0 0 0 20 0" fill="none" stroke="#0b0c0d" stroke-width="1.8" />

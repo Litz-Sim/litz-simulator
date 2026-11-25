@@ -1,6 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13.26 -8.94 26.52 17.88">
-<g transform="translate(-7.2576 -2.9376) scale(0.200000)">
-<g id="breadboard"><circle id="connector0pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="3.888" cy="25.488" r="1.512" /><circle id="connector1pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="11.088" cy="25.488" r="1.512" /><circle id="connector6pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="47.088" cy="25.488" r="1.512" /><circle id="connector7pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="54.288" cy="25.488" r="1.512" /><circle id="connector2pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="18.288" cy="25.488" r="1.512" /><circle id="connector3pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="25.488" cy="25.488" r="1.512" /><circle id="connector5pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="39.888" cy="25.488" r="1.512" /><circle id="connector4pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="32.688" cy="25.488" r="1.512" /><circle id="connector8pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="61.487" cy="25.488" r="1.512" /><circle id="connector9pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="68.688" cy="25.488" r="1.512" /><circle id="connector10pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="68.688" cy="3.888" r="1.512" /><circle id="connector11pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="61.487" cy="3.888" r="1.512" /><circle id="connector12pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="54.288" cy="3.888" r="1.512" /><circle id="connector13pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="47.088" cy="3.888" r="1.512" /><circle id="connector14pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="39.888" cy="3.888" r="1.512" /><circle id="connector15pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="32.688" cy="3.888" r="1.512" /><circle id="connector16pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="25.488" cy="3.888" r="1.512" /><circle id="connector17pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="18.288" cy="3.888" r="1.512" /><circle id="connector18pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="11.088" cy="3.888" r="1.512" /><circle id="connector19pin" fill="none" stroke="#9A916C" stroke-width="0.254" cx="3.888" cy="3.888" r="1.512" /><rect x="0.044" y="0.065" fill="#333333" width="71.296" height="25.489" /><polygon fill="#CCCCCC" points="71.979,21.976 71.979,6.747 72.62,5.749 72.62,4.065 71.34,0.065 71.34,25.375 72.62,29.375   72.62,25.977 " /><polygon fill="#808080" points="7.4,27.855 66.102,27.855 67.639,29.375 72.576,29.375 71.34,25.554 0.044,25.554 1.044,29.375   5.325,29.375 " /><path opacity="0.2" fill="#993D3D" d="M71.34,8.875c0,0-10.302-1-20.927-1S25.898,9.438,17.718,9.438S-0.038,8.875-0.038,8.875  l0.082-8.81H71.34V8.875z" /><path opacity="0.2" fill="#4C0E0E" d="M71.34,25.554H0.044l0.027-6.929c0,0,9.93,0.896,19.729,0.896  c11.688,0,25.477-1.583,29.738-1.583c7.834,0,21.802,0.667,21.802,0.667V25.554z" /><g><g><rect x="64.723" y="5.536" fill="#FF1000" width="4.986" height="14.549" /></g><g><rect x="57.717" y="5.536" fill="#E6E6E6" width="4.986" height="14.549" /></g><g><rect x="50.712" y="5.536" fill="#FF1000" width="4.986" height="14.549" /></g><g><rect x="43.706" y="5.536" fill="#E6E6E6" width="4.986" height="14.549" /></g><g><rect x="36.702" y="5.536" fill="#FF1000" width="4.986" height="14.549" /></g><g><rect x="29.696" y="5.536" fill="#E6E6E6" width="4.986" height="14.549" /></g><g><rect x="22.691" y="5.536" fill="#FF1000" width="4.986" height="14.549" /></g><g><rect x="15.686" y="5.536" fill="#E6E6E6" width="4.986" height="14.549" /></g><g><rect x="8.68" y="5.536" fill="#F2F2F2" width="4.986" height="14.549" /></g><g><rect x="1.675" y="5.536" fill="#FF1000" width="4.986" height="14.549" /></g></g></g>
-</g>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-46.0 -108.0 92.0 216.0">
+	<defs>
+		<linearGradient id="pcb" x1="0" y1="-1" x2="0" y2="1">
+			<stop offset="0" stop-color="#343a6b"/><stop offset="1" stop-color="#2b2f57"/>
+		</linearGradient>
+		<linearGradient id="can" x1="0" y1="-1" x2="0" y2="1">
+			<stop offset="0" stop-color="#d3d8db"/><stop offset="1" stop-color="#979fa4"/>
+		</linearGradient>
+	</defs>
+	<rect x="-26" y="-100" width="52" height="200" rx="3" fill="#20262a" stroke="#0c0f11" stroke-width="0.9"/>
+	<rect x="-20" y="83.0" width="40" height="14" rx="2" fill="#d93b3b" opacity="0.9"/>
+	<rect x="-20" y="63.0" width="40" height="14" rx="2" fill="#d9743b" opacity="0.9"/>
+	<rect x="-20" y="43.0" width="40" height="14" rx="2" fill="#d9a53b" opacity="0.9"/>
+	<rect x="-20" y="23.0" width="40" height="14" rx="2" fill="#c9d93b" opacity="0.9"/>
+	<rect x="-20" y="3.0" width="40" height="14" rx="2" fill="#78d93b" opacity="0.9"/>
+	<rect x="-20" y="-17.0" width="40" height="14" rx="2" fill="#3bd97a" opacity="0.9"/>
+	<rect x="-20" y="-37.0" width="40" height="14" rx="2" fill="#3bd9c4" opacity="0.9"/>
+	<rect x="-20" y="-57.0" width="40" height="14" rx="2" fill="#3b9ed9" opacity="0.9"/>
+	<rect x="-20" y="-77.0" width="40" height="14" rx="2" fill="#3b5ad9" opacity="0.9"/>
+	<rect x="-20" y="-97.0" width="40" height="14" rx="2" fill="#8b3bd9" opacity="0.9"/>
+	<rect x="-34.50" y="-94.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="-90.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">1</text>
+	<rect x="-34.50" y="-74.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="-70.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">2</text>
+	<rect x="-34.50" y="-54.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="-50.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">3</text>
+	<rect x="-34.50" y="-34.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="-30.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">4</text>
+	<rect x="-34.50" y="-14.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="-10.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">5</text>
+	<rect x="-34.50" y="5.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="10.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">6</text>
+	<rect x="-34.50" y="25.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="30.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">7</text>
+	<rect x="-34.50" y="45.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="50.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">8</text>
+	<rect x="-34.50" y="65.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="70.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">9</text>
+	<rect x="-34.50" y="85.50" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="-42.00" y="90.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.4" text-anchor="middle" dominant-baseline="middle" opacity="0.9">10</text>
+	<rect x="25.50" y="-4.5" width="9" height="9" rx="4.5" fill="#cba552" stroke="#7d6224" stroke-width="0.4"/>
+	<text x="40.00" y="0.00" fill="#57534e" font-family="ui-sans-serif, system-ui, sans-serif" font-size="4.6" text-anchor="middle" dominant-baseline="middle" opacity="0.9">C</text>
 </svg>

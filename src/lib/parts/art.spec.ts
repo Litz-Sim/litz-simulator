@@ -7,6 +7,37 @@ const ART_DIR = new URL('./art/', import.meta.url);
 const files = readdirSync(ART_DIR).filter((name) => name.endsWith('.svg'));
 const byType = new Map(PART_DEFS.map((def) => [def.type, def]));
 
+const PAD_FILLS = ['#d5af52', '#cba552'];
+
+interface Rect {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+	fill: string;
+}
+
+function rects(text: string): Rect[] {
+	const tags: { tag: string; fill: string }[] = [];
+	for (const match of text.matchAll(/<rect\b[^>]*>/g)) {
+		const fill = /fill="([^"]+)"/.exec(match[0])?.[1] ?? '';
+		tags.push({ tag: match[0], fill });
+	}
+	// A gold group paints its rects the same colour, so they are pads too.
+	for (const group of text.matchAll(/<g\b[^>]*fill="([^"]+)"[^>]*>([\s\S]*?)<\/g>/g)) {
+		for (const match of group[2].matchAll(/<rect\b[^>]*>/g)) {
+			tags.push({ tag: match[0], fill: group[1] });
+		}
+	}
+	return tags.map(({ tag, fill }) => {
+		const rect: Rect = { x: 0, y: 0, width: 0, height: 0, fill };
+		for (const match of tag.matchAll(/(?:^|\s)(x|y|width|height)="(-?[\d.]+)"/g)) {
+			rect[match[1] as 'x' | 'y' | 'width' | 'height'] = Number(match[2]);
+		}
+		return rect;
+	});
+}
+
 function box(text: string): { x: number; y: number; w: number; h: number } | null {
 	const match = /viewBox\s*=\s*"([^"]+)"/.exec(text);
 	if (!match) return null;
@@ -48,6 +79,28 @@ describe('part art', () => {
 				expect(pin.x, `${file} pin ${pin.name}`).toBeLessThanOrEqual(view.x + view.w);
 				expect(pin.y, `${file} pin ${pin.name}`).toBeGreaterThanOrEqual(view.y);
 				expect(pin.y, `${file} pin ${pin.name}`).toBeLessThanOrEqual(view.y + view.h);
+			}
+		}
+	});
+
+	it('keeps every header pad on the board', () => {
+		// A pad drawn past the board edge reads as a loose square at the end of a
+		// header leg, not as a solder point on the PCB.
+		for (const file of files) {
+			const all = rects(readFileSync(new URL(file, ART_DIR), 'utf8'));
+			const board = all.find((rect) => rect.fill === 'url(#pcb)');
+			if (!board) continue;
+			const pads = all.filter((rect) => PAD_FILLS.includes(rect.fill));
+			expect(pads.length, file).toBeGreaterThan(0);
+			for (const pad of pads) {
+				const cx = pad.x + pad.width / 2;
+				const cy = pad.y + pad.height / 2;
+				const inside =
+					cx >= board.x - 0.5 &&
+					cx <= board.x + board.width + 0.5 &&
+					cy >= board.y - 0.5 &&
+					cy <= board.y + board.height + 0.5;
+				expect(inside, `${file} pad at ${cx},${cy}`).toBe(true);
 			}
 		}
 	});

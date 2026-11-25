@@ -9,66 +9,10 @@ import { OUTPUT_PARTS } from './library/outputs';
 import { SENSOR_PARTS } from './library/sensors';
 import { withArt } from './svgArt.svelte';
 import { withFritzingGeometry } from './fritzing-geometry';
-import type { PartDef, PinDef } from './types';
-
-/** Header names that reach a GPIO without spelling it out. */
-const BOARD_ALIASES: Record<string, number> = { TX: 21, RX: 20 };
-
-function boardPin(name: string, x: number, y: number): PinDef {
-	const match = /^GPIO(\d+)$/.exec(name);
-	const gpio = match ? Number(match[1]) : BOARD_ALIASES[name];
-	return gpio === undefined ? { name, x, y } : { name, x, y, gpio };
-}
-
-function devBoard(
-	type: string,
-	name: string,
-	keyword: string,
-	left: string[],
-	right: string[],
-	chip: string
-): PartDef {
-	const rows = Math.max(left.length, right.length);
-	const top = -((rows - 1) * 20) / 2;
-	const pins: PinDef[] = [];
-	left.forEach((pin, i) => pins.push(boardPin(pin, -89, top + i * 20)));
-	right.forEach((pin, i) => pins.push(boardPin(pin, 89, top + i * 20)));
-	return {
-		type,
-		name,
-		category: 'Boards',
-		keywords: [keyword, 'board', 'mcu', 'devkit'],
-		width: 190,
-		height: 250,
-		pins,
-		attrs: [],
-		chip,
-		draw: (ctx, _part, zoom) => art.drawDevBoard(ctx, { left, right }, name, zoom)
-	};
-}
+import type { PartDef } from './types';
 
 const CATALOG: PartDef[] = [
 	...BOARD_PARTS,
-	devBoard(
-		'board-esp32-c3-devkitm-1',
-		'ESP32-C3 DevKitM',
-		'esp32',
-		['3V3', '5V', 'GND.1', 'GND.2', 'GPIO0', 'GPIO1', 'GPIO2', 'GPIO3', 'GPIO4', 'GPIO5'],
-		[
-			'GPIO6',
-			'GPIO7',
-			'GPIO8',
-			'GPIO9',
-			'GPIO10',
-			'GPIO18',
-			'GPIO19',
-			'GPIO20',
-			'GPIO21',
-			'TX',
-			'RX'
-		],
-		'esp32c3'
-	),
 	{
 		type: 'litz-led',
 		name: 'LED 5 mm',

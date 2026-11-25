@@ -11,10 +11,9 @@
 		</linearGradient>
 	</defs>
 	<g stroke-linecap="round">
-		<rect x="-36" y="-44" width="72" height="78" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.2" />
+		<rect x="-36" y="-44" width="72" height="91" rx="4" fill="url(#pcb)" stroke="#0f3f24" stroke-width="1.2" />
 		<circle cx="-30" cy="-38" r="2.4" fill="#0c3220" />
 		<circle cx="30" cy="-38" r="2.4" fill="#0c3220" />
-
 		<rect x="-24" y="-24" width="22" height="17" rx="1.5" fill="#171a1c" stroke="#000" stroke-width="0.8" />
 		<rect x="-21" y="-21" width="16" height="11" rx="0.8" fill="url(#glass)" stroke="#6d8fa6" stroke-width="0.7" />
 		<g fill="#54705d">
@@ -24,23 +23,16 @@
 		<g stroke="#f0c33c" stroke-width="1.5" fill="none" opacity="0.8">
 			<path d="M-32 -28 l7 6" /><path d="M-28 -32 l7 6" />
 		</g>
-
 		<rect x="6" y="-18" width="16" height="12" rx="1.4" fill="#1d2124" stroke="#0a0c0d" stroke-width="0.8" />
 		<circle cx="9" cy="-15" r="1.1" fill="#5e666b" />
 		<rect x="-30" y="2" width="9" height="5" rx="1" fill="#1d2124" />
 		<rect x="10" y="2" width="12" height="6" rx="1" fill="#2a2e31" />
-
-		<line x1="-30" y1="34" x2="-30" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
-		<line x1="-10" y1="34" x2="-10" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
-		<line x1="10" y1="34" x2="10" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
-		<line x1="30" y1="34" x2="30" y2="42" stroke="#b7bdc2" stroke-width="2.6" />
 		<g fill="#d5af52" stroke="#a8843a" stroke-width="0.6">
 			<rect x="-33.5" y="38" width="7" height="6" rx="1" />
 			<rect x="-13.5" y="38" width="7" height="6" rx="1" />
 			<rect x="6.5" y="38" width="7" height="6" rx="1" />
 			<rect x="26.5" y="38" width="7" height="6" rx="1" />
 		</g>
-
 		<g fill="#d6f2de" font-family="ui-sans-serif, system-ui, sans-serif" font-size="3.8" text-anchor="middle">
 			<text x="-30" y="27">VCC</text>
 			<text x="-10" y="27">GND</text>
