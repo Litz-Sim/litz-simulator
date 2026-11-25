@@ -8,6 +8,16 @@
 	}
 }
 
+/*
+ * @tailwindcss/forms paints the chevron eight pixels in from the right edge and
+ * leaves room with `padding-right`. A component that sets its own horizontal
+ * padding would put the label under the arrow, so the room is restored here
+ * (unlayered, and therefore stronger than the utility classes).
+ */
+select:not([multiple]) {
+	padding-right: 2rem;
+}
+
 /* Taps stay taps: no double-tap zoom or grey flash on the editor chrome. */
 button,
 input,
