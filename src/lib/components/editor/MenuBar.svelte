@@ -275,6 +275,7 @@
 					checked: () => sim.analog,
 					run: () => sim.setAnalog(!sim.analog)
 				},
+				{ label: m.menu_connect_cli(), run: () => (ui.linkOpen = true) },
 				{ label: m.menu_load_firmware(), run: () => firmwareInput.click() },
 				{ label: m.menu_load_bootloader(), run: () => chooseAux('boot') },
 				{ label: m.menu_load_partition(), run: () => chooseAux('ptable') },

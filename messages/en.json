@@ -406,5 +406,19 @@
 	"meter_add": "Add multimeter",
 	"meter_idle": "Run to take readings.",
 	"meter_voltage": "Voltage",
-	"meter_current": "Current"
+	"meter_current": "Current",
+	"menu_connect_cli": "Connect to CLI…",
+	"link_title": "Command line",
+	"link_hint": "Paste the URL litz connect-editor prints.",
+	"link_connect": "Connect",
+	"link_disconnect": "Disconnect",
+	"link_build": "Build",
+	"link_building": "Building…",
+	"link_all_boards": "All boards",
+	"link_online": "Connected",
+	"link_connecting": "Connecting…",
+	"link_offline": "Offline",
+	"link_bad_url": "That is not an attach URL.",
+	"link_unreachable": "Cannot reach the link.",
+	"link_build_failed": "The build failed."
 }

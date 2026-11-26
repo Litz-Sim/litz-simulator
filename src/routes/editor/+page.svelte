@@ -6,6 +6,7 @@
 	import { m } from '#lib/paraglide/messages.js';
 	import BottomPanel from '#lib/components/editor/BottomPanel.svelte';
 	import CanvasView from '#lib/components/editor/CanvasView.svelte';
+	import EditorLinkDialog from '#lib/components/editor/EditorLinkDialog.svelte';
 	import ExamplesDialog from '#lib/components/editor/ExamplesDialog.svelte';
 	import Icon from '#lib/components/editor/Icon.svelte';
 	import Inspector from '#lib/components/editor/Inspector.svelte';
@@ -228,6 +229,7 @@
 	<BottomPanel />
 	<StatusBar />
 	<SettingsDialog />
+	<EditorLinkDialog />
 	<ExamplesDialog />
 	<ProjectInfoDialog />
 </div>

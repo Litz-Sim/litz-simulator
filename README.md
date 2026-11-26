@@ -193,6 +193,12 @@ A session can hold any number of boards. Each board has its own UART, GPIO state
 
 Each board boots its own image; a board that has no uploaded or built-in image stops the run with an error rather than borrowing another board's firmware. The display panel draws the first board's framebuffer.
 
+### Building from the command line
+
+The editor cannot compile firmware, and the CLI cannot draw a circuit. `litz connect-editor` joins the two on one machine: it prints one line, `ws://127.0.0.1:4317/ws#CODE`, which pastes into the Simulation menu's **Connect to CLI** dialog as-is. Once attached, **Build** in that dialog runs the project's `litz.build.toml` recipe and streams its output; a `litz build --push` from a terminal does the same build and sends its result without pressing anything.
+
+The image is named by its SHA-256 and fetched over the same loopback port, then booted on the board whose id it carries, or on the selected board. The link is loopback-only and every route checks the pairing code, which travels in the URL fragment and therefore never reaches the daemon. It is a development convenience on the same machine; moving a project between devices is a separate storage question, and this is not one.
+
 ### Bottom panels
 
 | Panel     | Purpose                                                                                                                                                                                      |

@@ -2,7 +2,9 @@
 	import { canvasStatus } from '#lib/canvas/status.svelte';
 	import { m } from '#lib/paraglide/messages.js';
 	import { sim } from '#lib/sim/controller.svelte';
+	import { link } from '#lib/sim/editorLink.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
+	import { ui } from '#lib/ui.svelte';
 	import Icon from './Icon.svelte';
 
 	const saveLabel = $derived(
@@ -60,6 +62,17 @@
 		<span class="hidden text-stone-500 sm:inline">
 			{m.status_speed({ value: sim.speed === 0 ? '∞' : sim.speed })}
 		</span>
+	{/if}
+	{#if link.status === 'online'}
+		<button
+			type="button"
+			class="flex items-center gap-1 text-emerald-700 hover:text-emerald-800"
+			title={m.link_title()}
+			onclick={() => (ui.linkOpen = true)}
+		>
+			<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+			CLI{link.project ? ` · ${link.project}` : ''}
+		</button>
 	{/if}
 	<div class="ml-auto flex items-center gap-3">
 		<span class="hidden text-stone-500 sm:inline">

@@ -8,6 +8,8 @@ interface UiState {
 	settingsOpen: boolean;
 	projectOpen: boolean;
 	examplesOpen: boolean;
+	/** The connect dialog for `litz connect-editor`. */
+	linkOpen: boolean;
 	bottomOpen: boolean;
 	bottomTab: BottomTab;
 	/** Height in pixels of the open bottom panel; dragging the divider changes it. */
@@ -30,6 +32,7 @@ export const ui: UiState = $state({
 	settingsOpen: false,
 	projectOpen: false,
 	examplesOpen: false,
+	linkOpen: false,
 	bottomOpen: true,
 	bottomTab: 'code',
 	bottomHeight: 216,

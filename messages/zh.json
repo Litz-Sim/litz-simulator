@@ -406,5 +406,19 @@
 	"meter_add": "放置万用表",
 	"meter_idle": "运行后才有读数。",
 	"meter_voltage": "电压",
-	"meter_current": "电流"
+	"meter_current": "电流",
+	"menu_connect_cli": "连接命令行…",
+	"link_title": "命令行",
+	"link_hint": "粘贴 litz connect-editor 打印的地址。",
+	"link_connect": "连接",
+	"link_disconnect": "断开",
+	"link_build": "构建",
+	"link_building": "构建中…",
+	"link_all_boards": "全部板子",
+	"link_online": "已连接",
+	"link_connecting": "连接中…",
+	"link_offline": "未连接",
+	"link_bad_url": "这不是连接地址。",
+	"link_unreachable": "连不上链接。",
+	"link_build_failed": "构建失败。"
 }
