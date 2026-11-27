@@ -82,7 +82,13 @@ Browser storage is local to one browser and one origin. It does not sync between
 
 ### Projects in a bucket
 
-File → Projects… keeps projects in an S3 bucket instead. Settings → Storage takes the endpoint (`https://s3.us-east-1.amazonaws.com`, or any S3-compatible server), region, bucket, prefix, access key, and secret key; **Test** lists the bucket to confirm they work. The keys are stored in this browser's `localStorage` and the page signs each request itself, because there is no server here to hold them.
+File → Projects… keeps projects in an S3 bucket instead. Settings → Storage takes a provider, bucket, prefix, access key, and secret key; **Test** lists the bucket to confirm they work. The keys are stored in this browser's `localStorage` and the page signs each request itself, because there is no server here to hold them.
+
+For Amazon S3 or another S3-compatible server, the provider asks for the endpoint (`https://s3.us-east-1.amazonaws.com`) and region. For **Cloudflare R2** it asks for the account ID alone, builds `https://<account>.r2.cloudflarestorage.com`, and signs with region `auto`. An R2 setup needs three pieces from the Cloudflare dashboard:
+
+1. A bucket, from R2 → Create bucket.
+2. An API token, from R2 → Manage R2 API Tokens → Create API token with **Object Read & Write** on that bucket. Its Access Key ID and Secret Access Key go into Storage.
+3. A CORS policy on the bucket (Settings → CORS policy). **Copy CORS** in the Storage section puts the right policy on the clipboard, with the page's own origin filled in; when the editor also runs on `localhost`, run it from both origins and merge the two lists.
 
 Saving writes `Name.litzproject.json` under the prefix. Once a project is attached, every edit uploads two seconds after it settles, and <kbd>⌘S</kbd> uploads immediately; the status bar shows `S3`, `S3 ↑` while a save is in flight, and `S3 !` with the error when one fails. The dialog lists objects newest first with their size and timestamp, and can open or delete them. Opening replaces the workspace like File → Import project.
 

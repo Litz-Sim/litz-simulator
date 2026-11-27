@@ -450,5 +450,11 @@
 	"settings_storage_keys": "Keys stay in this browser.",
 	"status_storage": "S3",
 	"status_storage_saving": "S3 ↑",
-	"status_storage_error": "S3 !"
+	"status_storage_error": "S3 !",
+	"settings_provider": "Provider",
+	"settings_provider_s3": "Amazon S3 or compatible",
+	"settings_provider_r2": "Cloudflare R2",
+	"settings_account": "Account ID",
+	"settings_copy_cors": "Copy CORS",
+	"settings_copied": "Copied"
 }

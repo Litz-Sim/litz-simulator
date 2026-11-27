@@ -48,6 +48,17 @@ export function configured(settings: S3Settings): boolean {
 	);
 }
 
+/** The S3 endpoint Cloudflare R2 serves an account at. */
+export function r2Endpoint(account: string): string {
+	return `https://${account.trim()}.r2.cloudflarestorage.com`;
+}
+
+/** The account id inside an R2 endpoint, or null for any other server. */
+export function r2Account(endpoint: string): string | null {
+	const match = /^https:\/\/([0-9a-f]{32})\.r2\.cloudflarestorage\.com\/?$/i.exec(endpoint.trim());
+	return match ? match[1] : null;
+}
+
 /** The object name a project is stored under: `Name.litzproject.json`. */
 export function projectFile(name: string): string {
 	const clean = name

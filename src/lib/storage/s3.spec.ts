@@ -6,6 +6,8 @@ import {
 	parseListing,
 	projectFile,
 	projectName,
+	r2Account,
+	r2Endpoint,
 	S3Error,
 	S3Store,
 	type S3Settings
@@ -38,6 +40,17 @@ describe('project keys', () => {
 		expect(objectKey('Blinky', '')).toBe('Blinky.litzproject.json');
 		expect(projectName('team/demo/Blinky.litzproject.json', 'team/demo')).toBe('Blinky');
 		expect(projectName('Blinky.litzproject.json', '')).toBe('Blinky');
+	});
+});
+
+describe('R2', () => {
+	it('turns an account id into an endpoint and back', () => {
+		const id = '0123456789abcdef0123456789abcdef';
+		expect(r2Endpoint(id)).toBe(`https://${id}.r2.cloudflarestorage.com`);
+		expect(r2Endpoint(` ${id} `)).toBe(`https://${id}.r2.cloudflarestorage.com`);
+		expect(r2Account(r2Endpoint(id))).toBe(id);
+		expect(r2Account('https://s3.us-east-1.amazonaws.com')).toBeNull();
+		expect(r2Account('https://example.com')).toBeNull();
 	});
 });
 

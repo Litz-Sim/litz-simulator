@@ -450,5 +450,11 @@
 	"settings_storage_keys": "密钥只存在这个浏览器里。",
 	"status_storage": "S3",
 	"status_storage_saving": "S3 ↑",
-	"status_storage_error": "S3 !"
+	"status_storage_error": "S3 !",
+	"settings_provider": "服务",
+	"settings_provider_s3": "Amazon S3 或兼容服务",
+	"settings_provider_r2": "Cloudflare R2",
+	"settings_account": "账户 ID",
+	"settings_copy_cors": "复制 CORS",
+	"settings_copied": "已复制"
 }
