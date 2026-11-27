@@ -5,6 +5,7 @@
 	import { sim } from '#lib/sim/controller.svelte';
 	import { link } from '#lib/sim/editorLink.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
+	import { Cloudflare } from '#lib/storage/cloudflare';
 	import { projects } from '#lib/storage/projects.svelte';
 	import { r2Account, r2Endpoint, type S3Settings } from '#lib/storage/s3';
 	import { ui } from '#lib/ui.svelte';
@@ -46,6 +47,13 @@
 	let flavour = $state<'s3' | 'r2'>('s3');
 	let account = $state('');
 	let copied = $state(false);
+	let attach = $state('');
+	let apiToken = $state('');
+	let bucketState = $state<'idle' | 'working' | 'done'>('idle');
+	let bucketError = $state<string | null>(null);
+	const canBucket = $derived(
+		link.status === 'online' && Boolean(account.trim() && draft.bucket.trim() && apiToken.trim())
+	);
 
 	$effect(() => {
 		if (!ui.settingsOpen) return;
@@ -55,17 +63,21 @@
 		const id = r2Account(stored.endpoint) ?? '';
 		draft = stored;
 		account = id;
+		apiToken = stored.apiToken ?? '';
 		flavour = id ? 'r2' : 's3';
 		testState = 'idle';
 		copied = false;
+		attach = '';
+		bucketState = 'idle';
+		bucketError = null;
 	});
 
 	// R2 has one endpoint per account and signs with region `auto`, so the
 	// dialog asks for the account id and stores what the bucket expects.
 	function current(): S3Settings {
 		return flavour === 'r2'
-			? { ...draft, endpoint: r2Endpoint(account), region: 'auto' }
-			: { ...draft };
+			? { ...draft, endpoint: r2Endpoint(account), region: 'auto', apiToken: apiToken.trim() }
+			: { ...draft, apiToken: apiToken.trim() };
 	}
 
 	function save(): void {
@@ -93,6 +105,46 @@
 		} catch {
 			copied = false;
 		}
+	}
+
+	function connectLink(): void {
+		const text = attach.trim();
+		if (!text) return;
+		if (link.connect(text)) attach = '';
+	}
+
+	/** The calls Cloudflare will not take from a page, made from the link's machine. */
+	function cloud(): Cloudflare {
+		projects.saveSettings(current());
+		return new Cloudflare(account.trim(), apiToken.trim(), async (method, url, init) => {
+			const reply = await link.request(method, url, init);
+			return { status: reply.status, body: reply.body };
+		});
+	}
+
+	async function runBucket(task: () => Promise<void>): Promise<void> {
+		bucketState = 'working';
+		bucketError = null;
+		try {
+			await task();
+			bucketState = 'done';
+		} catch (failure) {
+			bucketState = 'idle';
+			bucketError = failure instanceof Error ? failure.message : String(failure);
+		}
+	}
+
+	function createBucket(): void {
+		void runBucket(async () => {
+			await cloud().createBucket(draft.bucket);
+			await cloud().setCors(draft.bucket, window.location.origin);
+		});
+	}
+
+	function setCors(): void {
+		void runBucket(async () => {
+			await cloud().setCors(draft.bucket, window.location.origin);
+		});
 	}
 
 	function close(): void {
@@ -266,6 +318,64 @@
 				<section class="border-t border-stone-200 px-3 py-3">
 					<div class="flex items-center justify-between gap-3">
 						<h3 class="text-[11px] font-medium tracking-wide text-stone-500">
+							{m.link_title()}
+						</h3>
+						<span
+							class="text-[11px] {link.status === 'online' ? 'text-emerald-700' : 'text-stone-400'}"
+						>
+							{link.status === 'online'
+								? m.link_online()
+								: link.status === 'connecting'
+									? m.link_connecting()
+									: m.link_offline()}
+						</span>
+					</div>
+
+					{#if link.status === 'online'}
+						<p class="mt-2 text-[11px] text-stone-600">
+							{[link.project, link.version].filter(Boolean).join(' · ')}
+						</p>
+						<p class="mt-0.5 font-mono text-[10px] break-all text-stone-400">
+							{link.library ?? ''}
+						</p>
+						<button
+							type="button"
+							class="mt-2 rounded-md border border-stone-300 bg-white px-2 py-1 text-[12px] text-stone-700 hover:border-stone-400 [@media(pointer:coarse)]:py-2"
+							onclick={() => link.disconnect()}
+						>
+							{m.link_disconnect()}
+						</button>
+					{:else}
+						<div class="mt-2 flex gap-2">
+							<input
+								type="text"
+								spellcheck="false"
+								autocomplete="off"
+								aria-label={m.link_hint()}
+								placeholder="wss://host/ws#CODE"
+								class="min-w-0 flex-1 rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
+								bind:value={attach}
+								onkeydown={(event) => {
+									if (event.key === 'Enter') connectLink();
+								}}
+							/>
+							<button
+								type="button"
+								class="shrink-0 rounded-md bg-stone-800 px-2 py-1 text-[12px] text-white hover:bg-stone-700 [@media(pointer:coarse)]:py-2"
+								onclick={connectLink}
+							>
+								{m.link_connect()}
+							</button>
+						</div>
+						{#if link.error}
+							<p class="mt-1 text-[11px] text-red-600">{link.error}</p>
+						{/if}
+					{/if}
+				</section>
+
+				<section class="border-t border-stone-200 px-3 py-3">
+					<div class="flex items-center justify-between gap-3">
+						<h3 class="text-[11px] font-medium tracking-wide text-stone-500">
 							{m.settings_storage()}
 						</h3>
 						{#if projects.provider === 's3'}
@@ -329,6 +439,19 @@
 										bind:value={account}
 									/>
 								</label>
+								<label class="block sm:col-span-2">
+									<span class="block text-[11px] text-stone-500">
+										{m.settings_api_token()}
+									</span>
+									<input
+										type="password"
+										spellcheck="false"
+										autocomplete="off"
+										placeholder="••••••••"
+										class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
+										bind:value={apiToken}
+									/>
+								</label>
 							{:else}
 								<label class="block sm:col-span-2">
 									<span class="block text-[11px] text-stone-500">{m.settings_endpoint()}</span>
@@ -367,6 +490,36 @@
 								</label>
 							{/each}
 						</div>
+						{#if flavour === 'r2'}
+							<div class="mt-2 flex flex-wrap items-center gap-2">
+								<button
+									type="button"
+									class="rounded-md border border-stone-300 bg-white px-2 py-1 text-[12px] text-stone-700 hover:border-stone-400 disabled:opacity-40 [@media(pointer:coarse)]:py-2"
+									disabled={!canBucket || bucketState === 'working'}
+									onclick={createBucket}
+								>
+									{m.settings_bucket_create()}
+								</button>
+								<button
+									type="button"
+									class="rounded-md border border-stone-300 bg-white px-2 py-1 text-[12px] text-stone-700 hover:border-stone-400 disabled:opacity-40 [@media(pointer:coarse)]:py-2"
+									disabled={!canBucket || bucketState === 'working'}
+									onclick={setCors}
+								>
+									{m.settings_cors_set()}
+								</button>
+								{#if bucketState === 'done'}
+									<span class="text-[11px] text-emerald-700">{m.settings_bucket_done()}</span>
+								{/if}
+							</div>
+							{#if link.status !== 'online'}
+								<p class="mt-1 text-[11px] text-stone-400">{m.link_need_for_bucket()}</p>
+							{:else if bucketError}
+								<p class="mt-1 text-[11px] text-red-600">
+									{m.projects_failed({ detail: bucketError })}
+								</p>
+							{/if}
+						{/if}
 						<div class="mt-1.5 flex items-center justify-between gap-3">
 							<p class="text-[11px] text-stone-400">{m.settings_storage_keys()}</p>
 							<button

@@ -17,6 +17,12 @@ export interface S3Settings {
 	prefix: string;
 	accessKeyId: string;
 	secretAccessKey: string;
+	/**
+	 * A Cloudflare API token, used only to make the bucket from the editor.
+	 * Nothing signs with it; it travels through the CLI link, because the
+	 * Cloudflare API has no CORS and the browser cannot call it.
+	 */
+	apiToken?: string;
 }
 
 export interface StoredProject {
@@ -36,7 +42,8 @@ export const EMPTY_SETTINGS: S3Settings = {
 	bucket: '',
 	prefix: '',
 	accessKeyId: '',
-	secretAccessKey: ''
+	secretAccessKey: '',
+	apiToken: ''
 };
 
 export function configured(settings: S3Settings): boolean {

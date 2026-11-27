@@ -461,5 +461,11 @@
 	"settings_provider_r2": "Cloudflare R2",
 	"settings_account": "Account ID",
 	"settings_copy_cors": "Copy CORS",
-	"settings_copied": "Copied"
+	"settings_copied": "Copied",
+	"settings_api_token": "Cloudflare API token",
+	"settings_bucket_create": "Create bucket",
+	"settings_cors_set": "Set CORS",
+	"settings_bucket_done": "Bucket ready",
+	"link_need_for_bucket": "Connect a command line to create the bucket.",
+	"link_forward_failed": "The linked machine could not make that request."
 }

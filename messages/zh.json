@@ -461,5 +461,11 @@
 	"settings_provider_r2": "Cloudflare R2",
 	"settings_account": "账户 ID",
 	"settings_copy_cors": "复制 CORS",
-	"settings_copied": "已复制"
+	"settings_copied": "已复制",
+	"settings_api_token": "Cloudflare API 令牌",
+	"settings_bucket_create": "创建桶",
+	"settings_cors_set": "设置 CORS",
+	"settings_bucket_done": "桶已就绪",
+	"link_need_for_bucket": "连接命令行后可以创建桶。",
+	"link_forward_failed": "链路那台机器没能发出这个请求。"
 }

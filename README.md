@@ -91,11 +91,11 @@ This is the default. Settings → Storage → **Projects are kept in** switches 
 
 With **Projects are kept in** set to an S3 bucket, File → Projects… stores them there instead. Settings → Storage takes a provider, bucket, prefix, access key, and secret key; **Test** lists the bucket to confirm they work. The keys are stored in this browser's `localStorage` and the page signs each request itself, because there is no server here to hold them.
 
-For Amazon S3 or another S3-compatible server, the provider asks for the endpoint (`https://s3.us-east-1.amazonaws.com`) and region. For **Cloudflare R2** it asks for the account ID alone, builds `https://<account>.r2.cloudflarestorage.com`, and signs with region `auto`. An R2 setup needs three pieces from the Cloudflare dashboard:
+For Amazon S3 or another S3-compatible server, the provider asks for the endpoint (`https://s3.us-east-1.amazonaws.com`) and region. For **Cloudflare R2** it asks for the account ID alone, builds `https://<account>.r2.cloudflarestorage.com`, and signs with region `auto`. An R2 setup needs three pieces:
 
-1. A bucket, from R2 → Create bucket.
-2. An API token, from R2 → Manage R2 API Tokens → Create API token with **Object Read & Write** on that bucket. Its Access Key ID and Secret Access Key go into Storage.
-3. A CORS policy on the bucket (Settings → CORS policy). **Copy CORS** in the Storage section puts the right policy on the clipboard, with the page's own origin filled in; when the editor also runs on `localhost`, run it from both origins and merge the two lists.
+1. A bucket. With a command line connected, **Create bucket** in the Storage section makes it and allows this page's origin in one press; it needs the account ID and a Cloudflare API token with R2 write access. The Cloudflare API sends no CORS headers, so this call goes through the link rather than from the page.
+2. Keys, from R2 → Manage R2 API Tokens → Create API token with **Object Read & Write** on that bucket. Its Access Key ID and Secret Access Key go into Storage. Without a link, make the bucket in the dashboard.
+3. A CORS policy on the bucket. **Set CORS** does it with the same API token; without a link, or for another provider, **Copy CORS** puts the policy on the clipboard with this page's origin filled in, and when the editor also runs on `localhost`, run it from both origins and merge the two lists.
 
 Saving writes `Name.litzproject.json` under the prefix. Once a project is attached, every edit uploads two seconds after it settles, and <kbd>⌘S</kbd> uploads immediately; the status bar shows `S3`, `S3 ↑` while a save is in flight, and `S3 !` with the error when one fails. The dialog lists objects newest first with their size and timestamp, and can open or delete them. Opening replaces the workspace like File → Import project.
 
@@ -236,6 +236,10 @@ The editor cannot compile firmware, and the CLI cannot draw a circuit. `litz con
 The image is named by its SHA-256 and fetched over the same loopback port, then booted on the board whose id it carries, or on the selected board. The link is loopback-only and every route checks the pairing code, which travels in the URL fragment and therefore never reaches the daemon. It is a development convenience on the same machine; moving a project between devices is a separate storage question, and this is not one.
 
 The same socket carries the project library: File → Projects… lists, saves, opens and deletes the `.litzproject.json` files in the folder the link was opened on. Names are stems — no path can leave `.litz/projects` — and a save is written beside the file and renamed over it, so an interrupted save leaves the previous version readable.
+
+The socket also carries `http.request`: one HTTP request the page names — method, URL, headers, body — which the link makes from its machine and answers with the status, headers and body it got. It exists for the hosts a browser may not call, the Cloudflare API above being the first. The link keeps a 30-second timeout and a 4 MB answer, and the request runs as the link's user, so give the link only the reach the page should have.
+
+Settings → **Command line** connects and disconnects the link, shows the project, version and folder it serves, and keeps the attach URL across reloads. `--token CODE` fixes the pairing code; without it a link that starts where one ran before keeps the code in `.litz/editor.json`, so a restart does not invalidate a bookmark or the copy this page stored.
 
 A link can also live on a server, so the projects stay reachable while the laptop is off, and this page stays where it is served. `litz connect-editor --host 127.0.0.1 --origin https://this.site` behind a TLS proxy takes `wss://your.server/ws#CODE` in the Connect dialog, and the browser remembers it: reopening the editor reattaches on its own, and a bookmark like `https://this.site/#wss://your.server/ws#CODE` skips the dialog. The page sends the pairing code as the socket protocol rather than a query, so the proxy's logs do not record it. `--static dist` is the self-contained variant, for offline or a LAN.
 

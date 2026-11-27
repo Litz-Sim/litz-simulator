@@ -31,6 +31,15 @@ export interface LinkProject {
 	modified: number;
 }
 
+/** The answer to a request the linked machine made on the page's behalf. */
+export interface LinkReply {
+	status: number;
+	headers: Record<string, string>;
+	/** The host's bytes as text, or base64 when they were not UTF-8. */
+	body: string;
+	base64: boolean;
+}
+
 interface Pending {
 	resolve: (value: Record<string, unknown>) => void;
 	reject: (error: Error) => void;
@@ -130,6 +139,34 @@ class EditorLink {
 
 	async removeProject(key: string): Promise<void> {
 		await this.#request('project.remove', { name: key });
+	}
+
+	/**
+	 * Make an HTTP request from the machine the link runs on. A browser may not
+	 * call a host that sends no CORS headers, and may not set every header a
+	 * host wants; the link has neither limit, so an API the page is locked out
+	 * of is reachable through it.
+	 */
+	async request(
+		method: string,
+		url: string,
+		init: { headers?: Record<string, string>; body?: string } = {}
+	): Promise<LinkReply> {
+		const answer = await this.#request(
+			'http.request',
+			{ method, url, headers: init.headers ?? {}, body: init.body },
+			35_000
+		);
+		if (answer.type === 'http.failed') {
+			throw new Error(text(answer.error) || m.link_forward_failed());
+		}
+		if (typeof answer.status !== 'number') throw new Error(m.link_forward_failed());
+		return {
+			status: answer.status,
+			headers: (answer.headers as Record<string, string>) ?? {},
+			body: text(answer.body),
+			base64: answer.encoding === 'base64'
+		};
 	}
 
 	#open(): void {
@@ -239,7 +276,11 @@ class EditorLink {
 	 * rejects this promise instead of landing in the strip's error, so a save
 	 * that could not happen cannot read as a build that failed.
 	 */
-	#request(type: string, body: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
+	#request(
+		type: string,
+		body: Record<string, unknown> = {},
+		patience = 15_000
+	): Promise<Record<string, unknown>> {
 		const socket = this.#socket;
 		if (this.status !== 'online' || socket?.readyState !== WebSocket.OPEN) {
 			return Promise.reject(new Error(m.link_unreachable()));
@@ -250,7 +291,7 @@ class EditorLink {
 			const timer = setTimeout(() => {
 				this.#pending.delete(id);
 				reject(new Error(m.link_timeout()));
-			}, 15_000);
+			}, patience);
 			this.#pending.set(id, { resolve, reject, timer });
 			socket.send(JSON.stringify({ ...body, type, id }));
 		});
