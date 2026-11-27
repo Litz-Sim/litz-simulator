@@ -1,16 +1,18 @@
 /**
- * Projects kept in the user's own S3 bucket.
+ * Where the projects live: the folder a `litz serve` link opened, or a bucket
+ * the browser signs for itself.
  *
- * The bucket is the storage; localStorage stays the offline mirror every edit
- * already writes. Credentials live in this browser only, because there is no
- * server here to hold them: the page signs its own requests.
+ * Local storage stays the offline mirror every edit already writes, so neither
+ * provider is load-bearing for the editor to keep working.
  */
 import { m } from '#lib/paraglide/messages.js';
+import { link } from '#lib/sim/editorLink.svelte';
 import { doc } from '#lib/sketch/doc.svelte';
 import {
 	configured,
 	EMPTY_SETTINGS,
 	objectKey,
+	plainName,
 	projectName,
 	S3Store,
 	type S3Settings,
@@ -18,6 +20,33 @@ import {
 } from './s3';
 
 const SETTINGS_KEY = 'litz.storage.v1';
+const PROVIDER_KEY = 'litz.storage.provider.v1';
+const ATTACHED_KEY = 'litz.storage.attached.v1';
+
+/** The link's own folder is the default; a bucket is opt-in. */
+export type StorageProvider = 'link' | 's3';
+
+function restoredProvider(): StorageProvider {
+	if (typeof localStorage === 'undefined') return 'link';
+	return localStorage.getItem(PROVIDER_KEY) === 's3' ? 's3' : 'link';
+}
+
+/**
+ * The project this browser was last attached to, if it belongs to the store in
+ * use. A key from one store names nothing in the other, so it is not carried
+ * across a switch.
+ */
+function restoredAttachment(provider: StorageProvider): string | null {
+	if (typeof localStorage === 'undefined') return null;
+	try {
+		const text = localStorage.getItem(ATTACHED_KEY);
+		if (!text) return null;
+		const parsed = JSON.parse(text) as { provider?: string; key?: string };
+		return parsed.provider === provider && typeof parsed.key === 'string' ? parsed.key : null;
+	} catch {
+		return null;
+	}
+}
 
 function restored(): S3Settings {
 	if (typeof localStorage === 'undefined') return { ...EMPTY_SETTINGS };
@@ -33,10 +62,11 @@ function restored(): S3Settings {
 
 class Projects {
 	settings = $state<S3Settings>(restored());
-	/** Objects under the prefix, newest first. */
+	provider = $state<StorageProvider>(restoredProvider());
+	/** Projects in the chosen store, newest first. */
 	items = $state<StoredProject[]>([]);
-	/** Object key of the project this document is attached to, or null. */
-	key = $state<string | null>(null);
+	/** Key of the project this document is attached to, or null. */
+	key = $state<string | null>(restoredAttachment(this.provider));
 	listing = $state(false);
 	saving = $state(false);
 	error = $state<string | null>(null);
@@ -44,11 +74,43 @@ class Projects {
 	#timer: ReturnType<typeof setTimeout> | undefined;
 
 	get ready(): boolean {
-		return configured(this.settings);
+		return this.provider === 'link' ? link.status === 'online' : configured(this.settings);
+	}
+
+	/** A key as the dialog shows it: a library stem or a key without its prefix. */
+	nameOf(key: string): string {
+		return this.provider === 'link' ? key : projectName(key, this.settings.prefix);
+	}
+
+	/** Switching stores detaches the document: a key means nothing in the other one. */
+	setProvider(next: StorageProvider): void {
+		if (this.provider === next) return;
+		this.provider = next;
+		this.#setKey(null);
+		this.items = [];
+		this.sync = 'idle';
+		this.error = null;
+		try {
+			localStorage.setItem(PROVIDER_KEY, next);
+		} catch {
+			// A full quota only costs the choice; the session keeps the provider.
+		}
 	}
 
 	#store(): S3Store {
 		return new S3Store(this.settings);
+	}
+
+	#text(key: string): Promise<string> {
+		return this.provider === 'link' ? link.readProject(key) : this.#store().text(key);
+	}
+
+	#put(key: string, body: string): Promise<void> {
+		return this.provider === 'link' ? link.writeProject(key, body) : this.#store().put(key, body);
+	}
+
+	#remove(key: string): Promise<void> {
+		return this.provider === 'link' ? link.removeProject(key) : this.#store().remove(key);
 	}
 
 	#fail(failure: unknown): void {
@@ -71,7 +133,8 @@ class Projects {
 	async test(): Promise<boolean> {
 		this.error = null;
 		try {
-			await this.#store().list();
+			if (this.provider === 'link') await link.projects();
+			else await this.#store().list();
 			return true;
 		} catch (failure) {
 			this.#fail(failure);
@@ -84,7 +147,7 @@ class Projects {
 		this.listing = true;
 		this.error = null;
 		try {
-			this.items = await this.#store().list();
+			this.items = this.provider === 'link' ? await link.projects() : await this.#store().list();
 		} catch (failure) {
 			this.#fail(failure);
 		} finally {
@@ -96,12 +159,12 @@ class Projects {
 	async open(item: StoredProject): Promise<boolean> {
 		this.error = null;
 		try {
-			const text = await this.#store().text(item.key);
+			const text = await this.#text(item.key);
 			if (!doc.loadProject(text)) {
 				this.error = m.projects_invalid();
 				return false;
 			}
-			this.key = item.key;
+			this.#setKey(item.key);
 			this.sync = 'saved';
 			return true;
 		} catch (failure) {
@@ -116,7 +179,12 @@ class Projects {
 	 * object; a document that is not attached stays local.
 	 */
 	async save(name?: string): Promise<boolean> {
-		const target = name?.trim() ? objectKey(name, this.settings.prefix) : this.key;
+		const named = name?.trim();
+		const target = named
+			? this.provider === 'link'
+				? plainName(named)
+				: objectKey(named, this.settings.prefix)
+			: this.key;
 		if (!target) return false;
 		this.saving = true;
 		this.sync = 'saving';
@@ -125,9 +193,9 @@ class Projects {
 			// The object name is the document's name, so a save under a new
 			// name renames the tab as well and the file and its title agree
 			// when it is opened again.
-			if (name?.trim()) doc.renameTab(projectName(target, this.settings.prefix));
-			await this.#store().put(target, doc.projectJSON());
-			this.key = target;
+			if (named) doc.renameTab(this.nameOf(target));
+			await this.#put(target, doc.projectJSON());
+			this.#setKey(target);
 			this.sync = 'saved';
 			await this.refresh();
 			return true;
@@ -145,9 +213,9 @@ class Projects {
 		clearTimeout(this.#timer);
 		this.error = null;
 		try {
-			await this.#store().remove(item.key);
+			await this.#remove(item.key);
 			if (this.key === item.key) {
-				this.key = null;
+				this.#setKey(null);
 				this.sync = 'idle';
 			}
 			await this.refresh();
@@ -171,8 +239,26 @@ class Projects {
 	}
 
 	attach(key: string | null): void {
-		this.key = key;
+		this.#setKey(key);
 		this.sync = key ? 'saved' : 'idle';
+	}
+
+	/**
+	 * The attachment survives a reload, so a public editor reopening on a
+	 * server link goes on saving to the same project without a trip through
+	 * the dialog. The store it belongs to is recorded with it.
+	 */
+	#setKey(key: string | null): void {
+		this.key = key;
+		try {
+			if (key) {
+				localStorage.setItem(ATTACHED_KEY, JSON.stringify({ provider: this.provider, key }));
+			} else {
+				localStorage.removeItem(ATTACHED_KEY);
+			}
+		} catch {
+			// A full quota only costs the memory; the session stays attached.
+		}
 	}
 }
 

@@ -69,6 +69,7 @@ The interface ships in English and Chinese. Switch in Settings; strings live in 
 | Output              | Where                                      | Contents                                                                   |
 | ------------------- | ------------------------------------------ | -------------------------------------------------------------------------- |
 | Workspace           | Automatic, browser `localStorage`          | Every tab with its layout, wires, and view state.                          |
+| Project in a folder | File → Projects…                           | The same `.litzproject.json`, kept in the folder a CLI link opened.        |
 | Project in a bucket | File → Projects…                           | The same `.litzproject.json`, kept in the user's S3 bucket.                |
 | Project file        | File → Export project                      | `.litzproject.json` with every tab, ready to import elsewhere.             |
 | Single-tab document | File → Export JSON                         | `.litzboard.json` for the active tab, with layout and wire bends, no view. |
@@ -80,9 +81,15 @@ The workspace is written to `localStorage` under `litz-board.workspace.v1` after
 
 Browser storage is local to one browser and one origin. It does not sync between devices, and clearing site data removes it. The workspace stays under 5 MB; uploaded firmware lives separately in IndexedDB, keyed by content hash. Export a project file to back up or move a workspace, and keep the original image files to restore their references elsewhere.
 
+### Projects in a folder
+
+With a CLI link attached, File → Projects… saves into the folder that link was opened on: one `Name.litzproject.json` per project under `.litz/projects`, written by the daemon and listed back from disc. Nothing leaves the machine, and the folder can be copied, backed up or committed.
+
+This is the default. Settings → Storage → **Projects are kept in** switches between the link's folder and a bucket; the folder only lists while the link is connected.
+
 ### Projects in a bucket
 
-File → Projects… keeps projects in an S3 bucket instead. Settings → Storage takes a provider, bucket, prefix, access key, and secret key; **Test** lists the bucket to confirm they work. The keys are stored in this browser's `localStorage` and the page signs each request itself, because there is no server here to hold them.
+With **Projects are kept in** set to an S3 bucket, File → Projects… stores them there instead. Settings → Storage takes a provider, bucket, prefix, access key, and secret key; **Test** lists the bucket to confirm they work. The keys are stored in this browser's `localStorage` and the page signs each request itself, because there is no server here to hold them.
 
 For Amazon S3 or another S3-compatible server, the provider asks for the endpoint (`https://s3.us-east-1.amazonaws.com`) and region. For **Cloudflare R2** it asks for the account ID alone, builds `https://<account>.r2.cloudflarestorage.com`, and signs with region `auto`. An R2 setup needs three pieces from the Cloudflare dashboard:
 
@@ -228,6 +235,10 @@ The editor cannot compile firmware, and the CLI cannot draw a circuit. `litz con
 
 The image is named by its SHA-256 and fetched over the same loopback port, then booted on the board whose id it carries, or on the selected board. The link is loopback-only and every route checks the pairing code, which travels in the URL fragment and therefore never reaches the daemon. It is a development convenience on the same machine; moving a project between devices is a separate storage question, and this is not one.
 
+The same socket carries the project library: File → Projects… lists, saves, opens and deletes the `.litzproject.json` files in the folder the link was opened on. Names are stems — no path can leave `.litz/projects` — and a save is written beside the file and renamed over it, so an interrupted save leaves the previous version readable.
+
+A link can also live on a server, so the projects stay reachable while the laptop is off, and this page stays where it is served. `litz connect-editor --host 127.0.0.1 --origin https://this.site` behind a TLS proxy takes `wss://your.server/ws#CODE` in the Connect dialog, and the browser remembers it: reopening the editor reattaches on its own, and a bookmark like `https://this.site/#wss://your.server/ws#CODE` skips the dialog. The page sends the pairing code as the socket protocol rather than a query, so the proxy's logs do not record it. `--static dist` is the self-contained variant, for offline or a LAN.
+
 ### Bottom panels
 
 | Panel     | Purpose                                                                                                                                                                                      |
@@ -285,7 +296,7 @@ The inspector exposes device-specific controls and live state: distance for an H
 - Classic ESP32 and ESP32-S3 are Xtensa. The current WebAssembly build does not include those cores, so the part library omits both boards.
 - AVR boards have no debugger: the panel reports that the core cannot be debugged.
 - Storage volumes live in the workspace (browser storage), so a multi-megabyte file can exceed the browser quota; the status bar reports a failed save. A board's flash dump is read from the last run and exported, not stored in the project.
-- There is no project sharing or account system. File → Projects… writes to an S3 bucket the user owns; it is not a Litz service, and the keys stay in the browser that entered them.
+- There is no project sharing or account system. File → Projects… writes either to the link's local folder or to an S3 bucket the user owns; it is not a Litz service, and bucket keys stay in the browser that entered them.
 - Uploaded firmware is cached per browser. Opening a project on another browser or after clearing site data requires uploading the image again.
 - Flash size and MAC address are available from the engine API but are not exposed in the UI.
 
@@ -318,7 +329,7 @@ src/lib/parts/               part definitions and Canvas drawing
 src/lib/canvas/              Canvas 2D engine, viewport, input state
 src/lib/components/editor/   menus, toolbar, tabs, parts library, canvas, inspector, bottom panel
 src/lib/sim/                 Litz WASM backend, run controller, firmware cache, Python staging
-src/lib/storage/             S3 client and the bucket-backed project store
+src/lib/storage/             S3 client and the project store over a folder or a bucket
 src/service-worker/          offline cache and update behaviour
 static/firmware/             built-in native images and Python interpreters
 ```

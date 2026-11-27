@@ -2,8 +2,9 @@
 	import { canvasControl } from '#lib/canvas/control';
 	import { m } from '#lib/paraglide/messages.js';
 	import { doc } from '#lib/sketch/doc.svelte';
+	import { link } from '#lib/sim/editorLink.svelte';
 	import { projects } from '#lib/storage/projects.svelte';
-	import { projectName, type StoredProject } from '#lib/storage/s3';
+	import type { StoredProject } from '#lib/storage/s3';
 	import { ui } from '#lib/ui.svelte';
 	import Icon from './Icon.svelte';
 
@@ -17,12 +18,13 @@
 
 	function openSettings(): void {
 		ui.projectsOpen = false;
-		ui.settingsOpen = true;
+		if (projects.provider === 'link') ui.linkOpen = true;
+		else ui.settingsOpen = true;
 	}
 
 	$effect(() => {
 		if (!ui.projectsOpen) return;
-		name = projects.key ? projectName(projects.key, projects.settings.prefix) : doc.name;
+		name = projects.key ? projects.nameOf(projects.key) : doc.name;
 		pendingDelete = null;
 		void projects.refresh();
 	});
@@ -56,8 +58,9 @@
 		return bytes < 1024 ? `${bytes} B` : `${(bytes / 1024).toFixed(1)} KB`;
 	}
 
-	function when(iso: string): string {
-		const date = new Date(iso);
+	/** A bucket lists ISO timestamps; the link lists milliseconds. */
+	function when(stamp: string | number): string {
+		const date = new Date(stamp);
 		return Number.isNaN(date.getTime()) ? '' : date.toLocaleString();
 	}
 </script>
@@ -109,13 +112,15 @@
 
 			{#if !projects.ready}
 				<div class="flex flex-col items-start gap-3 p-4">
-					<p class="text-[12px] text-stone-600">{m.projects_unconfigured()}</p>
+					<p class="text-[12px] text-stone-600">
+						{projects.provider === 'link' ? m.projects_need_link() : m.projects_unconfigured()}
+					</p>
 					<button
 						type="button"
 						class="rounded border border-stone-300 px-3 py-1.5 text-[12px] text-stone-700 hover:bg-stone-50"
 						onclick={openSettings}
 					>
-						{m.projects_settings()}
+						{projects.provider === 'link' ? m.link_connect() : m.projects_settings()}
 					</button>
 				</div>
 			{:else}
@@ -204,6 +209,11 @@
 					<span class="truncate text-stone-400">
 						{projects.key ? m.projects_attached({ key: projects.key }) : m.projects_not_stored()}
 					</span>
+					{#if projects.provider === 'link' && link.library}
+						<span class="ml-auto shrink-0 truncate font-mono text-stone-300" title={link.library}>
+							{link.library}
+						</span>
+					{/if}
 				</div>
 			{/if}
 		</div>

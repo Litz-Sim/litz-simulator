@@ -18,7 +18,9 @@
 	import StatusBar from '#lib/components/editor/StatusBar.svelte';
 	import TabRow from '#lib/components/editor/TabRow.svelte';
 	import Toolbar from '#lib/components/editor/Toolbar.svelte';
+	import { parseAttach } from '#lib/sim/attach';
 	import { sim } from '#lib/sim/controller.svelte';
+	import { link } from '#lib/sim/editorLink.svelte';
 	import * as live from '#lib/sim/live';
 	import { doc } from '#lib/sketch/doc.svelte';
 	import { projects } from '#lib/storage/projects.svelte';
@@ -38,6 +40,24 @@
 		if (!restored) requestAnimationFrame(() => canvasControl.engine?.fit());
 		// A stable handle for browser tests and for debugging a deployed build.
 		(window as unknown as { __litz?: unknown }).__litz = { doc, ui, canvasControl, sim, live };
+		// A link URL carries its own address, so a public editor attaches from
+		// the fragment alone: `https://editor/#wss://host/ws#CODE`. A bare code
+		// belongs to a link that also serves the page, so it goes to this host.
+		// Either way the fragment is dropped, and without one the browser
+		// reattaches to the link it used last.
+		const hash = location.hash.slice(1);
+		const attach = parseAttach(hash)
+			? hash
+			: hash
+				? `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws#${hash}`
+				: '';
+		if (attach) {
+			if (link.connect(attach)) {
+				history.replaceState(null, '', `${location.pathname}${location.search}`);
+			}
+		} else {
+			link.restore();
+		}
 	});
 
 	$effect(() => {

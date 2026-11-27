@@ -24,8 +24,8 @@ export interface StoredProject {
 	/** The key without the configured prefix. */
 	name: string;
 	size: number;
-	/** ISO timestamp from the listing. */
-	modified: string;
+	/** ISO timestamp from a listing; the link's folder reports milliseconds. */
+	modified: string | number;
 }
 
 export class S3Error extends Error {}
@@ -67,6 +67,14 @@ export function projectFile(name: string): string {
 		.replace(/\s+/g, ' ');
 	if (clean.endsWith('.litzproject.json')) return clean;
 	return `${clean || 'untitled'}.litzproject.json`;
+}
+
+/**
+ * The stem `projectFile` builds: a project's name once it is a file, which is
+ * how the link's library names it too.
+ */
+export function plainName(name: string): string {
+	return projectFile(name).slice(0, -'.litzproject.json'.length);
 }
 
 /** Join the prefix and a project name into an object key. */
@@ -204,7 +212,7 @@ export class S3Store {
 			}
 			token = page.next;
 		} while (token);
-		return items.sort((a, b) => b.modified.localeCompare(a.modified));
+		return items.sort((a, b) => String(b.modified).localeCompare(String(a.modified)));
 	}
 
 	async text(key: string): Promise<string> {

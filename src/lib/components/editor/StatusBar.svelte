@@ -76,7 +76,7 @@
 		</button>
 	{/if}
 	<div class="ml-auto flex items-center gap-3">
-		{#if projects.ready && projects.key}
+		{#if projects.provider === 's3' && projects.ready && projects.key}
 			<button
 				type="button"
 				class="flex items-center gap-1 {projects.sync === 'error'

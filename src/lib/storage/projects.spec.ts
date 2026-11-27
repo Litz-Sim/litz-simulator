@@ -49,6 +49,7 @@ describe('projects store', () => {
 		const address = server.address();
 		const port = typeof address === 'object' && address ? address.port : 0;
 		endpoint = `http://127.0.0.1:${port}`;
+		projects.setProvider('s3');
 		projects.saveSettings({
 			endpoint,
 			region: 'us-east-1',

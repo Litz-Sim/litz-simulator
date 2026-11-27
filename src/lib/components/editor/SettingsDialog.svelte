@@ -3,6 +3,7 @@
 	import { m } from '#lib/paraglide/messages.js';
 	import { installPackage, packages, removePackage } from '#lib/parts/custom.svelte';
 	import { sim } from '#lib/sim/controller.svelte';
+	import { link } from '#lib/sim/editorLink.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
 	import { projects } from '#lib/storage/projects.svelte';
 	import { r2Account, r2Endpoint, type S3Settings } from '#lib/storage/s3';
@@ -41,7 +42,8 @@
 	let error = $state<string | null>(null);
 	let draft = $state<S3Settings>({ ...projects.settings });
 	let testState = $state<'idle' | 'ok' | 'error'>('idle');
-	let provider = $state<'s3' | 'r2'>('s3');
+	/** The bucket flavour, which is a different question from where projects live. */
+	let flavour = $state<'s3' | 'r2'>('s3');
 	let account = $state('');
 	let copied = $state(false);
 
@@ -53,7 +55,7 @@
 		const id = r2Account(stored.endpoint) ?? '';
 		draft = stored;
 		account = id;
-		provider = id ? 'r2' : 's3';
+		flavour = id ? 'r2' : 's3';
 		testState = 'idle';
 		copied = false;
 	});
@@ -61,7 +63,7 @@
 	// R2 has one endpoint per account and signs with region `auto`, so the
 	// dialog asks for the account id and stores what the bucket expects.
 	function current(): S3Settings {
-		return provider === 'r2'
+		return flavour === 'r2'
 			? { ...draft, endpoint: r2Endpoint(account), region: 'auto' }
 			: { ...draft };
 	}
@@ -266,101 +268,122 @@
 						<h3 class="text-[11px] font-medium tracking-wide text-stone-500">
 							{m.settings_storage()}
 						</h3>
-						<div class="flex items-center gap-1.5">
-							<button
-								type="button"
-								class="rounded-md border border-stone-300 bg-white px-2 py-1 text-[12px] text-stone-700 hover:border-stone-400 [@media(pointer:coarse)]:py-2"
-								onclick={() => void test()}
-							>
-								{m.settings_storage_test()}
-							</button>
-							<button
-								type="button"
-								class="rounded-md bg-stone-800 px-2 py-1 text-[12px] text-white hover:bg-stone-700 [@media(pointer:coarse)]:py-2"
-								onclick={save}
-							>
-								{m.projects_save()}
-							</button>
-						</div>
+						{#if projects.provider === 's3'}
+							<div class="flex items-center gap-1.5">
+								<button
+									type="button"
+									class="rounded-md border border-stone-300 bg-white px-2 py-1 text-[12px] text-stone-700 hover:border-stone-400 [@media(pointer:coarse)]:py-2"
+									onclick={() => void test()}
+								>
+									{m.settings_storage_test()}
+								</button>
+								<button
+									type="button"
+									class="rounded-md bg-stone-800 px-2 py-1 text-[12px] text-white hover:bg-stone-700 [@media(pointer:coarse)]:py-2"
+									onclick={save}
+								>
+									{m.projects_save()}
+								</button>
+							</div>
+						{/if}
 					</div>
 
-					<div class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
-						<label class="block sm:col-span-2">
-							<span class="block text-[11px] text-stone-500">{m.settings_provider()}</span>
-							<select
-								class="mt-0.5 w-full rounded border border-stone-300 bg-white px-2 py-1 text-[12px]"
-								bind:value={provider}
-							>
-								<option value="s3">{m.settings_provider_s3()}</option>
-								<option value="r2">{m.settings_provider_r2()}</option>
-							</select>
-						</label>
-						{#if provider === 'r2'}
-							<label class="block sm:col-span-2">
-								<span class="block text-[11px] text-stone-500">{m.settings_account()}</span>
-								<input
-									type="text"
-									spellcheck="false"
-									autocomplete="off"
-									placeholder="0123456789abcdef0123456789abcdef"
-									class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
-									bind:value={account}
-								/>
-							</label>
-						{:else}
-							<label class="block sm:col-span-2">
-								<span class="block text-[11px] text-stone-500">{m.settings_endpoint()}</span>
-								<input
-									type="text"
-									spellcheck="false"
-									autocomplete="off"
-									placeholder="https://s3.us-east-1.amazonaws.com"
-									class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
-									bind:value={draft.endpoint}
-								/>
-							</label>
-							<label class="block sm:col-span-2">
-								<span class="block text-[11px] text-stone-500">{m.settings_region()}</span>
-								<input
-									type="text"
-									spellcheck="false"
-									autocomplete="off"
-									placeholder="us-east-1"
-									class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
-									bind:value={draft.region}
-								/>
-							</label>
-						{/if}
-						{#each FIELDS as field (field.key)}
-							<label class="block {field.wide ? 'sm:col-span-2' : ''}">
-								<span class="block text-[11px] text-stone-500">{field.label()}</span>
-								<input
-									type={field.secret ? 'password' : 'text'}
-									spellcheck="false"
-									autocomplete="off"
-									placeholder={field.placeholder}
-									class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
-									bind:value={draft[field.key]}
-								/>
-							</label>
-						{/each}
-					</div>
-					<div class="mt-1.5 flex items-center justify-between gap-3">
-						<p class="text-[11px] text-stone-400">{m.settings_storage_keys()}</p>
-						<button
-							type="button"
-							class="shrink-0 rounded border border-stone-300 px-2 py-0.5 text-[11px] text-stone-600 hover:bg-stone-50"
-							onclick={() => void copyCors()}
+					<label class="mt-2 block">
+						<span class="block text-[11px] text-stone-500">{m.settings_source()}</span>
+						<select
+							class="mt-0.5 w-full rounded border border-stone-300 bg-white px-2 py-1 text-[12px]"
+							value={projects.provider}
+							onchange={(event) =>
+								projects.setProvider(event.currentTarget.value === 's3' ? 's3' : 'link')}
 						>
-							{copied ? m.settings_copied() : m.settings_copy_cors()}
-						</button>
-					</div>
-					{#if testState === 'ok'}
-						<p class="mt-1 text-[11px] text-emerald-700">{m.settings_storage_ok()}</p>
-					{:else if testState === 'error' && projects.error}
-						<p class="mt-1 text-[11px] text-red-600">
-							{m.projects_failed({ detail: projects.error })}
+							<option value="link">{m.settings_source_link()}</option>
+							<option value="s3">{m.settings_source_s3()}</option>
+						</select>
+					</label>
+
+					{#if projects.provider === 'link'}
+						<p class="mt-2 font-mono text-[11px] text-stone-400">
+							{link.library ?? m.projects_need_link()}
 						</p>
+					{:else}
+						<div class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+							<label class="block sm:col-span-2">
+								<span class="block text-[11px] text-stone-500">{m.settings_provider()}</span>
+								<select
+									class="mt-0.5 w-full rounded border border-stone-300 bg-white px-2 py-1 text-[12px]"
+									bind:value={flavour}
+								>
+									<option value="s3">{m.settings_provider_s3()}</option>
+									<option value="r2">{m.settings_provider_r2()}</option>
+								</select>
+							</label>
+							{#if flavour === 'r2'}
+								<label class="block sm:col-span-2">
+									<span class="block text-[11px] text-stone-500">{m.settings_account()}</span>
+									<input
+										type="text"
+										spellcheck="false"
+										autocomplete="off"
+										placeholder="0123456789abcdef0123456789abcdef"
+										class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
+										bind:value={account}
+									/>
+								</label>
+							{:else}
+								<label class="block sm:col-span-2">
+									<span class="block text-[11px] text-stone-500">{m.settings_endpoint()}</span>
+									<input
+										type="text"
+										spellcheck="false"
+										autocomplete="off"
+										placeholder="https://s3.us-east-1.amazonaws.com"
+										class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
+										bind:value={draft.endpoint}
+									/>
+								</label>
+								<label class="block sm:col-span-2">
+									<span class="block text-[11px] text-stone-500">{m.settings_region()}</span>
+									<input
+										type="text"
+										spellcheck="false"
+										autocomplete="off"
+										placeholder="us-east-1"
+										class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
+										bind:value={draft.region}
+									/>
+								</label>
+							{/if}
+							{#each FIELDS as field (field.key)}
+								<label class="block {field.wide ? 'sm:col-span-2' : ''}">
+									<span class="block text-[11px] text-stone-500">{field.label()}</span>
+									<input
+										type={field.secret ? 'password' : 'text'}
+										spellcheck="false"
+										autocomplete="off"
+										placeholder={field.placeholder}
+										class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
+										bind:value={draft[field.key]}
+									/>
+								</label>
+							{/each}
+						</div>
+						<div class="mt-1.5 flex items-center justify-between gap-3">
+							<p class="text-[11px] text-stone-400">{m.settings_storage_keys()}</p>
+							<button
+								type="button"
+								class="shrink-0 rounded border border-stone-300 px-2 py-0.5 text-[11px] text-stone-600 hover:bg-stone-50"
+								onclick={() => void copyCors()}
+							>
+								{copied ? m.settings_copied() : m.settings_copy_cors()}
+							</button>
+						</div>
+						{#if testState === 'ok'}
+							<p class="mt-1 text-[11px] text-emerald-700">{m.settings_storage_ok()}</p>
+						{:else if testState === 'error' && projects.error}
+							<p class="mt-1 text-[11px] text-red-600">
+								{m.projects_failed({ detail: projects.error })}
+							</p>
+						{/if}
 					{/if}
 				</section>
 			</div>
