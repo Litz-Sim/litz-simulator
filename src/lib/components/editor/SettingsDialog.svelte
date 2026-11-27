@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { getLocale, setLocale } from '#lib/paraglide/runtime.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { installPackage, packages, removePackage } from '#lib/parts/custom.svelte';
@@ -67,7 +68,8 @@
 		flavour = id ? 'r2' : 's3';
 		testState = 'idle';
 		copied = false;
-		attach = '';
+		// Untracked: the link going online mid-edit must not reset the form.
+		attach = untrack(() => (link.status === 'online' ? '' : link.remembered));
 		bucketState = 'idle';
 		bucketError = null;
 	});

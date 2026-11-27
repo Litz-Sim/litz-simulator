@@ -115,6 +115,11 @@ class EditorLink {
 		this.building = false;
 	}
 
+	/** The attach URL this browser stored, for a dialog that offers it again. */
+	get remembered(): string {
+		return this.#stored();
+	}
+
 	build(board?: string): void {
 		if (this.status !== 'online' || this.building) return;
 		this.log = '';
