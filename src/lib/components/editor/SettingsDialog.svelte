@@ -4,6 +4,8 @@
 	import { installPackage, packages, removePackage } from '#lib/parts/custom.svelte';
 	import { sim } from '#lib/sim/controller.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
+	import { projects } from '#lib/storage/projects.svelte';
+	import type { S3Settings } from '#lib/storage/s3';
 	import { ui } from '#lib/ui.svelte';
 	import Icon from './Icon.svelte';
 
@@ -16,8 +18,46 @@
 		{ value: 0, label: m.menu_speed_max }
 	];
 
+	const FIELDS: {
+		key: keyof S3Settings;
+		label: () => string;
+		placeholder: string;
+		wide?: boolean;
+		secret?: boolean;
+	}[] = [
+		{
+			key: 'endpoint',
+			label: m.settings_endpoint,
+			placeholder: 'https://s3.us-east-1.amazonaws.com',
+			wide: true
+		},
+		{ key: 'bucket', label: m.settings_bucket, placeholder: 'my-litz-projects' },
+		{ key: 'region', label: m.settings_region, placeholder: 'us-east-1' },
+		{ key: 'prefix', label: m.settings_prefix, placeholder: 'projects' },
+		{ key: 'accessKeyId', label: m.settings_access_key, placeholder: 'AKIA…' },
+		{
+			key: 'secretAccessKey',
+			label: m.settings_secret_key,
+			placeholder: '••••••••',
+			wide: true,
+			secret: true
+		}
+	];
+
 	let input = $state<HTMLInputElement>();
 	let error = $state<string | null>(null);
+	let draft = $state<S3Settings>({ ...projects.settings });
+	let testState = $state<'idle' | 'ok' | 'error'>('idle');
+
+	$effect(() => {
+		if (!ui.settingsOpen) return;
+		draft = { ...projects.settings };
+		testState = 'idle';
+	});
+
+	async function test(): Promise<void> {
+		testState = (await projects.test()) ? 'ok' : 'error';
+	}
 
 	function close(): void {
 		ui.settingsOpen = false;
@@ -183,6 +223,57 @@
 					{#if error}
 						<p class="mt-2 text-[11px] text-red-600">
 							{m.settings_import_failed({ detail: error })}
+						</p>
+					{/if}
+				</section>
+
+				<section class="border-t border-stone-200 px-3 py-3">
+					<div class="flex items-center justify-between gap-3">
+						<h3 class="text-[11px] font-medium tracking-wide text-stone-500">
+							{m.settings_storage()}
+						</h3>
+						<div class="flex items-center gap-1.5">
+							<button
+								type="button"
+								class="rounded-md border border-stone-300 bg-white px-2 py-1 text-[12px] text-stone-700 hover:border-stone-400 [@media(pointer:coarse)]:py-2"
+								onclick={() => {
+									projects.saveSettings(draft);
+									void test();
+								}}
+							>
+								{m.settings_storage_test()}
+							</button>
+							<button
+								type="button"
+								class="rounded-md bg-stone-800 px-2 py-1 text-[12px] text-white hover:bg-stone-700 [@media(pointer:coarse)]:py-2"
+								onclick={() => projects.saveSettings(draft)}
+							>
+								{m.projects_save()}
+							</button>
+						</div>
+					</div>
+
+					<div class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+						{#each FIELDS as field (field.key)}
+							<label class="block {field.wide ? 'sm:col-span-2' : ''}">
+								<span class="block text-[11px] text-stone-500">{field.label()}</span>
+								<input
+									type={field.secret ? 'password' : 'text'}
+									spellcheck="false"
+									autocomplete="off"
+									placeholder={field.placeholder}
+									class="mt-0.5 w-full rounded border border-stone-300 px-2 py-1 font-mono text-[12px] text-stone-800 placeholder:text-stone-400 focus:border-[#2f6fd0] focus:outline-none"
+									bind:value={draft[field.key]}
+								/>
+							</label>
+						{/each}
+					</div>
+					<p class="mt-1.5 text-[11px] text-stone-400">{m.settings_storage_keys()}</p>
+					{#if testState === 'ok'}
+						<p class="mt-1 text-[11px] text-emerald-700">{m.settings_storage_ok()}</p>
+					{:else if testState === 'error' && projects.error}
+						<p class="mt-1 text-[11px] text-red-600">
+							{m.projects_failed({ detail: projects.error })}
 						</p>
 					{/if}
 				</section>

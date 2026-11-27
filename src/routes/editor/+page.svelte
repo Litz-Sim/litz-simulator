@@ -13,6 +13,7 @@
 	import MenuBar from '#lib/components/editor/MenuBar.svelte';
 	import PartsBin from '#lib/components/editor/PartsBin.svelte';
 	import ProjectInfoDialog from '#lib/components/editor/ProjectInfoDialog.svelte';
+	import ProjectsDialog from '#lib/components/editor/ProjectsDialog.svelte';
 	import SettingsDialog from '#lib/components/editor/SettingsDialog.svelte';
 	import StatusBar from '#lib/components/editor/StatusBar.svelte';
 	import TabRow from '#lib/components/editor/TabRow.svelte';
@@ -20,6 +21,7 @@
 	import { sim } from '#lib/sim/controller.svelte';
 	import * as live from '#lib/sim/live';
 	import { doc } from '#lib/sketch/doc.svelte';
+	import { projects } from '#lib/storage/projects.svelte';
 	import { ui } from '#lib/ui.svelte';
 
 	let tool = $state<Tool>('select');
@@ -42,7 +44,10 @@
 		void doc.rev;
 		void doc.activeTab;
 		clearTimeout(saveTimer);
-		saveTimer = setTimeout(() => doc.save(), 500);
+		saveTimer = setTimeout(() => {
+			doc.save();
+			projects.queue();
+		}, 500);
 	});
 
 	// Each document runs its own session: a tab switch never leaves another
@@ -70,6 +75,7 @@
 		if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
 			event.preventDefault();
 			doc.save();
+			void projects.flush();
 			return;
 		}
 		const target = event.target as HTMLElement | null;
@@ -230,6 +236,7 @@
 	<StatusBar />
 	<SettingsDialog />
 	<EditorLinkDialog />
+	<ProjectsDialog />
 	<ExamplesDialog />
 	<ProjectInfoDialog />
 </div>

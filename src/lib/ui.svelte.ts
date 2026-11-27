@@ -10,6 +10,8 @@ interface UiState {
 	examplesOpen: boolean;
 	/** The connect dialog for `litz connect-editor`. */
 	linkOpen: boolean;
+	/** The bucket browser for projects kept in S3. */
+	projectsOpen: boolean;
 	bottomOpen: boolean;
 	bottomTab: BottomTab;
 	/** Height in pixels of the open bottom panel; dragging the divider changes it. */
@@ -33,6 +35,7 @@ export const ui: UiState = $state({
 	projectOpen: false,
 	examplesOpen: false,
 	linkOpen: false,
+	projectsOpen: false,
 	bottomOpen: true,
 	bottomTab: 'code',
 	bottomHeight: 216,

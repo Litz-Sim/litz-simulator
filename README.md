@@ -69,6 +69,7 @@ The interface ships in English and Chinese. Switch in Settings; strings live in 
 | Output              | Where                                      | Contents                                                                   |
 | ------------------- | ------------------------------------------ | -------------------------------------------------------------------------- |
 | Workspace           | Automatic, browser `localStorage`          | Every tab with its layout, wires, and view state.                          |
+| Project in a bucket | File → Projects…                           | The same `.litzproject.json`, kept in the user's S3 bucket.                |
 | Project file        | File → Export project                      | `.litzproject.json` with every tab, ready to import elsewhere.             |
 | Single-tab document | File → Export JSON                         | `.litzboard.json` for the active tab, with layout and wire bends, no view. |
 | Litz diagram        | Code tab → `diagram.json`                  | Read-only JSON generated for the simulator.                                |
@@ -78,6 +79,28 @@ The interface ships in English and Chinese. Switch in Settings; strings live in 
 The workspace is written to `localStorage` under `litz-board.workspace.v1` after every edit. The status bar shows whether the workspace is saved, has unsaved changes, or failed to save. <kbd>⌘S</kbd> / <kbd>Ctrl+S</kbd> or File → Save project writes immediately.
 
 Browser storage is local to one browser and one origin. It does not sync between devices, and clearing site data removes it. The workspace stays under 5 MB; uploaded firmware lives separately in IndexedDB, keyed by content hash. Export a project file to back up or move a workspace, and keep the original image files to restore their references elsewhere.
+
+### Projects in a bucket
+
+File → Projects… keeps projects in an S3 bucket instead. Settings → Storage takes the endpoint (`https://s3.us-east-1.amazonaws.com`, or any S3-compatible server), region, bucket, prefix, access key, and secret key; **Test** lists the bucket to confirm they work. The keys are stored in this browser's `localStorage` and the page signs each request itself, because there is no server here to hold them.
+
+Saving writes `Name.litzproject.json` under the prefix. Once a project is attached, every edit uploads two seconds after it settles, and <kbd>⌘S</kbd> uploads immediately; the status bar shows `S3`, `S3 ↑` while a save is in flight, and `S3 !` with the error when one fails. The dialog lists objects newest first with their size and timestamp, and can open or delete them. Opening replaces the workspace like File → Import project.
+
+The browser talks to the bucket directly, so the bucket needs a CORS rule for the site's origin:
+
+```json
+[
+	{
+		"AllowedOrigins": ["https://your-site.example"],
+		"AllowedMethods": ["GET", "PUT", "DELETE"],
+		"AllowedHeaders": ["*"],
+		"ExposeHeaders": ["ETag"],
+		"MaxAgeSeconds": 3000
+	}
+]
+```
+
+`GET` covers both the listing and object downloads. A key limited to this prefix keeps the rest of the bucket out of reach.
 
 File → Import project replaces the entire workspace with the file's tabs. If the file is not a valid Litz project, the status bar reports the error and the current workspace is left untouched. File → Import JSON replaces the active tab's diagram with a `.litzboard.json` document and fits it to the viewport.
 
@@ -256,7 +279,7 @@ The inspector exposes device-specific controls and live state: distance for an H
 - Classic ESP32 and ESP32-S3 are Xtensa. The current WebAssembly build does not include those cores, so the part library omits both boards.
 - AVR boards have no debugger: the panel reports that the core cannot be debugged.
 - Storage volumes live in the workspace (browser storage), so a multi-megabyte file can exceed the browser quota; the status bar reports a failed save. A board's flash dump is read from the last run and exported, not stored in the project.
-- There is no project sharing, cloud storage, account system, or CI pipeline.
+- There is no project sharing or account system. File → Projects… writes to an S3 bucket the user owns; it is not a Litz service, and the keys stay in the browser that entered them.
 - Uploaded firmware is cached per browser. Opening a project on another browser or after clearing site data requires uploading the image again.
 - Flash size and MAC address are available from the engine API but are not exposed in the UI.
 
@@ -289,6 +312,7 @@ src/lib/parts/               part definitions and Canvas drawing
 src/lib/canvas/              Canvas 2D engine, viewport, input state
 src/lib/components/editor/   menus, toolbar, tabs, parts library, canvas, inspector, bottom panel
 src/lib/sim/                 Litz WASM backend, run controller, firmware cache, Python staging
+src/lib/storage/             S3 client and the bucket-backed project store
 src/service-worker/          offline cache and update behaviour
 static/firmware/             built-in native images and Python interpreters
 ```

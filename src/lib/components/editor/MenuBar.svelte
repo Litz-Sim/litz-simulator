@@ -171,6 +171,7 @@
 				{ separator: true },
 				{ label: m.menu_project_info(), run: () => (ui.projectOpen = true) },
 				{ label: m.menu_save_project(), hint: '⌘S', run: () => doc.save() },
+				{ label: m.menu_projects(), run: () => (ui.projectsOpen = true) },
 				{ label: m.menu_import_project(), run: () => projectInput.click() },
 				{ label: m.menu_export_project(), run: exportProject },
 				{ separator: true },

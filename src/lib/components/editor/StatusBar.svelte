@@ -4,6 +4,7 @@
 	import { sim } from '#lib/sim/controller.svelte';
 	import { link } from '#lib/sim/editorLink.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
+	import { projects } from '#lib/storage/projects.svelte';
 	import { ui } from '#lib/ui.svelte';
 	import Icon from './Icon.svelte';
 
@@ -75,6 +76,25 @@
 		</button>
 	{/if}
 	<div class="ml-auto flex items-center gap-3">
+		{#if projects.ready && projects.key}
+			<button
+				type="button"
+				class="flex items-center gap-1 {projects.sync === 'error'
+					? 'text-red-600'
+					: projects.sync === 'saving'
+						? 'text-amber-700'
+						: 'text-stone-500'} hover:text-stone-700"
+				title={projects.error ?? projects.key}
+				onclick={() => (ui.projectsOpen = true)}
+			>
+				<Icon name="folder" size={12} />
+				{projects.sync === 'error'
+					? m.status_storage_error()
+					: projects.sync === 'saving'
+						? m.status_storage_saving()
+						: m.status_storage()}
+			</button>
+		{/if}
 		<span class="hidden text-stone-500 sm:inline">
 			{m.status_counts({ parts: doc.sketch.parts.length, wires: doc.sketch.wires.length })}
 		</span>
