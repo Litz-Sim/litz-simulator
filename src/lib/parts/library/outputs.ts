@@ -781,6 +781,9 @@ function drawRegulator(ctx: CanvasRenderingContext2D, part: PartInstance): void 
 	ctx.lineWidth = 3;
 	for (const x of [-18, 0, 18]) leg(ctx, x, 18, x, 44);
 	for (const x of [-18, 0, 18]) pad(ctx, x, 42);
+	// The LM317's adjust tap, on the body's side.
+	leg(ctx, 20, 0, 42, 0);
+	pad(ctx, 40, 0);
 
 	// Heat tab.
 	ctx.fillStyle = '#c3c9cd';
@@ -807,6 +810,42 @@ function drawRegulator(ctx: CanvasRenderingContext2D, part: PartInstance): void 
 	ctx.stroke();
 
 	label(ctx, variant, 0, -4, 8, '#cfd6db');
+	ctx.restore();
+}
+
+function drawDcDc(ctx: CanvasRenderingContext2D, part: PartInstance): void {
+	const boost = String(part.attrs.topology ?? 'buck') === 'boost';
+	ctx.save();
+	ctx.lineCap = 'round';
+
+	ctx.strokeStyle = LEAD;
+	ctx.lineWidth = 3;
+	for (const x of [-18, 0, 18]) {
+		leg(ctx, x, 18, x, 44);
+		pad(ctx, x, 42);
+	}
+
+	const board = ctx.createLinearGradient(0, -30, 0, 18);
+	board.addColorStop(0, '#2b63a8');
+	board.addColorStop(1, '#173f72');
+	ctx.fillStyle = board;
+	ctx.strokeStyle = '#12325c';
+	ctx.lineWidth = 1.4;
+	ctx.beginPath();
+	ctx.roundRect(-30, -30, 60, 48, 4);
+	ctx.fill();
+	ctx.stroke();
+
+	// Inductor winding along the top of the module.
+	ctx.strokeStyle = '#d9a441';
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	for (let i = 0; i < 4; i++) {
+		ctx.arc(-18 + i * 9, -18, 4.5, Math.PI, 0, false);
+	}
+	ctx.stroke();
+
+	label(ctx, boost ? 'BOOST' : 'BUCK', 0, 6, 9, '#dfe7ef');
 	ctx.restore();
 }
 
@@ -1286,13 +1325,33 @@ export const OUTPUT_PARTS: PartDef[] = [
 		pins: [
 			{ name: 'VI', label: 'input', x: -18, y: 44 },
 			{ name: 'GND', label: 'ground', x: 0, y: 44 },
-			{ name: 'VO', label: 'output', x: 18, y: 44 }
+			{ name: 'VO', label: 'output', x: 18, y: 44 },
+			{ name: 'ADJ', label: 'adjust', x: 42, y: 0 }
 		],
 		attrs: [
 			{ name: 'variant', type: 'enum', values: ['7805', '7812', '7905', 'LM317'], default: '7805' },
 			{ name: 'voltage', type: 'number', default: 5.0 }
 		],
 		draw: (ctx, part) => drawRegulator(ctx, part)
+	},
+	{
+		type: 'litz-dc-dc',
+		name: 'DC-DC converter',
+		category: 'Power',
+		keywords: ['buck', 'boost', 'converter', 'step-down', 'step-up'],
+		width: 66,
+		height: 92,
+		pins: [
+			{ name: 'VI', label: 'input', x: -18, y: 44 },
+			{ name: 'GND', label: 'ground', x: 0, y: 44 },
+			{ name: 'VO', label: 'output', x: 18, y: 44 }
+		],
+		attrs: [
+			{ name: 'topology', type: 'enum', values: ['buck', 'boost'], default: 'buck' },
+			{ name: 'voltage', type: 'number', default: 5.0 },
+			{ name: 'max_amps', type: 'number', default: 2.0 }
+		],
+		draw: (ctx, part) => drawDcDc(ctx, part)
 	},
 	{
 		type: 'litz-zener',

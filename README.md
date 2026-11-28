@@ -2,7 +2,7 @@
 
 Litz Breadboard is a browser-based breadboard editor built on the Litz simulation engine. The editing flow follows Wokwi, wires are strictly orthogonal like Fritzing, and the canvas layout takes cues from LCEDA (EasyEDA). You place boards and parts on a virtual breadboard, wire them up, and the editor derives the `diagram.json` that Litz consumes.
 
-Everything runs client-side. Simulation uses [`@litz-sim/litz`](https://www.npmjs.com/package/@litz-sim/litz) 0.6.3 compiled to WebAssembly: pressing Run boots one chip per board on the canvas, all chips share the same circuit, and serial output, LEDs, buttons, and seven-segment displays update live.
+Everything runs client-side. Simulation uses [`@litz-sim/litz`](https://www.npmjs.com/package/@litz-sim/litz) 0.9.0 compiled to WebAssembly: pressing Run boots one chip per board on the canvas, all chips share the same circuit, and serial output, LEDs, buttons, and seven-segment displays update live.
 
 ## Quick start
 

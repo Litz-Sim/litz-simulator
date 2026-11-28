@@ -667,7 +667,10 @@ export const LOGIC_PARTS: PartDef[] = [
 		bodyWidth: 120,
 		left: [pin('VCC'), pin('GND'), pin('SDA')],
 		right: [pin('SCL'), pin('VOUT')],
-		attrs: [{ name: 'value', type: 'number', default: 0 }]
+		attrs: [
+			{ name: 'value', type: 'number', default: 0 },
+			{ name: 'vref', type: 'number', default: 5.0 }
+		]
 	}),
 	modulePart({
 		type: 'litz-pcf8574',
@@ -735,7 +738,15 @@ export const LOGIC_PARTS: PartDef[] = [
 		keywords: ['ads1015', 'i2c', 'adc', 'analog'],
 		bodyWidth: 124,
 		left: [pin('VDD'), pin('GND'), pin('SCL')],
-		right: [pin('SDA'), pin('ADDR'), pin('ALRT')],
+		right: [
+			pin('SDA'),
+			pin('ADDR'),
+			pin('ALRT'),
+			pin('A0', 'channel 0 input'),
+			pin('A1', 'channel 1 input'),
+			pin('A2', 'channel 2 input'),
+			pin('A3', 'channel 3 input')
+		],
 		attrs: [
 			{ name: 'a0', type: 'number', default: 0 },
 			{ name: 'a1', type: 'number', default: 0 },
@@ -750,7 +761,15 @@ export const LOGIC_PARTS: PartDef[] = [
 		keywords: ['ads1115', 'i2c', 'adc', 'analog'],
 		bodyWidth: 124,
 		left: [pin('VDD'), pin('GND'), pin('SCL')],
-		right: [pin('SDA'), pin('ADDR'), pin('ALRT')],
+		right: [
+			pin('SDA'),
+			pin('ADDR'),
+			pin('ALRT'),
+			pin('A0', 'channel 0 input'),
+			pin('A1', 'channel 1 input'),
+			pin('A2', 'channel 2 input'),
+			pin('A3', 'channel 3 input')
+		],
 		attrs: [
 			{ name: 'a0', type: 'number', default: 0 },
 			{ name: 'a1', type: 'number', default: 0 },
