@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { canvasControl } from '#lib/canvas/control';
 	import { m } from '#lib/paraglide/messages.js';
+	import { sim } from '#lib/sim/controller.svelte';
 	import { doc } from '#lib/sketch/doc.svelte';
 	import { EXAMPLES, type Example } from '#lib/sketch/examples-list';
 	import { ui } from '#lib/ui.svelte';
@@ -12,6 +13,7 @@
 
 	function open(example: Example): void {
 		const name = example.name();
+		if (example.analog) sim.setAnalog(true);
 		doc.openSketch(name, example.build(name));
 		ui.examplesOpen = false;
 		requestAnimationFrame(() => canvasControl.engine?.fit());

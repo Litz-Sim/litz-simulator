@@ -299,6 +299,8 @@
 	"example_button_name": "Button and LED",
 	"example_oled_name": "OLED on I²C",
 	"example_traffic_name": "Traffic light",
+	"example_analyzer_name": "Logic analyzer",
+	"example_supply_name": "MCU adjustable supply",
 	"error_aux_single_board": "Bootloader and partition images are only supported with one board.",
 	"error_python_no_entry": "The Python program needs main.py or code.py in the board storage.",
 	"error_python_prompt": "{board}: the REPL prompt did not appear; check the Python firmware and mask ROM.",

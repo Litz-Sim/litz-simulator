@@ -299,6 +299,8 @@
 	"example_button_name": "按钮与 LED",
 	"example_oled_name": "I²C OLED",
 	"example_traffic_name": "交通灯",
+	"example_analyzer_name": "逻辑分析仪",
+	"example_supply_name": "MCU 可调电源",
 	"error_aux_single_board": "引导程序和分区表只支持单块开发板。",
 	"error_python_no_entry": "Python 程序需要在板子存储里有 main.py 或 code.py。",
 	"error_python_prompt": "{board}：没有等到 REPL 提示符，请检查 Python 固件和 Mask ROM。",
