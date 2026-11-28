@@ -27,8 +27,8 @@ importers:
         specifier: ^6.43.15
         version: 6.43.15
       '@litz-sim/litz':
-        specifier: ^0.9.0
-        version: 0.9.0
+        specifier: ^0.9.1
+        version: 0.9.1
       '@lucide/svelte':
         specifier: ^1.77.0
         version: 1.77.0(svelte@5.58.1(@typescript-eslint/types@8.73.0))
@@ -457,8 +457,8 @@ packages:
   '@lezer/python@1.1.19':
     resolution: {integrity: sha512-MhQIURHRytsNzP/YXnqpYKW6la6voAH3kyplTOOiCdjyFY6cWWGFVmYVdHIPrElqSDf4iCDktQCockB9FxuhzQ==}
 
-  '@litz-sim/litz@0.9.0':
-    resolution: {integrity: sha512-92FJe0UOlkwq1mm+XJoio41NeO0I+XYR607kHEOFPpYdFO8EFMEtFLhDXa2lk0hsY+YSr+dG6BuRMQoM4pQC/g==}
+  '@litz-sim/litz@0.9.1':
+    resolution: {integrity: sha512-nOU3YukxnKJ8RWiOtL0HVrjPftm0/021Jd1IBgbzW3ppPxkldn+kHykdDj7OtiUE0Op5flsYMAi/Eo93o0KPtw==}
     engines: {node: '>=18'}
 
   '@lix-js/sdk@0.20.1':
@@ -2822,7 +2822,7 @@ snapshots:
       '@lezer/highlight': 1.2.5
       '@lezer/lr': 1.4.12
 
-  '@litz-sim/litz@0.9.0': {}
+  '@litz-sim/litz@0.9.1': {}
 
   '@lix-js/sdk@0.20.1':
     dependencies:
